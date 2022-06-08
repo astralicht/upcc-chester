@@ -1,0 +1,18 @@
+{
+    "name": "eneioarzew/arkan-mvc",
+    "description": "A simple PHP framework for personal or commercial use.",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Main\\": "",
+            "Main\\Controllers\\": "controllers",
+            "Main\\Models\\": "models",
+            "Main\\Services\\": "services"
+        }
+    },
+    "require": {
+        "php": ">=7.0"
+    }
+}

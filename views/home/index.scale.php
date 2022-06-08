@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php include_once "views/shared/headers.php"; ?>
+    <style>
+        .hero {
+            display: flex;
+            flex: auto;
+            height: auto;
+            width: 100%;
+            padding: 100px;
+            background-color: #f5f5f5;
+            background-image: url("../api/assets/img?name=hero1.webp&type=webp");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-content>* {
+            padding: 70px 50px;
+            width: 100%;
+            color: white;
+            line-height: 1.5em;
+        }
+    </style>
+    <title>Home | UPCC</title>
+</head>
+
+<body>
+    <div body back-light>
+        <?php include_once("views/shared/nav.php"); ?>
+        <div class="hero">
+            <div class="hero-content" flex="h" style="width: 50%;">
+                <div style="background-color: rgba(0, 0, 0, .7); backdrop-filter: blur(3px);" flex="v">
+                    <div style="color: white;">
+                        <h1 style=" display: inline; color: white; font-size: 3em;">UPCC</h1> has been at the forefront of the valve pipeline steel business in the
+                        Philippines. We carry a wide range of High Pressure Steam valves carbon steel, forged steel, SS 304(CF8)/316L(CF8M) body
+                        construction with pipe fittings/flanges and seamless pipes, Boiler tubes, and High Pressure Plates from Japan, Italy, Brazil,
+                        Germany, Korea, China, and the United States. We hold the distinction of being ranked as one of the regular vendor of some of
+                        the Philippines' biggest companies from sectors in Oil Refinery, Petroleum, Geothermal, LNG, LPG, Power/Energy, Chemical, Sugar
+                        Mill, Food/Beverage, Distillery & International Sub contructors.
+                    </div>
+                    <div flex="h" h-end>
+                        <a href="#" button="primary" white-text-all>
+                            <b>Explore Valves</b>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div main flex="v">
+            <div id="featured-products">
+                <div>
+                    <h1 style="width: 100%; text-align: center; font-size: 2.5em;">Featured Products</h1>
+                </div>
+                <div>
+                    <div class="cards-container" flex="h" h-center>
+                        <div class="card" flex="v">
+                            <img src="" alt="" class="card-img">
+                            <div>
+                                <span class="card-title">Item Name</span>
+                            </div>
+                            <div flex="h" h-center>
+                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
+                                    <div white-text>
+                                        View
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card" flex="v">
+                            <img src="" alt="" class="card-img">
+                            <div>
+                                <span class="card-title">Item Name</span>
+                            </div>
+                            <div flex="h" h-center>
+                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
+                                    <div white-text>
+                                        View
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card" flex="v">
+                            <img src="" alt="" class="card-img">
+                            <div>
+                                <span class="card-title">Item Name</span>
+                            </div>
+                            <div flex="h" h-center>
+                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
+                                    <div white-text>
+                                        View
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div flex="h" h-center v-center style="height: 600px;" id="about-us">
+            <div style="background-color: #0f2755; height: 300px; width: 300px; z-index: 2; left: 150px;
+                        position: absolute; justify-content: center; align-items: center;
+                        box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, .3);" flex>
+                <h1 style="font-size: 2.5em; color: white;">
+                    About Us
+                </h1>
+            </div>
+            <div style="background-color: white; position: absolute; left: 320px; right: 150px; min-width: 700px; padding: 50px; 
+                        padding-left: 170px; box-shadow: 0 0 9px 3px rgba(0, 0, 0, .15); overflow-x: auto;" flex>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Gravida dictum fusce ut placerat
+                orci nulla pellentesque dignissim enim. Sociis natoque penatibus et magnis. Mauris pharetra et ultrices neque ornare
+                aenean euismod. At urna condimentum mattis pellentesque id. Nunc sed blandit libero volutpat sed cras ornare arcu dui.
+                Sit amet aliquam id diam maecenas ultricies mi. Risus pretium quam vulputate dignissim suspendisse. At imperdiet dui
+                accumsan sit amet nulla facilisi. Vulputate ut pharetra sit amet aliquam id diam maecenas. Pretium nibh ipsum consequat
+                nisl vel pretium lectus quam id. Habitant morbi tristique senectus et netus et. Mattis ullamcorper velit sed ullamcorper
+                morbi tincidunt ornare massa eget. Duis convallis convallis tellus id interdum velit laoreet. Lacus vel facilisis
+                volutpat est velit. Quam quisque id diam vel. Et egestas quis ipsum suspendisse ultrices. Amet dictum sit amet justo.
+            </div>
+        </div>
+    </div>
+    <?php include_once "views/shared/footers.php"; ?>
+</body>
+
+</html>

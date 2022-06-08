@@ -1,0 +1,13 @@
+php_value date.timezone "Asia/Manila"
+
+Options +FollowSymLinks
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} /(.*)/$
+RewriteCond %{REQUEST_URI} !Main.php
+RewriteRule ^ /%1 [R,L]
+
+RewriteRule ^$ Main.php
+RewriteRule ^(.*)$ Main.php
