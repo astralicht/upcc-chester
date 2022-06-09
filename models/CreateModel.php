@@ -43,9 +43,9 @@ class CreateModel {
             $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
         }
 
-        $sql = 'INSERT INTO users(`first_name`, `last_name`, `company_name`, `company_address`, `company_nature`,
+        $sql = "INSERT INTO users(`first_name`, `last_name`, `company_name`, `company_address`, `company_nature`,
                     `phone_number`, `email`, `password`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         return self::getResult($sql, $data);
     }
@@ -53,15 +53,47 @@ class CreateModel {
 
     function product($data) {
         $data = json_decode($data, true);
+        $sql = "";
 
-        if ($data["password"] === $data["confirm_password"]) {
-            unset($data["confirm_password"]);
-            $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
-        }
+        return self::getResult($sql, $data);
+    }
 
-        $sql = 'INSERT INTO users(`first_name`, `last_name`, `company_name`, `company_address`, `company_nature`,
-                    `phone_number`, `email`, `password`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
+
+    function productPrice($data) {
+        $data = json_decode($data, true);
+        $sql = "";
+
+        return self::getResult($sql, $data);
+    }
+
+
+    function productType($data) {
+        $data = json_decode($data, true);
+        $sql = "";
+
+        return self::getResult($sql, $data);
+    }
+
+
+    function productStock($data) {
+        $data = json_decode($data, true);
+        $sql = "";
+
+        return self::getResult($sql, $data);
+    }
+
+
+    function order($data) {
+        $data = json_decode($data, true);
+        $sql = "";
+
+        return self::getResult($sql, $data);
+    }
+
+
+    function shoppingCartItem($data) {
+        $data = json_decode($data, true);
+        $sql = "";
 
         return self::getResult($sql, $data);
     }

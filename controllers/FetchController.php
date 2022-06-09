@@ -15,5 +15,6 @@ class FetchController {
     function productsCount() { return (new FetchModel)->productsCount(); }
     function ordersCount() { return (new FetchModel)->ordersCount(); }
     function companyNatures() { return (new FetchModel)->companyNatures(); }
+    function product($data) { return (new FetchModel)->product($data); }
     
 }

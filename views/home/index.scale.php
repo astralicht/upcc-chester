@@ -7,9 +7,9 @@
         .hero {
             display: flex;
             flex: auto;
-            height: auto;
+            height: calc(100vh - 3em);
             width: 100%;
-            padding: 100px;
+            padding: 80px;
             background-color: #f5f5f5;
             background-image: url("../api/assets/img?name=hero1.webp&type=webp");
             background-size: cover;
@@ -18,7 +18,7 @@
         }
 
         .hero-content>* {
-            padding: 70px 50px;
+            padding: 50px;
             width: 100%;
             color: white;
             line-height: 1.5em;
@@ -31,7 +31,9 @@
     <div body back-light>
         <?php include_once("views/shared/nav.php"); ?>
         <div class="hero">
-            <div class="hero-content" flex="h" style="width: 50%;">
+            <div style="height: calc(100vh - 3em); width: 100%; background-image: linear-gradient(to right, transparent, transparent, #000); position: absolute; top: 4em; left: 0;"></div>
+            <div fullwidth></div>
+            <div class="hero-content" flex="h" v-center style="width: 100%;">
                 <div style="background-color: rgba(0, 0, 0, .7); backdrop-filter: blur(3px);" flex="v">
                     <div style="color: white;">
                         <h1 style=" display: inline; color: white; font-size: 3em;">UPCC</h1> has been at the forefront of the valve pipeline steel business in the

@@ -21,4 +21,5 @@ class AssetsController {
     public function js($data): void { self::getAsset("views/assets/js/".$data["name"], "js"); }
     public function css($data): void { self::getAsset("views/assets/css/".$data["name"], "css"); }
     public function img($data): void { self::getAsset("views/assets/img/".$data["name"], $data["type"]); }
+    public function imgUploaded($data): void { self::getAsset("uploads/img/".$data["name"], $data["type"]); }
 }

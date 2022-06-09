@@ -67,29 +67,39 @@
             background-color: white;
             box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
         }
+
+        #price-header, #price-header * {
+            color: #ed7d61;
+        }
     </style>
     <title>Product <?php echo addslashes($_GET["id"]); ?> | UPCC</title>
 </head>
 
 <body>
     <?php include_once("views/shared/nav.php"); ?>
-    <input type="hidden" id="product_id" style="display: hidden;" value="<?php echo $_GET['product_id']; ?>">
+    <input type="hidden" id="product-id" style="display: hidden;" value="<?php echo $_GET['id']; ?>">
     <div flex="v" main>
         <div flex="h">
             <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../api/assets/img?name=arrow-right.webp&type=webp" alt="back" style="transform: rotate(180deg);">Back</button>
         </div>
-        <div flex>
+        <div flex="h" style="gap: 1.4em">
             <div style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0;">
                 <img src="" alt="placeholder">
             </div>
-            <div flex="v" style="gap: 15px; padding: 15px 0;">
-                <div class="products-section">
-                    <h2 id="product-name" style="margin: .3em 0;">Product Name</h2>
-                    <span id="product-id">#000-00000</span>
-                    <p id="product-description" style="color: #999;">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, dolores soluta? Iure atque
-                        amet quam modi incidunt commodi deleniti, distinctio mollitia! Aut sequi eum repellat animi soluta est autem ipsa!
-                    </p>
+            <div flex="v" style="gap: 1em; padding: 15px 0; width: 100%;">
+                <div class="products-section" flex="v" style="gap: .7em;">
+                    <h2 id="name" style="margin: 0;">Product Name</h2>
+                    <div style="padding: 1em; background-color: #F5F5F5;">
+                        <p nomargin>
+                            <strong>Brand:</strong>
+                            <span id="brand"></span>
+                        </p>
+                        <p nomargin>
+                            <strong>Material:</strong>
+                            <span id="material"></span>
+                        </p>
+                    </div>
+                    <h2 id="price-header" style="margin: 0;">₱<span id="unit_price">1,000</span></h2>
                 </div>
                 <div class="products-section">
                     <div flex v-center nogap>
@@ -103,12 +113,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="products-section" flex>
-                    <button button="secondary" style="gap: 5px;" flex v-center onclick="showEmailPopup()">
+                <div class="products-section" flex="h">
+                    <button button="secondary" style="gap: .5em; width: 200px; height: 3em;" flex="h" v-center onclick="showEmailPopup()">
                         <img src="../api/assets/img?name=email.webp&type=webp" alt="email">
                         Email Now
                     </button>
-                    <button button="good" style="gap: 5px;" flex v-center onclick="checkAuth()">
+                    <button button="good" style="gap: .5em; width: 200px; height: 3em;" flex="h" v-center onclick="checkAuth()">
                         <img src="../api/assets/img?name=add-to-cart.webp&type=webp" alt="add to cart">
                         Add to Cart
                     </button>
@@ -117,15 +127,30 @@
                 <div class="products-section" flex="v" style="gap: 0; padding: 15px 20px; background-color: #f5f5f5; border-radius: 5px;">
                     <div style="width: 100%;">
                         <h3 style="margin: .3em 0;">More Details</h3>
-                        <p style="color: #999;">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita recusandae dicta praesentium itaque
-                            quibusdam adipisci ratione excepturi velit nulla, assumenda officia, aspernatur quos atque eveniet repellendus
-                            laboriosam. Ut, totam assumenda. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloremque
-                            fugiat nam repellendus id delectus quia quod voluptas voluptate culpa aliquid consequatur labore odit
-                            tempore voluptatum sed, non quo porro. Nobis.
-                        </p>
+                        <hr style="border: 0; border-bottom: 1px solid #999;">
+                        <div style="padding: 1em; background-color: #F5F5F5;">
+                            <p nomargin>
+                                <strong>Connection Type:</strong>
+                                <span id="connection_type"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Length:</strong>
+                                <span id="length"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Width:</strong>
+                                <span id="width"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Thickness:</strong>
+                                <span id="thickness"></span>
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div flex="v" style="min-width: 350px; height: 500px; background-color: #F5F5F5;">
+
             </div>
         </div>
         <div id="email-popup-container" style="flex-shrink: 0;">
@@ -158,12 +183,26 @@
     <?php include_once "views/shared/footers.php"; ?>
     <script>
         var container_display = false;
-        fetch("getProductFromDb.php")
-            .then(response => response.json)
+        var id = document.querySelector("#product-id").value;
+
+        fetch(`../api/product?id=${id}`)
+            .then(response => response.json())
             .then(json => displayDataToDom(json));
 
         function displayDataToDom(json) {
-            // code here
+            if (json["status"] !== 200) return;
+            if (json["rows"].length < 1) return;
+
+            let rows = json["rows"];
+            let keys = Object.keys(rows[0]);
+
+            for (let key of keys) {
+                let element = document.querySelector(`#${key}`);
+
+                if (element === null) continue;
+
+                element.innerText = rows[0][key];
+            }
         }
 
         function decrementItemCount() {

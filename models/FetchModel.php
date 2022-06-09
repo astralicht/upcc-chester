@@ -93,17 +93,17 @@ class FetchModel
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
-        $sql = "SELECT `item_name`, `item_type`, `brand`
+        $sql = "SELECT `id`, `name`, `type`, `brand`, `unit_price`
                 FROM products
                 WHERE `date_removed` IS NULL
                 LIMIT ?, ?";
 
-        if ($filter !== "") {
-            $sql = "SELECT `item_name`, `item_type`, `brand`
+        if ($filter !== "null") {
+            $sql = "SELECT `id`, `name`, `type`, `brand`, `unit_price`
                     FROM products
                     WHERE `date_removed` IS NULL
-                    AND `item_name` LIKE '%$filter%'
-                    OR  `item_type` LIKE '%$filter%'
+                    AND `name` LIKE '%$filter%'
+                    OR  `type` LIKE '%$filter%'
                     OR  `brand` LIKE '%$filter%'
                     LIMIT ?, ?";
         }
@@ -136,6 +136,14 @@ class FetchModel
         $sql = "SELECT `nature` FROM company_natures WHERE `date_removed` IS NULL";
 
         return self::getResult($sql);
+    }
+
+    
+    function product($data) {
+        $id = [$data["id"]];
+        $sql = "SELECT * FROM products WHERE `id`=? AND `date_removed` IS NULL";
+
+        return self::getResult($sql, $id);
     }
 
 }
