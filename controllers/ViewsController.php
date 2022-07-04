@@ -27,7 +27,18 @@ class ViewsController {
     function adminDashboard(): string { return self::getFile('views/admin/dashboard.scale.php'); }
     function adminUsers(): string { return self::getFile('views/admin/users.scale.php'); }
     function adminProducts(): string { return self::getFile('views/admin/products.scale.php'); }
+    function adminProductTypes(): string { return self::getFile('views/admin/product-types.scale.php'); }
     function adminOrders(): string { return self::getFile('views/admin/orders.scale.php'); }
     function adminEditUser(): string { return self::getFile('views/admin/edit_user.scale.php'); }
+    function adminNewProduct(): string { return self::getFile('views/admin/new-product.scale.php'); }
+    function adminNewProductType(): string { return self::getFile('views/admin/new-product-type.scale.php'); }
     function signupSuccess(): string { return self::getFile('views/signup/success.scale.php'); }
+    function clientAccountDetails(): string { return self::getFile('views/client/account-details.scale.php'); }
+    function clientOrderHistory(): string { return self::getFile('views/client/order-history.scale.php'); }
+    function clientCart(): string { return self::getFile('views/client/cart.scale.php'); }
+    function clientEditInfo(): string { return self::getFile('views/client/edit-info.scale.php'); }
+    function agentDashboard(): string { return self::getFile('views/agent/dashboard.scale.php'); }
+    function agentOrders(): string { return self::getFile('views/agent/orders.scale.php'); }
+    function agentViewOrder(): string { return self::getFile('views/agent/view-order.scale.php'); }
+
 }

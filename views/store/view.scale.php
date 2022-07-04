@@ -68,11 +68,12 @@
             box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
         }
 
-        #price-header, #price-header * {
+        #price-header,
+        #price-header * {
             color: #ed7d61;
         }
     </style>
-    <title>Product <?php echo addslashes($_GET["id"]); ?> | UPCC</title>
+    <title></title>
 </head>
 
 <body>
@@ -99,7 +100,7 @@
                             <span id="material"></span>
                         </p>
                     </div>
-                    <h2 id="price-header" style="margin: 0;">₱<span id="unit_price">1,000</span></h2>
+                    <h2 id="price-header" style="margin: 0;">₱<span id="unit_price">0.00</span></h2>
                 </div>
                 <div class="products-section">
                     <div flex v-center nogap>
@@ -123,8 +124,10 @@
                         Add to Cart
                     </button>
                 </div>
-                <div id="popup-message" style="opacity: 0; display: none; padding: 15px 20px; transition: opacity .3s ease-in-out;" flex></div>
-                <div class="products-section" flex="v" style="gap: 0; padding: 15px 20px; background-color: #f5f5f5; border-radius: 5px;">
+                <div class="products-section">
+                    <div id="popup-message" style="opacity: 0; display: none; padding: 1em 1.5em; transition: opacity .3s ease-in-out;" flex></div>
+                </div>
+                <div class="products-section" flex="v" style="gap: 0; padding: 1em 1.5em; background-color: #f5f5f5; border-radius: 5px;">
                     <div style="width: 100%;">
                         <h3 style="margin: .3em 0;">More Details</h3>
                         <hr style="border: 0; border-bottom: 1px solid #999;">
@@ -148,9 +151,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="products-section" flex="v" style="background-color: #f5f5f5;">
+                    <h3>Recommended Items</h3>
+                </div>
             </div>
             <div flex="v" style="min-width: 350px; height: 500px; background-color: #F5F5F5;">
-
             </div>
         </div>
         <div id="email-popup-container" style="flex-shrink: 0;">
@@ -182,8 +187,8 @@
     </div>
     <?php include_once "views/shared/footers.php"; ?>
     <script>
-        var container_display = false;
-        var id = document.querySelector("#product-id").value;
+        let container_display = false;
+        let id = document.querySelector("#product-id").value;
 
         fetch(`../api/product?id=${id}`)
             .then(response => response.json())
@@ -196,10 +201,17 @@
             let rows = json["rows"];
             let keys = Object.keys(rows[0]);
 
+            document.title = `${rows[0]["name"]} | UPCC Store`;
+
             for (let key of keys) {
                 let element = document.querySelector(`#${key}`);
 
                 if (element === null) continue;
+
+                if (rows[0][key] === null) {
+                    element.innerText = "N/A";
+                    continue;
+                }
 
                 element.innerText = rows[0][key];
             }
@@ -238,22 +250,50 @@
 
         function checkAuth() {
             const popup_message = document.querySelector("#popup-message");
-            fetch("back/isAuth.php")
+
+            fetch("../api/checkauth")
                 .then(response => response.json())
                 .then(json => {
-                    if (json["auth"]) return addToCart(product_id);
-                    popup_message.style.backgroundColor = "#ffbabb";
-                    popup_message.style.border = "2px solid #cc6264";
-                    popup_message.innerHTML = "<div>You are currently not signed in! Click <a href='signup.php'>here</a> to sign up for an account.</div>";
+                    if (json["is_auth"] === "TRUE") return addToCart(id);
+                    popup_message.setAttribute("contain", "danger");
+                    popup_message.setAttribute("bordered", "");
+                    popup_message.setAttribute("dark-text", "");
+                    popup_message.innerHTML = "You are currently not logged in! Click <a href='../login/index'>here</a> to login.";
                     fadeInFlex(popup_message);
                 });
         }
 
-        function addToCart(product_id) {
-            fetch(`addToCart.php?product_id=${product_id}`)
-                .then(response => response.json)
-                .then(json => {
-                    // code here
+        function addToCart(id) {
+            const popup_message = document.querySelector("#popup-message");
+            let quantity = document.querySelector("#item_count").value;
+
+            fetch(`../api/addtocart?product_id=${id}&quantity=${quantity}`)
+                .then(response => response.json()).then(json => {
+                    if (json["status"] !== 200) {
+                        popup_message.setAttribute("contain", "danger");
+                        popup_message.setAttribute("bordered", "");
+                        popup_message.setAttribute("dark-text", "");
+                        popup_message.innerHTML = "Something went wrong. Please try again in a while.";
+                        fadeIn(popup_message);
+                        setTimeout(() => {
+                            fadeOut(popup_message);
+                        }, 5150);
+
+                        return;
+                    }
+
+                    console.log();
+                    
+                    document.querySelector("#cart-items-count").innerText = json["cart_count"];
+
+                    popup_message.setAttribute("contain", "good");
+                    popup_message.setAttribute("bordered", "");
+                    popup_message.setAttribute("dark-text", "");
+                    popup_message.innerHTML = "Successfully added to cart!";
+                    fadeIn(popup_message);
+                    setTimeout(() => {
+                        fadeOut(popup_message);
+                    }, 5150);
                 });
         }
 

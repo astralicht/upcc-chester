@@ -19,7 +19,7 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             background-color: rgba(0, 0, 0, .3);
         }
 
-        #products-table tr:nth-child(even) {
+        #product-types-table tr:nth-child(even) {
             background-color: #E5E5E5;
         }
     </style>
@@ -33,16 +33,16 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main>
                 <div flex="h">
-                    <div flex="h" v-center>
-                        <h1>Products</h1>
-                        <a href="../admin/new-product" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
+                    <div flex="h" v-center fullwidth>
+                        <h1>Product Types</h1>
+                        <a href="../admin/new-product-type" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
                     </div>
                     <div flex="h" h-end fullwidth>
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProducts()">
-                                <div id="search-button" flex="h" v-center onclick="fetchProducts()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProductTypes()">
+                                <div id="search-button" flex="h" v-center onclick="fetchProductTypes()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>
                             </div>
@@ -51,25 +51,23 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                 </div>
                 <div flex="v">
                     <div flex="h">
-                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editProduct()">Edit</div>
-                        <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteProducts()">Delete</div>
+                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editProductType()">Edit</div>
+                        <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteProductTypes()">Delete</div>
                     </div>
                     <div id="message" contain="danger" bordered dark-text style="display: none; opacity: 0;"></div>
                     <div flex="v">
-                        <div id="products-page-controls" h-end fullwidth contain="white" small flex="h">
+                        <div id="product-types-page-controls" h-end fullwidth contain="white" small flex="h">
                             <div contain="secondary" button style="width: 50px; border-radius: var(--border-radius);" small flex="h" h-center id="prev-page">
                                 < </div>
                                     <div contain="secondary" style="width: 150px; border-radius: var(--border-radius);" small flex="h" h-center id="pages-display">1 of 1</div>
                                     <div contain="secondary" button style="width: 50px; border-radius: var(--border-radius);" small flex="h" h-center id="next-page"> > </div>
                             </div>
                         </div>
-                        <table table id='products-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
+                        <table table id='product-types-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
                             <thead style="border-bottom: 1px solid #E5E5E5;">
                                 <th></th>
                                 <th>Name</th>
-                                <th>Type</th>
-                                <th>Brand</th>
-                                <th>Unit Price</th>
+                                <th>Description</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -85,43 +83,43 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <script>
             const LIMIT = 25;
             var pages = {
-                "products": 0,
+                "product-types": 0,
             };
             var page_controls = {
-                "products": {
+                "product-types": {
                     "next": document.querySelector("#next-page"),
                     "previous": document.querySelector("#prev-page"),
                 }
             };
             var table_bodies = {
-                "products": document.querySelector("#products-table tbody"),
+                "product-types": document.querySelector("#product-types-table tbody"),
             };
 
-            fetchProducts(pages["products"]);
-            fetchTotalProductsCount();
+            fetchProductTypes(pages["product-types"]);
+            fetchTotalProductTypesCount();
 
 
-            function fetchProducts(products_page) {
-                clearTableBody(table_bodies["products"]);
-                products_page = 0;
+            function fetchProductTypes(product_types_page) {
+                clearTableBody(table_bodies["product-types"]);
+                product_types_page = 0;
 
                 let filter = null;
 
                 setTimeout(() => {
                     filter = document.querySelector("#search-input").value;
 
-                    fetch(`../api/products?filter=${filter}&page=${products_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+                    fetch(`../api/product-types?filter=${filter}&page=${product_types_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                         if (json["status"] !== 200) console.error(json);
                         if (json["rows"] === undefined) return;
 
-                        printProductsToTable(json);
+                        printProductTypesToTable(json);
                     });
                 }, 1);
             }
 
 
-            function printProductsToTable(json) {
-                const TBODY = table_bodies["products"];
+            function printProductTypesToTable(json) {
+                const TBODY = table_bodies["product-types"];
                 let rows = json["rows"];
 
                 if (rows.length === 0) {
@@ -149,50 +147,54 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             }
 
 
-            function fetchTotalProductsCount() {
-                fetch("../api/products/count").then(response => response.json()).then(data => {
-                    printProductsPages(data);
+            function fetchTotalProductTypesCount() {
+                fetch("../api/product-types/count").then(response => response.json()).then(data => {
+                    printProductTypesPages(data);
                 });
             }
 
 
-            function printProductsPages(data) {
-                let controls = page_controls["products"];
-                let total_count = data["rows"][0]["products_count"];
+            function printProductTypesPages(data) {
+                let controls = page_controls["product-types"];
+                let total_count = 0;
                 let total_pages = parseInt(total_count / LIMIT);
+                let rows = data["rows"];
+
+                if (rows == undefined) total_count = 0;
+                else total_count = rows[0]["product-types_count"];
 
                 controls["previous"].onclick = () => {
                     previousProductsTablePage()
                 };
                 controls["next"].onclick = () => {
-                    nextProductsTablePage(total_pages)
+                    nextProductTypesTablePage(total_pages)
                 };
 
-                controls.innerText = `Page ${pages["products"]+1} of ${total_pages}`;
+                controls.innerText = `Page ${pages["product-types"]+1} of ${total_pages}`;
             }
 
 
-            function nextProductsTablePage(total_pages) {
-                if (pages["products"] + 1 >= total_pages) return;
+            function nextProductTypesTablePage(total_pages) {
+                if (pages["product-types"] + 1 >= total_pages) return;
 
-                let tbody = table_bodies["products"];
+                let tbody = table_bodies["product-types"];
                 tbody = clearTableBody(tbody);
-                ++pages["products"];
+                ++pages["product-types"];
 
-                fetchProducts(pages["products"]);
-                fetchTotalProductsCount();
+                fetchProductTypes(pages["product-types"]);
+                fetchTotalProductTypesCount();
             }
 
 
             function previousProductsTablePage() {
-                if (pages["products"] - 1 < 0) return;
+                if (pages["product-types"] - 1 < 0) return;
 
-                let tbody = table_bodies["products"];
+                let tbody = table_bodies["product-types"];
                 tbody = clearTableBody(tbody);
-                --pages["products"];
+                --pages["product-types"];
 
-                fetchProducts(pages["products"]);
-                fetchTotalProductsCount();
+                fetchProductTypes(pages["product-types"]);
+                fetchTotalProductTypesCount();
             }
 
 
@@ -228,33 +230,39 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             }
 
 
-            function deleteProducts() {
+            function deleteProductTypes() {
                 const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
 
-                let product_ids = [];
+                let product_type_ids = [];
 
                 for (let index = 0; index < tickedBoxes.length; index++) {
-                    product_ids.push(tickedBoxes[index].value);
+                    product_type_ids.push(tickedBoxes[index].value);
                 }
 
-                fetch("../api/remove-products", {
+                fetch("../api/remove-product-types", {
                     "method": "POST",
                     "Content-Type": "application/json",
-                    "body": JSON.stringify(product_ids),
-                }).then(response => response.json()).then(data => {
+                    "body": JSON.stringify(product_type_ids),
+                }).then(response => response.text()).then(data => {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    
                     if (data["status"] !== 200) return console.error(data["message"]);
 
-                    let tbody = table_bodies["products"];
+                    let tbody = table_bodies["product-types"];
                     tbody = clearTableBody(tbody);
 
-                    fetchProducts(pages["products"]);
-                    fetchTotalProductsCount();
+                    fetchProductTypes(pages["product-types"]);
+                    fetchTotalProductTypesCount();
 
                     document.querySelector("#edit-button").style.display = "none";
                     document.querySelector("#delete-button").style.display = "none";
 
                     let message = document.querySelector("div#message");
-                    message.innerText = "Product(s) removed successfully!";
+                    message.innerText = "Product type(s) removed successfully!";
                     fadeIn(message);
                     setTimeout(() => {
                         fadeOut(message);

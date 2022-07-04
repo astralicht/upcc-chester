@@ -10,15 +10,18 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
     <title>Edit User | UPCC Admin</title>
 </head>
 
-<body>
+<body back-light>
     <div flex="h" nogap>
         <?php include_once("views/shared/admin_nav.php"); ?>
-        <div main back-light fullwidth>
-            <div flex="v">
-                <h1>Edit User</h1>
-                <form onsubmit="return false;">
-                    <input type="hidden" value="<?php echo $_GET["id"]; ?>">
-                </form>
+        <div flex="v" fullwidth nogap>
+            <?php include_once("views/shared/admin_header_nav.php"); ?>
+            <div main>
+                <div flex="v">
+                    <h1>Edit User</h1>
+                    <form onsubmit="return false;">
+                        <input type="hidden" value="<?php echo $_GET["id"]; ?>">
+                    </form>
+                </div>
             </div>
         </div>
     </div>

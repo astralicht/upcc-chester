@@ -5,11 +5,11 @@
                 <h1 white-text nopadding nomargin>Contact Us</h1>
                 <div id="contact-details" flex="v">
                     <div class="detail" flex white-text>
-                        <img src="api/assets/img?name=phone.webp&type=webp" alt="">
+                        <img src="../api/assets/img?name=phone.webp&type=webp" alt="">
                         (00)123-1234 | (00)123-1234
                     </div>
                     <div class="detail" flex white-text>
-                        <img src="api/assets/img?name=location.webp&type=webp" alt="">
+                        <img src="../api/assets/img?name=location.webp&type=webp" alt="">
                         Metro Manila
                     </div>
                 </div>

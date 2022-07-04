@@ -5,9 +5,24 @@ RewriteEngine on
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_URI} /(.*)/$
+RewriteCond %{REQUEST_URI} ^/$
 RewriteCond %{REQUEST_URI} !Main.php
 RewriteRule ^ /%1 [R,L]
 
+RewriteRule Routes.php error/404
+RewriteRule Resource.php error/404
+RewriteRule Config.php error/404
+RewriteRule composer.json error/404
+RewriteRule composer.lock error/404
+RewriteRule LICENSE error/404
+RewriteRule README.md error/404
+RewriteRule session.php error/404
+RewriteRule controllers error/404
+RewriteRule models error/404
+
 RewriteRule ^$ Main.php
-RewriteRule ^(.*)$ Main.php
+RewriteRule ^([0-9a-z-]+)$ Main.php/$1
+RewriteRule ^([0-9a-z-]+)/([0-9a-z-]+)$ Main.php/$1/$2
+RewriteRule ^([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)$ Main.php/$1/$2/$3
+RewriteRule ^([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)$ Main.php/$1/$2/$3/$4
+RewriteRule ^([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)/([0-9a-z-]+)$ Main.php/$1/$2/$3/$4/$5

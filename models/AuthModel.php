@@ -4,11 +4,12 @@ namespace Main\Models;
 use Main\Config;
 
 class AuthModel {
+
     function login($data) {
         $data = json_decode($data, true);
         $conn = (new Config())->openDbConnection();
 
-        $sql = 'SELECT `first_name`, `last_name`, `type`
+        $sql = 'SELECT `id`,`first_name`, `last_name`, `type`, `dp_path`
         FROM users
         WHERE `email`=?
         AND `date_removed` IS NULL
@@ -26,4 +27,5 @@ class AuthModel {
         
         return ["status" => 200, "user" => $row];
     }
+    
 }

@@ -7,7 +7,7 @@ session_start();
 
 class AuthController {
 
-    public function login($data) { 
+    function login($data) { 
         $response = (new AuthModel)->login($data);
 
         if ($response["status"] === 401) return [
@@ -23,9 +23,16 @@ class AuthController {
         }
 
         if ($response["status"] === 200) {
+            $_SESSION["id"] = $response["user"]["id"];
             $_SESSION["first_name"] = $response["user"]["first_name"];
             $_SESSION["last_name"] = $response["user"]["last_name"];
             $_SESSION["type"] = $response["user"]["type"];
+            $_SESSION["dp_path"] = $response["user"]["dp_path"];
+
+            $FetchController = new FetchController();
+            $cart_items_count = $FetchController->cartItemsCount()["rows"][0]["cart_items_count"];
+
+            $_SESSION["cart_count"] = $cart_items_count;
 
             return [
                 "status" => 200,
@@ -39,17 +46,25 @@ class AuthController {
         ];
     }
 
-    public function logout() {
+
+    function logout() {
         unset($_SESSION);
         session_destroy();
-        header("Location: ../login/");
+        header("Location: ../login/index");
     }
 
-    public function loginRedirect() {
-        var_dump($_SESSION);
+
+    function loginRedirect() {
         if (!isset($_SESSION["type"])) return null;
         if ($_SESSION["type"] === "ADMIN") header("Location: ../admin/dashboard");
-        if ($_SESSION["type"] === "CLIENT") header("Location: ../client/dashboard");
+        if ($_SESSION["type"] === "CLIENT") header("Location: ../client/account-details");
+        if ($_SESSION["type"] === "AGENT") header("Location: ../agent/dashboard");
+    }
+
+
+    function checkAuth() {
+        if (isset($_SESSION["type"])) return ["is_auth" => "TRUE"];
+        return ["is_auth" => "FALSE"];
     }
 
 }

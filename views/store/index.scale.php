@@ -73,30 +73,43 @@
         <div flex="h">
             <div>
                 <div flex="v" id="search-filter-container">
-                    <h2 class="header">Search Filter</h2>
+                    <h2 class="header">Search</h2>
                     <div>
-                        <h3 class="header">Type</h3>
+                        <input type="text" id="search-input" placeholder="Search here" form-input>
+                        <div style="padding: 1em 0;">
+                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProduct()">
+                                Search
+                            </button>
+                        </div>
                         <hr>
-                        <select form-input id="type_select">
-                            <option value="NULL">Select type</option>
-                        </select>
                     </div>
-                    <div>
-                        <h3 class="header">Brand</h3>
-                        <hr>
-                        <select form-input id="type_select">
-                            <option value="NULL">Select brand</option>
-                        </select>
-                    </div>
-                    <div>
-                        <h3 class="header">Variant</h3>
-                        <hr>
-                        <select form-input id="type_select">
-                            <option value="NULL">Select variant</option>
-                        </select>
-                    </div>
-                    <div style="padding: 1em 0;">
-                        <button button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;">Apply filters</button>
+                    <div id="advanced-search-filters" flex="v">
+                        <div>
+                            <h3 class="header">Type</h3>
+                            <hr>
+                            <select form-input id="type_select">
+                                <option value="NULL">Select type</option>
+                            </select>
+                        </div>
+                        <div>
+                            <h3 class="header">Brand</h3>
+                            <hr>
+                            <select form-input id="type_select">
+                                <option value="NULL">Select brand</option>
+                            </select>
+                        </div>
+                        <div>
+                            <h3 class="header">Variant</h3>
+                            <hr>
+                            <select form-input id="type_select">
+                                <option value="NULL">Select variant</option>
+                            </select>
+                        </div>
+                        <div style="padding: 1em 0;">
+                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProductWithFilters()">
+                                Apply Filters
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,6 +227,16 @@
         function clearContainer(CONTAINER) {
             CONTAINER.innerHTML = "";
             return CONTAINER;
+        }
+
+
+        function searchProduct() {
+            console.log("banana");
+        }
+
+
+        function searchProductWithFilters() {
+
         }
     </script>
 </body>

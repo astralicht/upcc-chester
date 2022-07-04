@@ -66,13 +66,10 @@
 
 <body>
     <?php include_once("views/shared/nav.php"); ?>
-    <div main flex="v" fullwidth back-light>
-        <a href="../login/index" fittocontent>
-            <h3 nomargin button small contain="secondary" style="width: 150px; border-radius: 1000px;">Login here</h3>
-        </a>
+    <div main flex="v" fullwidth back-light style="height: calc(100vh - 4em);" v-center>
         <div class="content-section" flex="v" h-center style="box-shadow: 0 6px 6px -6px rgba(0, 0, 0, .3);">
             <div class="card" flex="v" style="justify-content: center; gap: 0; background-color: #FFF;">
-                <form>
+                <form onsubmit="return false;">
                     <div class="row">
                         <div class="column header-container" id="headers" style="gap: 10px; text-align: center; padding-top: 30px; min-width: 200px;">
                             <h1 style="margin: 0;">Signup!</h1>
@@ -107,7 +104,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <input form-input type="text" id="company_name" placeholder="Name of company" required>
+                                <input form-input type="text" id="company_name" placeholder="Name of company">
                             </div>
                         </div>
                     </div>
@@ -137,7 +134,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <select form-input id="company_nature" required>
+                                <select form-input id="company_nature">
                                     <option value="NULL">Select company nature</option>
                                 </select>
                             </div>
@@ -154,7 +151,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <input form-input type="text" id="email" placeholder="Email">
+                                <input form-input type="text" id="email" placeholder="Email" required>
                             </div>
                         </div>
                     </div>
@@ -170,7 +167,6 @@
                         <div class="column" style="gap: 1em;">
                             <div flex>
                                 <input form-input type="number" id="mobile_number" placeholder="Mobile number">
-                                <input form-input type="number" id="landline_number" placeholder="Landline number">
                             </div>
                         </div>
                     </div>
@@ -191,9 +187,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="column header-container" id="headers"></div>
+                        <div class="column header-container" id="headers" style="text-align: center;">
+                            <a href="../login/index" style="color: #CCC">Already have an account? Login here!</a>
+                        </div>
                         <div class="column" style="align-items: flex-end">
-                            <button button contain="good" style="width: 150px; border-radius: 1000px;" onclick="submitSignUp()">Sign up</button>
+                            <button type="submit" button contain="good" style="width: 150px; border-radius: 1000px;" onclick="submitSignUp()">Sign up</button>
                         </div>
                     </div>
                 </form>
@@ -239,32 +237,41 @@
                 return;
             }
 
-            const input_fields = document.querySelectorAll("input");
-            const select_fields = document.querySelectorAll("select");
+            const INPUT_FIELDS = document.querySelectorAll("input");
+            const SELECTS = document.querySelectorAll("select");
+            const TEXTAREAS = document.querySelectorAll("textarea");
             let inputs = {};
 
-            if (input_fields.length !== 0) {
-                input_fields.forEach((field) => {
+            if (INPUT_FIELDS.length !== 0) {
+                INPUT_FIELDS.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
             }
 
-            if (select_fields.length !== 0) {
-                select_fields.forEach((field) => {
+            if (SELECTS.length !== 0) {
+                SELECTS.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
             }
 
-            console.log(inputs);
-            return;
+            if (TEXTAREAS.length !== 0) {
+                TEXTAREAS.forEach((field) => {
+                    inputs[field.id] = field.value;
+                });
+            }
 
             fetch("../api/createuser", {
                 "method": "POST",
                 "Content-Type": "application/json",
                 "body": JSON.stringify(inputs),
-            }).then(response => response.json()).then(json => {
-                if (json["status"] !== 200) console.error(json);
-                if (json["rows"] === undefined) return;
+            }).then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch (error) {
+                    return console.error(error);
+                }
+
+                if (json["status"] !== 200) return console.error(json);
 
                 window.location.href = "../signup/success";
             });

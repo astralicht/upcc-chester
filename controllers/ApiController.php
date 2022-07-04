@@ -15,7 +15,7 @@ class ApiController {
         return json_encode([
             "type" => "error",
             "code" => "404",
-            "body" => "Does not exist.",
+            "body" => "Route does not exist.",
         ]);
     }
 

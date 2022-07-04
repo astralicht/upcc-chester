@@ -39,25 +39,19 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             background-attachment: fixed;
         }
     </style>
-    <title>Dashboard | UPCC Admin</title>
+    <title>Dashboard | UPCC Agent</title>
 </head>
 
 <body back-light>
     <div flex="h" nogap>
-        <?php include_once("views/shared/admin_nav.php"); ?>
+        <?php include_once("views/shared/agent_nav.php"); ?>
         <div flex="v" fullwidth nogap>
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main fullwidth>
                 <div flex>
                     <div contain="white" style="width: 200px; padding: 0 1em;" fittocontent>
-                        <div fullwidth>
-                            <h2>Users</h2>
-                            <h3 id="users-count">N/A</h3>
-                        </div>
-                    </div>
-                    <div contain="white" style="width: 200px; padding: 0 1em;" fittocontent>
-                        <h2>Products</h2>
-                        <h3 id="products-count">N/A</h3>
+                        <h2>Orders</h2>
+                        <h3 id="orders-count">N/A</h3>
                     </div>
                 </div>
             </div>
@@ -69,14 +63,9 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         </div>
     </div>
     <script>
-        fetch("../api/users/count").then(response => response.json()).then(json => {
+        fetch("../api/orders/count").then(response => response.json()).then(json => {
             if (json["status"] !== 200) console.error(json);
-            document.querySelector("#users-count").innerText = json["rows"][0]["users_count"]
-        });
-
-        fetch("../api/products/count").then(response => response.json()).then(json => {
-            if (json["status"] !== 200) console.error(json);
-            document.querySelector("#products-count").innerText = json["rows"][0]["products_count"]
+            document.querySelector("#orders-count").innerText = json["rows"][0]["orders_count"];
         });
     </script>
 </body>

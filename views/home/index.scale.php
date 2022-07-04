@@ -57,46 +57,9 @@
                     <h1 style="width: 100%; text-align: center; font-size: 2.5em;">Featured Products</h1>
                 </div>
                 <div>
-                    <div class="cards-container" flex="h" h-center>
-                        <div class="card" flex="v">
-                            <img src="" alt="" class="card-img">
-                            <div>
-                                <span class="card-title">Item Name</span>
-                            </div>
-                            <div flex="h" h-center>
-                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
-                                    <div white-text>
-                                        View
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card" flex="v">
-                            <img src="" alt="" class="card-img">
-                            <div>
-                                <span class="card-title">Item Name</span>
-                            </div>
-                            <div flex="h" h-center>
-                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
-                                    <div white-text>
-                                        View
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card" flex="v">
-                            <img src="" alt="" class="card-img">
-                            <div>
-                                <span class="card-title">Item Name</span>
-                            </div>
-                            <div flex="h" h-center>
-                                <a href="product-view.php?prod_id=123" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
-                                    <div white-text>
-                                        View
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="cards-container" flex="h" h-center></div>
+                    <div fullwidth flex="h" h-center fullpadding>
+                        <a href="../store/index" button="secondary" style="outline: none; border: 0; width: 300px; padding: .5em .7em;">View more in store</a>
                     </div>
                 </div>
             </div>
@@ -124,6 +87,45 @@
         </div>
     </div>
     <?php include_once "views/shared/footers.php"; ?>
+    <script>
+        fetch("../api/featured-products").then(response => response.text()).then(json => {
+            try {
+                json = JSON.parse(json);
+            } catch (error) {
+                console.error(error);
+            }
+
+            if (json["status"] !== 200) console.error(json);
+            if (json["rows"] === undefined) return;
+
+            printProducts(json["rows"]);
+        });
+
+
+        function printProducts(rows) {
+            let cardsContainer = document.querySelector(".cards-container");
+
+            for (let row of rows) {
+                let card = document.createElement("div");
+
+                card.className = "card";
+                card.innerHTML = `<img src="${row["image_path"]}" alt="${row["image_name"]}" class="card-img">
+                                    <div>
+                                        <span class="card-title">${row["name"]}</span>
+                                    </div>
+                                    <div flex="h" h-center>
+                                        <a href="../store/viewproduct?id=${row["id"]}" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
+                                            <div white-text>
+                                                View Product
+                                            </div>
+                                        </a>
+                                    </div>`;
+                card.setAttribute("flex", "v");
+
+                cardsContainer.appendChild(card);
+            }
+        }
+    </script>
 </body>
 
 </html>

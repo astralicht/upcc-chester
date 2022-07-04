@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,30 +19,30 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             background-color: rgba(0, 0, 0, .3);
         }
 
-        #products-table tr:nth-child(even) {
+        #orders-table tr:nth-child(even) {
             background-color: #E5E5E5;
         }
     </style>
-    <title>Products | UPCC Admin</title>
+    <title>Orders | UPCC Agent</title>
 </head>
 
 <body back-light>
     <div flex="h" nogap>
-        <?php include_once("views/shared/admin_nav.php"); ?>
+        <?php include_once("views/shared/agent_nav.php"); ?>
         <div flex="v" fullwidth nogap>
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main>
                 <div flex="h">
                     <div flex="h" v-center>
-                        <h1>Products</h1>
-                        <a href="../admin/new-product" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
+                        <h1>Orders</h1>
+                        <a href="../agent/new-order" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
                     </div>
                     <div flex="h" h-end fullwidth>
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProducts()">
-                                <div id="search-button" flex="h" v-center onclick="fetchProducts()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeyup="fetchOrders()">
+                                <div id="search-button" flex="h" v-center onclick="fetchOrders()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>
                             </div>
@@ -54,22 +54,22 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                         <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editProduct()">Edit</div>
                         <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteProducts()">Delete</div>
                     </div>
-                    <div id="message" contain="danger" bordered dark-text style="display: none; opacity: 0;"></div>
                     <div flex="v">
-                        <div id="products-page-controls" h-end fullwidth contain="white" small flex="h">
+                        <div id="orders-page-controls" h-end fullwidth contain="white" small flex="h">
                             <div contain="secondary" button style="width: 50px; border-radius: var(--border-radius);" small flex="h" h-center id="prev-page">
                                 < </div>
                                     <div contain="secondary" style="width: 150px; border-radius: var(--border-radius);" small flex="h" h-center id="pages-display">1 of 1</div>
                                     <div contain="secondary" button style="width: 50px; border-radius: var(--border-radius);" small flex="h" h-center id="next-page"> > </div>
                             </div>
                         </div>
-                        <table table id='products-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
+                        <table table id='orders-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
                             <thead style="border-bottom: 1px solid #E5E5E5;">
                                 <th></th>
+                                <th>Order ID</th>
                                 <th>Name</th>
-                                <th>Type</th>
-                                <th>Brand</th>
-                                <th>Unit Price</th>
+                                <th>Items</th>
+                                <th>Total Price</th>
+                                <th>Status</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -85,43 +85,50 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <script>
             const LIMIT = 25;
             var pages = {
-                "products": 0,
+                "orders": 0,
             };
             var page_controls = {
-                "products": {
+                "orders": {
                     "next": document.querySelector("#next-page"),
                     "previous": document.querySelector("#prev-page"),
                 }
             };
             var table_bodies = {
-                "products": document.querySelector("#products-table tbody"),
+                "orders": document.querySelector("#orders-table tbody"),
             };
 
-            fetchProducts(pages["products"]);
-            fetchTotalProductsCount();
+            fetchOrders(pages["orders"]);
+            fetchTotalOrdersCount();
 
 
-            function fetchProducts(products_page) {
-                clearTableBody(table_bodies["products"]);
-                products_page = 0;
+            function fetchOrders(orders_page) {
+                orders_page = 0;
 
                 let filter = null;
+                let timeout = 10;
 
                 setTimeout(() => {
+                    clearTableBody(table_bodies["orders"]);
                     filter = document.querySelector("#search-input").value;
 
-                    fetch(`../api/products?filter=${filter}&page=${products_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+                    fetch(`../api/orders?filter=${filter}&page=${orders_page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
+                        try {
+                            json = JSON.parse(json);
+                        } catch (error) {
+                            console.error(error);
+                        }
+
                         if (json["status"] !== 200) console.error(json);
                         if (json["rows"] === undefined) return;
 
-                        printProductsToTable(json);
+                        printOrdersToTable(json);
                     });
-                }, 1);
+                }, timeout);
             }
 
 
-            function printProductsToTable(json) {
-                const TBODY = table_bodies["products"];
+            function printOrdersToTable(json) {
+                const TBODY = table_bodies["orders"];
                 let rows = json["rows"];
 
                 if (rows.length === 0) {
@@ -135,12 +142,38 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
 
                     for (let key of keys) {
                         let td = document.createElement("td");
-                        td.innerText = row[key];
 
                         if (key === "id") {
                             td.innerHTML = `<input type='checkbox' value='${row[key]}' onclick='checkTickedBoxes()'>`;
+                            tr.appendChild(td);
+                            continue;
+                        }
+                        if (key === "order_id") {
+                            let a = document.createElement("a");
+                            a.href = `../agent/view-order?order_id=${row[key]}`;
+                            a.innerText = row[key];
+                            td.appendChild(a);
+                            tr.appendChild(td);
+                            continue;
+                        }
+                        if (key === "status") {
+                            let div = document.createElement("div");
+                            div.innerText = row[key];
+
+                            div.style.textAlign = "center";
+                            div.setAttribute("small", "");
+                            div.setAttribute("fullwidth", "");
+                            div.setAttribute("contain", "secondary");
+
+                            if (row[key] === "APPROVED") div.setAttribute("contain", "good");
+                            if (row[key] === "DECLINED") div.setAttribute("contain", "danger");
+
+                            td.appendChild(div);
+                            tr.appendChild(td);
+                            continue;
                         }
 
+                        td.innerText = row[key];
                         tr.appendChild(td);
                     }
 
@@ -149,50 +182,50 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             }
 
 
-            function fetchTotalProductsCount() {
-                fetch("../api/products/count").then(response => response.json()).then(data => {
-                    printProductsPages(data);
+            function fetchTotalOrdersCount() {
+                fetch("../api/orders/count").then(response => response.json()).then(data => {
+                    printOrdersPages(data);
                 });
             }
 
 
-            function printProductsPages(data) {
-                let controls = page_controls["products"];
-                let total_count = data["rows"][0]["products_count"];
+            function printOrdersPages(data) {
+                let controls = page_controls["orders"];
+                let total_count = data["rows"][0]["orders_count"];
                 let total_pages = parseInt(total_count / LIMIT);
 
                 controls["previous"].onclick = () => {
-                    previousProductsTablePage()
+                    previousOrdersTablePage()
                 };
                 controls["next"].onclick = () => {
-                    nextProductsTablePage(total_pages)
+                    nextOrdersTablePage(total_pages)
                 };
 
-                controls.innerText = `Page ${pages["products"]+1} of ${total_pages}`;
+                controls.innerText = `Page ${pages["orders"]+1} of ${total_pages}`;
             }
 
 
-            function nextProductsTablePage(total_pages) {
-                if (pages["products"] + 1 >= total_pages) return;
+            function nextOrdersTablePage(total_pages) {
+                if (pages["orders"] + 1 >= total_pages) return;
 
-                let tbody = table_bodies["products"];
+                let tbody = table_bodies["orders"];
                 tbody = clearTableBody(tbody);
-                ++pages["products"];
+                ++pages["orders"];
 
-                fetchProducts(pages["products"]);
-                fetchTotalProductsCount();
+                fetchOrders(pages["orders"]);
+                fetchTotalOrdersCount();
             }
 
 
-            function previousProductsTablePage() {
-                if (pages["products"] - 1 < 0) return;
+            function previousOrdersTablePage() {
+                if (pages["orders"] - 1 < 0) return;
 
-                let tbody = table_bodies["products"];
+                let tbody = table_bodies["orders"];
                 tbody = clearTableBody(tbody);
-                --pages["products"];
+                --pages["orders"];
 
-                fetchProducts(pages["products"]);
-                fetchTotalProductsCount();
+                fetchOrders(pages["orders"]);
+                fetchTotalOrdersCount();
             }
 
 
@@ -200,7 +233,6 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                 tbody.innerHTML = "";
                 return tbody;
             }
-
 
             function checkTickedBoxes() {
                 const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
@@ -225,41 +257,6 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
 
                 document.querySelector("#edit-button").style.display = "none";
                 document.querySelector("#delete-button").style.display = "none";
-            }
-
-
-            function deleteProducts() {
-                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
-
-                let product_ids = [];
-
-                for (let index = 0; index < tickedBoxes.length; index++) {
-                    product_ids.push(tickedBoxes[index].value);
-                }
-
-                fetch("../api/remove-products", {
-                    "method": "POST",
-                    "Content-Type": "application/json",
-                    "body": JSON.stringify(product_ids),
-                }).then(response => response.json()).then(data => {
-                    if (data["status"] !== 200) return console.error(data["message"]);
-
-                    let tbody = table_bodies["products"];
-                    tbody = clearTableBody(tbody);
-
-                    fetchProducts(pages["products"]);
-                    fetchTotalProductsCount();
-
-                    document.querySelector("#edit-button").style.display = "none";
-                    document.querySelector("#delete-button").style.display = "none";
-
-                    let message = document.querySelector("div#message");
-                    message.innerText = "Product(s) removed successfully!";
-                    fadeIn(message);
-                    setTimeout(() => {
-                        fadeOut(message);
-                    }, 5150);
-                });
             }
         </script>
 </body>
