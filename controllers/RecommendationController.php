@@ -52,8 +52,10 @@ class RecommendationController {
         $weightedProducts = [];
 
         foreach ($products as $product) {
-            $weightedProducts[$product["id"]] = ($wtTypeArray[$product["type"]] + $wtMaterialArray[$product["material"]] + $wtBrandArray[$product["brand"]] + $wtConnTypeArray[$product["connection_type"]]) / $parameterCount;
+            $weightedProducts[$product["id"]] = round(($wtTypeArray[$product["type"]] + $wtMaterialArray[$product["material"]] + $wtBrandArray[$product["brand"]] + $wtConnTypeArray[$product["connection_type"]]) / $parameterCount, 4);
         }
+
+        arsort($weightedProducts);
 
         return $weightedProducts;
     }

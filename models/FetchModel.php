@@ -101,11 +101,15 @@ class FetchModel
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
+        $weightedProducts = (new \Main\Controllers\RecommendationController())->computeRelevance();
+        $productKeys = implode(", ", array_keys($weightedProducts));
+
         $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
+                ORDER BY field(p.`id`, $productKeys)
                 LIMIT ?, ?";
 
         if ($filter !== "null") {
@@ -117,6 +121,7 @@ class FetchModel
                     AND (p.`name` LIKE '%$filter%'
                     OR  pt.`name` LIKE '%$filter%'
                     OR  p.`brand` LIKE '%$filter%')
+                    ORDER BY field(p.`id`, $productKeys)
                     LIMIT ?, ?";
         }
 
