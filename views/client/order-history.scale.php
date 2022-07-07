@@ -38,6 +38,10 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             background-size: cover;
             background-attachment: fixed;
         }
+
+        th {
+            text-align: left;
+        }
     </style>
     <title>Order History | UPCC Client</title>
 </head>
@@ -48,9 +52,12 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <div main back-light fullwidth flex="v">
             <h1>Order History</h1>
             <div contain="white" fullwidth>
-                <table id="orders-table">
+                <table id="orders-table" table>
                     <thead>
-                        <th>ID</th>
+                        <th></th>
+                        <th>Order #</th>
+                        <th>Total Price</th>
+                        <th>Date</th>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -68,23 +75,23 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         };
 
 
-        function fetchProductTypes(product_types_page) {
+        fetchClientOrders();
+
+
+        function fetchClientOrders() {
             clearTableBody(table_bodies["orders"]);
-            product_types_page = 0;
 
             let filter = null;
 
             setTimeout(() => {
-                filter = document.querySelector("#search-input").value;
-
                 fetch(`../api/client/orders`).then(response => response.text()).then(json => {
                     try {
-                        json = JSON.parse();
+                        json = JSON.parse(json);
                     } catch {
-                        console.error(json);
+                        return console.error(error);
                     }
 
-                    if (json["status"] !== 200) console.error(json);
+                    if (json["status"] !== 200) return console.error(json);
                     if (json["rows"] === undefined) return;
 
                     printOrders(json);
@@ -108,7 +115,21 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
 
                 for (let key of keys) {
                     let td = document.createElement("td");
-                    
+
+                    if (key === "id") {
+                        let a = document.createElement("a");
+
+                        a.href = `../client/order?id=${row[key]}`;
+                        a.innerText = "View Order";
+
+                        td.appendChild(a);
+                        tr.appendChild(td);
+                        continue;
+                    }
+                    if (key === "order_id") {
+                        
+                    }
+
                     td.innerText = row[key];
                     tr.appendChild(td);
                 }

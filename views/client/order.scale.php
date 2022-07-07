@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location: ../error/403");
+if (!isset($_SESSION["type"])) header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,57 +8,65 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
-        #search-button {
-            padding: 0 .3em;
-            border-radius: 5px;
-            cursor: pointer;
-            height: 100%;
+        .card {
+            width: 60%;
+            height: 500px;
+            padding: 30px;
+            border-radius: 7px;
+            box-shadow: 0 6px 6px -6px rgba(0, 0, 0, .2);
+            background-color: rgba(15, 39, 85, .8);
+            backdrop-filter: blur(3px);
         }
 
-        #search-button:hover {
-            background-color: rgba(0, 0, 0, .3);
+        [form-input] {
+            background-color: transparent;
+            border-radius: 0;
+            border-bottom: 2px solid #e5e5e5;
+            color: white;
+            outline: none;
+            width: 100%;
+            font-size: 1em;
         }
 
-        #orders-table tr:nth-child(even) {
-            background-color: #E5E5E5;
+        [form-input]::placeholder {
+            color: #999;
+        }
+
+        .main-content {
+            background-image: url("../api/assets/img?name=login.webp&type=webp");
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        th {
+            text-align: left;
         }
     </style>
-    <title>Orders | UPCC Agent</title>
+    <title>Order History | UPCC Client</title>
 </head>
 
-<body back-light>
+<body>
     <div flex="h" nogap>
-        <?php include_once("views/shared/agent_nav.php"); ?>
-        <div flex="v" fullwidth nogap>
-            <?php include_once("views/shared/admin_header_nav.php"); ?>
-            <div main flex="v">
-                <div>
-                    <button button contain="secondary" small onclick="history.back()">Back</button>
-                </div>
-                <div flex="h">
-                    <div flex="h" v-center>
-                        <div id="order-id" style="display: none;"><?php echo $_GET["order_id"] ?></div>
-                        <h1 style="flex-shrink: 0;">Order #<?php echo $_GET["order_id"] ?></h1>
-                    </div>
-                </div>
-                <div flex="v">
-                    <div flex="v">
-                        <table table id='orders-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
-                            <thead style="border-bottom: 1px solid #E5E5E5;">
-                                <th>Product #</th>
-                                <th>Product Name</th>
-                                <th></th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Subtotal</th>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
+        <?php include_once("views/shared/client_nav.php"); ?>
+        <div main back-light fullwidth flex="v">
+            <h1>Order History</h1>
+            <div contain="white" fullwidth>
+                <table id="order-products-table" table>
+                    <thead>
+                        <th>Product #</th>
+                        <th>Name</th>
+                        <th></th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
+    <div id="order-id" style="display: none;"><?php echo $_GET["id"]; ?></div>
     <div contain="dark" fullwidth sharp-edges>
         <div id="copyright" style="text-align: right; color: #aaa; font-size: 0.8em;">
             Copyright © 2022 | All rights reserved.
@@ -66,7 +74,7 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
     </div>
     <script>
         var table_bodies = {
-            "orders": document.querySelector("#orders-table tbody"),
+            "order-products": document.querySelector("#order-products-table tbody"),
         };
 
 
@@ -79,7 +87,7 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
             const ORDER_ID = document.querySelector("#order-id").innerText;
 
             setTimeout(() => {
-                clearTableBody(table_bodies["orders"]);
+                clearTableBody(table_bodies["order-products"]);
 
                 fetch(`../api/order?id=${ORDER_ID}`).then(response => response.text()).then(json => {
                     try {
@@ -91,14 +99,14 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
                     if (json["status"] !== 200) console.error(json);
                     if (json["rows"] === undefined) return;
 
-                    printOrdersToTable(json);
+                    printOrderProductsToTable(json);
                 });
             }, timeout);
         }
 
 
-        function printOrdersToTable(json) {
-            const TBODY = table_bodies["orders"];
+        function printOrderProductsToTable(json) {
+            const TBODY = table_bodies["order-products"];
             let rows = json["rows"];
 
             if (rows.length === 0) {

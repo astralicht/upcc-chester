@@ -23,7 +23,7 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <div flex="v" fullwidth nogap>
             <div main>
                 <div flex="h" v-center>
-                    <a href="#" onclick="history.back()" contain="secondary" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius); transform: rotate(180deg);"><img src="../views/assets/img/arrow-right.webp" alt=""></a>
+                    <button onclick="history.back()" contain="secondary" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/arrow-right.webp" style="transform: rotate(180deg);" alt=""></button>
                     <h1>New Product</h1>
                 </div>
                 <form flex="v" onsubmit="submitProduct(); return false;">

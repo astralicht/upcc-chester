@@ -32,12 +32,23 @@ class UpdateModel {
         return ["status" => 200];
     }
 
+
     function clientInfo($data) {
         $data = json_decode($data, true);
 
         $sql = "UPDATE users SET `first_name`=?, `last_name`=?, `company_name`=?, `company_address`=?, `phone_number`=?, `company_nature`=? WHERE `id`=?";
 
         return self::getResult($sql, $data);
+    }
+
+
+    function orderStatus($data) {
+        $data = json_decode($data, true);
+        $params = [$data["status"], $data["order_id"]];
+
+        $sql = "UPDATE orders SET `status`=? WHERE `id`=?";
+
+        return self::getResult($sql, $params);
     }
 
 }

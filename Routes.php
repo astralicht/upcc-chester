@@ -36,6 +36,7 @@ class Routes {
             "api/assets/js?name=*" => ["AssetsController", "js", "GET"],
             "api/assets/css?name=*" => ["AssetsController", "css", "GET"],
             "api/assets/img?name=*&type=*" => ["AssetsController", "img", "GET"],
+
             "api/verifylogin" => ["AuthController", "login", "POST"],
             "api/users/count" => ["FetchController", "usersCount", "GET"],
             "api/products/count" => ["FetchController", "productsCount", "GET"],
@@ -68,6 +69,9 @@ class Routes {
             "api/order?id=*" => ["FetchController", "order", "GET"],
             "api/featured-products" => ["FetchController", "featuredProducts", "GET"],
             "api/remove-product-types" => ["DeleteController", "productTypes", "POST"],
+            "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
+            "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
+
             
             "default" => "home/index",
             "home/index" => ["ViewsController", "home"],
@@ -89,13 +93,18 @@ class Routes {
             "admin/removeproducts" => ["ViewsController", "adminRemoveProducts"],
             "admin/new-product" => ["ViewsController", "adminNewProduct"],
             "admin/new-product-type" => ["ViewsController", "adminNewProductType"],
+            "admin/view-order?order_id=*" => ["ViewsController", "adminViewOrder"],
             "client/account-details" => ["ViewsController", "clientAccountDetails"],
             "client/order-history" => ["ViewsController", "clientOrderHistory"],
+            "client/order?id*" => ["ViewsController", "clientOrder"],
             "client/cart" => ["ViewsController", "clientCart"],
             "client/edit-info?id=*" => ["ViewsController", "clientEditInfo"],
             "agent/dashboard" => ["ViewsController", "agentDashboard"],
             "agent/orders" => ["ViewsController", "agentOrders"],
             "agent/view-order?order_id=*" => ["ViewsController", "agentViewOrder"],
+            "agent/new-order" => ["ViewsController", "agentNewOrder"],
+            "cookies/index" => ["ViewsController", "cookies"],
+            "relevance/index" => ["RecommendationController", "computeRelevance"],
         ];
     }
 

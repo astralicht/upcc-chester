@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,13 +32,16 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <div flex="v" fullwidth nogap>
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main>
-                <div flex="h">
-                    <h1>Orders</h1>
+                <div flex="h" flex="v">
+                    <div flex="h" v-center>
+                        <h1>Orders</h1>
+                        <a href="../admin/new-order" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
+                    </div>
                     <div flex="h" h-end fullwidth>
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchOrders()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeyup="fetchOrders()">
                                 <div id="search-button" flex="h" v-center onclick="fetchOrders()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>
@@ -48,8 +51,8 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                 </div>
                 <div flex="v">
                     <div flex="h">
-                        <div contain="primary" button small style="border-radius: 5px;">Edit</div>
-                        <div contain="danger" button small style="border-radius: 5px;">Delete</div>
+                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editProduct()">Edit</div>
+                        <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteProducts()">Delete</div>
                     </div>
                     <div flex="v">
                         <div id="orders-page-controls" h-end fullwidth contain="white" small flex="h">
@@ -62,9 +65,12 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                         <table table id='orders-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
                             <thead style="border-bottom: 1px solid #E5E5E5;">
                                 <th></th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Brand</th>
+                                <th>Order #</th>
+                                <th>Client Name</th>
+                                <th># of Items</th>
+                                <th>Total Price</th>
+                                <th></th>
+                                <th>Status</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -97,21 +103,28 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
 
 
             function fetchOrders(orders_page) {
-                clearTableBody(table_bodies["orders"]);
                 orders_page = 0;
 
                 let filter = null;
+                let timeout = 10;
 
                 setTimeout(() => {
+                    clearTableBody(table_bodies["orders"]);
                     filter = document.querySelector("#search-input").value;
 
-                    fetch(`../api/orders?filter=${filter}&page=${orders_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+                    fetch(`../api/orders?filter=${filter}&page=${orders_page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
+                        try {
+                            json = JSON.parse(json);
+                        } catch (error) {
+                            console.error(error);
+                        }
+
                         if (json["status"] !== 200) console.error(json);
                         if (json["rows"] === undefined) return;
 
                         printOrdersToTable(json);
                     });
-                }, 1);
+                }, timeout);
             }
 
 
@@ -130,12 +143,38 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
 
                     for (let key of keys) {
                         let td = document.createElement("td");
-                        td.innerText = row[key];
 
                         if (key === "id") {
-                            td.innerHTML = `<input type='checkbox' value='${row[key]}'>`;
+                            td.innerHTML = `<input type='checkbox' value='${row[key]}' onclick='checkTickedBoxes()'>`;
+                            tr.appendChild(td);
+                            continue;
+                        }
+                        if (key === "order_id_redr") {
+                            let a = document.createElement("a");
+                            a.href = `../agent/view-order?order_id=${row[key]}`;
+                            a.innerText = "View Order";
+                            td.appendChild(a);
+                            tr.appendChild(td);
+                            continue;
+                        }
+                        if (key === "status") {
+                            let div = document.createElement("div");
+                            div.innerText = row[key];
+
+                            div.style.textAlign = "center";
+                            div.setAttribute("small", "");
+                            div.setAttribute("fullwidth", "");
+                            div.setAttribute("contain", "secondary");
+
+                            if (row[key] === "APPROVED") div.setAttribute("contain", "good");
+                            if (row[key] === "DECLINED") div.setAttribute("contain", "danger");
+
+                            td.appendChild(div);
+                            tr.appendChild(td);
+                            continue;
                         }
 
+                        td.innerText = row[key];
                         tr.appendChild(td);
                     }
 
@@ -194,6 +233,31 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             function clearTableBody(tbody) {
                 tbody.innerHTML = "";
                 return tbody;
+            }
+
+            function checkTickedBoxes() {
+                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+                if (tickedBoxes.length === 0) {
+                    document.querySelector("#edit-button").style.display = "none";
+                    document.querySelector("#delete-button").style.display = "none";
+                    return;
+                }
+
+                if (tickedBoxes.length < 2) {
+                    document.querySelector("#edit-button").style.display = "block";
+                    document.querySelector("#delete-button").style.display = "block";
+                    return;
+                }
+
+                if (tickedBoxes.length > 1) {
+                    document.querySelector("#edit-button").style.display = "none";
+                    document.querySelector("#delete-button").style.display = "block";
+                    return;
+                }
+
+                document.querySelector("#edit-button").style.display = "none";
+                document.querySelector("#delete-button").style.display = "none";
             }
         </script>
 </body>

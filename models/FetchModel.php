@@ -101,7 +101,7 @@ class FetchModel
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
-        $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`
+        $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`id`=pr.`product_id`
@@ -109,7 +109,7 @@ class FetchModel
                 LIMIT ?, ?";
 
         if ($filter !== "null") {
-            $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`
+            $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`
                     FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
                     WHERE p.`date_removed` IS NULL
                     AND p.`id`=pr.`product_id`
@@ -124,6 +124,47 @@ class FetchModel
     }
 
 
+    function productsFilterOnly($data) {
+        $filter = $data["filter"];
+
+        $sql = "SELECT `id`, `name`
+                FROM products
+                WHERE `date_removed` IS NULL
+                AND (`name` LIKE '%$filter%'
+                OR  `id`='%$filter%')";
+
+        return self::getResult($sql);
+    }
+
+
+    function allProductIds() {
+        $sql = "SELECT `id` FROM products WHERE `date_removed` IS NULL;";
+
+        return self::getResult($sql);
+    }
+
+
+    function allProductsComplete() {
+        $sql = "SELECT p.`id`, pt.`name` AS 'type', p.`brand`, p.`material`, p.`connection_type`
+                FROM products AS p INNER JOIN product_types as pt
+                WHERE p.`date_removed` IS NULL
+                AND p.`type_id`=pt.`id`";
+
+        return self::getResult($sql);
+    }
+
+
+    function productDetailsComplete($id) {
+        $sql = "SELECT p.`id`, pt.`name` AS 'type', p.`brand`, p.`material`, p.`connection_type`
+                FROM products AS p INNER JOIN product_types as pt
+                WHERE p.`date_removed` IS NULL
+                AND p.`type_id`=pt.`id`
+                AND p.`id`=$id";
+
+        return self::getResult($sql);
+    }
+
+
     function allOrders($data) {
         $filter = $data["filter"];
         $page = $data["page"];
@@ -131,12 +172,13 @@ class FetchModel
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
-        $sql = "SELECT o.`id`, o.`id` AS 'order_id', CONCAT(u.`first_name`, ' ', u.`last_name`), COUNT(op.`id`), SUM(pr.`unit_price`*op.`item_count`), o.`status`
+        $sql = "SELECT o.`id`, o.`id` AS 'order_id', CONCAT(u.`first_name`, ' ', u.`last_name`), SUM(op.`item_count`), SUM(pr.`unit_price`*op.`item_count`), o.`id` AS 'order_id_redr', o.`status`
                 FROM orders AS o INNER JOIN products AS p INNER JOIN products_prices AS pr INNER JOIN orders_products AS op INNER JOIN users AS u
                 WHERE op.`product_id`=p.`id`
                 AND op.`order_id`=o.`id`
                 AND pr.`product_id`=p.`id`
                 AND o.`user_id`=u.`id`
+                GROUP BY o.`id`
                 ORDER BY o.`date_added` DESC
                 LIMIT ?, ?";
 
@@ -155,27 +197,19 @@ class FetchModel
     }
 
 
-    function clientOrders($data) {
-        $filter = $data["filter"];
-        $page = $data["page"];
-        $limit = $data["limit"];
-        $offset = $page * $limit;
-        $range = [$offset, $limit];
+    function clientOrders() {
+        $clientId = [$_SESSION["id"]];
+        
+        $sql = "SELECT o.`id`, o.`id` AS order_id, SUM(pr.`unit_price` * op.`item_count`) AS total_price, o.`date_added`
+        FROM orders AS o INNER JOIN orders_products AS op INNER JOIN products AS p INNER JOIN products_prices AS pr
+        WHERE o.`user_id`=?
+        AND op.`order_id`=o.`id`
+        AND op.`product_id`=p.`id`
+        AND pr.`product_id`=p.`id`
+        GROUP BY o.`id`
+        ORDER BY o.`date_added` DESC";
 
-        $sql = "SELECT `id`, `name`, `description` FROM orders WHERE `user_id`=? ORDER BY `date_added` DESC LIMIT ?, ?";
-
-        if ($filter !== "") {
-            $sql = "SELECT `id`, `name`, `description`
-                    FROM orders
-                    WHERE `date_removed` IS NULL
-                    AND `user_id`=?
-                    AND (`id` LIKE '%$filter%'
-                    OR `date_added` LIKE '$filter'
-                    OR `status` LIKE '$filter')
-                    LIMIT ?, ?";
-        }
-
-        return self::getResult($sql, $range);
+        return self::getResult($sql, $clientId);
     }
 
 
@@ -202,7 +236,7 @@ class FetchModel
     function order($data) {
         $orderId = [$data["id"]];
 
-        $sql = "SELECT p.`id`, p.`name`, p.`id` AS 'product_id', op.`item_count`, pr.`unit_price`, pr.`unit_price`*op.`item_count`
+        $sql = "SELECT p.`id`, p.`name`, p.`id` AS 'product_id', op.`item_count`, pr.`unit_price`, pr.`unit_price`*op.`item_count`, o.`status`
                 FROM orders AS o INNER JOIN products AS p INNER JOIN products_prices AS pr INNER JOIN orders_products AS op
                 WHERE op.`product_id`=p.`id`
                 AND op.`order_id`=o.`id`
@@ -223,7 +257,7 @@ class FetchModel
     
     function product($data) {
         $id = [$data["id"]];
-        $sql = "SELECT p.`name`, pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name`, p.`image_path`, pr.`unit_price`
+        $sql = "SELECT p.`name`, pt.`name` AS connection_type, p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name` as image_name, p.`image_path`, pr.`unit_price`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types AS pt
                 WHERE p.`id`=?
                 AND p.`id`=pr.`product_id`
@@ -296,7 +330,7 @@ class FetchModel
 
 
     function featuredProducts() {
-        $sql = "SELECT `id`, `name` FROM products WHERE `date_removed` IS NULL ORDER BY `date_added` DESC LIMIT 4";
+        $sql = "SELECT `id`, `name`, `image_path`, `image_name` FROM products WHERE `date_removed` IS NULL ORDER BY `date_added` DESC LIMIT 4";
 
         return self::getResult($sql);
     }

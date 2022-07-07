@@ -1,6 +1,8 @@
 <?php
 namespace Main\Controllers;
 
+use Main\Models\CreateModel;
+
 /**
  * Handles view requests made for Arkan integrated views.
  */
@@ -32,13 +34,17 @@ class ViewsController {
     function adminEditUser(): string { return self::getFile('views/admin/edit_user.scale.php'); }
     function adminNewProduct(): string { return self::getFile('views/admin/new-product.scale.php'); }
     function adminNewProductType(): string { return self::getFile('views/admin/new-product-type.scale.php'); }
+    function adminViewOrder(): string { return self::getFile('views/admin/view-order.scale.php'); }
     function signupSuccess(): string { return self::getFile('views/signup/success.scale.php'); }
     function clientAccountDetails(): string { return self::getFile('views/client/account-details.scale.php'); }
     function clientOrderHistory(): string { return self::getFile('views/client/order-history.scale.php'); }
+    function clientOrder(): string { return self::getFile('views/client/order.scale.php'); }
     function clientCart(): string { return self::getFile('views/client/cart.scale.php'); }
     function clientEditInfo(): string { return self::getFile('views/client/edit-info.scale.php'); }
     function agentDashboard(): string { return self::getFile('views/agent/dashboard.scale.php'); }
     function agentOrders(): string { return self::getFile('views/agent/orders.scale.php'); }
     function agentViewOrder(): string { return self::getFile('views/agent/view-order.scale.php'); }
+    function agentNewOrder(): string { return self::getFile('views/agent/new-order.scale.php'); }
+    function cookies(): string { return self::getFile('views/cookies/index.scale.php'); }
 
 }

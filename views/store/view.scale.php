@@ -1,3 +1,31 @@
+<?php
+
+use Main\Models\FetchModel;
+
+session_start();
+
+if (isset($_SESSION["id"])) {
+    $FetchModel = new FetchModel();
+    $product = $FetchModel->productDetailsComplete($_GET["id"])["rows"][0];
+
+    $cookieValues = json_encode([
+        "product_id" => $_GET["id"],
+        "type" => $product["type"],
+        "material" => $product["material"],
+        "brand" => $product["brand"],
+        "connection_type" => $product["connection_type"],
+    ]);
+
+    setcookie(
+        $_SESSION["id"]."_".uniqid(),
+        $cookieValues,
+        time() + 10800,
+        "/"
+    );
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,11 +109,11 @@
     <input type="hidden" id="product-id" style="display: hidden;" value="<?php echo $_GET['id']; ?>">
     <div flex="v" main>
         <div flex="h">
-            <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../api/assets/img?name=arrow-right.webp&type=webp" alt="back" style="transform: rotate(180deg);">Back</button>
+            <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../views/assets/img/arrow-right.webp" alt="back" style="transform: rotate(180deg);">Back</button>
         </div>
         <div flex="h" style="gap: 1.4em">
             <div style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0;">
-                <img src="" alt="placeholder">
+                <img src="" alt="" id="product-image">
             </div>
             <div flex="v" style="gap: 1em; padding: 15px 0; width: 100%;">
                 <div class="products-section" flex="v" style="gap: .7em;">
@@ -116,11 +144,11 @@
                 </div>
                 <div class="products-section" flex="h">
                     <button button="secondary" style="gap: .5em; width: 200px; height: 3em;" flex="h" v-center onclick="showEmailPopup()">
-                        <img src="../api/assets/img?name=email.webp&type=webp" alt="email">
+                        <img src="../views/assets/img/email.webp" alt="email">
                         Email Now
                     </button>
                     <button button="good" style="gap: .5em; width: 200px; height: 3em;" flex="h" v-center onclick="checkAuth()">
-                        <img src="../api/assets/img?name=add-to-cart.webp&type=webp" alt="add to cart">
+                        <img src="../views/assets/img/add-to-cart.webp" alt="add to cart">
                         Add to Cart
                     </button>
                 </div>
@@ -162,7 +190,7 @@
             <div id="email-popup" flex="v" style="flex-shrink: 0;">
                 <div flex="h" h-end>
                     <div style="height: 50px; width: 50px; background-color: #333; cursor: pointer;" flex="h" h-center v-center onclick="hideEmailPopup()">
-                        <img src="../api/assets/img?name=close.webp&type=webp" alt="close">
+                        <img src="../views/assets/img/close.webp" alt="close">
                     </div>
                 </div>
                 <div flex="v" style="padding: 25px 35px;">
@@ -198,22 +226,37 @@
             if (json["status"] !== 200) return;
             if (json["rows"].length < 1) return;
 
-            let rows = json["rows"];
-            let keys = Object.keys(rows[0]);
+            let product = json["rows"][0];
+            let keys = Object.keys(product);
 
-            document.title = `${rows[0]["name"]} | UPCC Store`;
+            document.title = `${product["name"]} | UPCC Store`;
 
             for (let key of keys) {
                 let element = document.querySelector(`#${key}`);
 
-                if (element === null) continue;
+                if (product[key] === null) {
+                    if (element === null) continue;
 
-                if (rows[0][key] === null) {
                     element.innerText = "N/A";
                     continue;
                 }
 
-                element.innerText = rows[0][key];
+                if (key === "image_path") {
+                    let image = document.querySelector("img#product-image");
+                    image.src = `../${product[key]}`;
+                    image.style.width = "300px";
+                    image.style.height = "300px";
+                    image.style.objectFit = "cover";
+                    continue;
+                }
+
+                if (key === "image_name") {
+                    let image = document.querySelector("img#product-image");
+                    image.alt = product[key];
+                    continue;
+                }
+
+                element.innerText = product[key];
             }
         }
 
@@ -283,7 +326,7 @@
                     }
 
                     console.log();
-                    
+
                     document.querySelector("#cart-items-count").innerText = json["cart_count"];
 
                     popup_message.setAttribute("contain", "good");

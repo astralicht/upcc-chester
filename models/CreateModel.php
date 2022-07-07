@@ -168,9 +168,8 @@ class CreateModel {
         $flatData = self::flattenAssocArray($data);
 
         $sql = "SELECT `name` FROM product_types WHERE `name`=?";
-
         $rows = self::executeQueryWithResult($sql, [$data["name"]]);
-        $count = count($rows);
+        $count = count($rows["rows"]);
 
         if ($count > 0) return ["status" => 400, "message" => "That product type already exists."];
 

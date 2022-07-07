@@ -11,7 +11,7 @@
             width: 100%;
             padding: 80px;
             background-color: #f5f5f5;
-            background-image: url("../api/assets/img?name=hero1.webp&type=webp");
+            background-image: url("../views/assets/img/hero1.webp");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -109,7 +109,7 @@
                 let card = document.createElement("div");
 
                 card.className = "card";
-                card.innerHTML = `<img src="${row["image_path"]}" alt="${row["image_name"]}" class="card-img">
+                card.innerHTML = `<img src="../${row["image_path"]}" alt="${row["image_name"]}" class="card-img">
                                     <div>
                                         <span class="card-title">${row["name"]}</span>
                                     </div>

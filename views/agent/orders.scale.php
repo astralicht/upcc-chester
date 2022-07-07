@@ -65,10 +65,11 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
                         <table table id='orders-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
                             <thead style="border-bottom: 1px solid #E5E5E5;">
                                 <th></th>
-                                <th>Order ID</th>
-                                <th>Name</th>
-                                <th>Items</th>
+                                <th>Order #</th>
+                                <th>Client Name</th>
+                                <th># of Items</th>
                                 <th>Total Price</th>
+                                <th></th>
                                 <th>Status</th>
                             </thead>
                             <tbody></tbody>
@@ -148,10 +149,10 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
                             tr.appendChild(td);
                             continue;
                         }
-                        if (key === "order_id") {
+                        if (key === "order_id_redr") {
                             let a = document.createElement("a");
                             a.href = `../agent/view-order?order_id=${row[key]}`;
-                            a.innerText = row[key];
+                            a.innerText = "View Order";
                             td.appendChild(a);
                             tr.appendChild(td);
                             continue;

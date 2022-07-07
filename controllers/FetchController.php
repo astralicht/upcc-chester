@@ -23,7 +23,8 @@ class FetchController {
     function productTypesAll() { return (new FetchModel)->productTypesAll(); }
     function clientCart($data) { return (new FetchModel)->clientCart($data); }
     function order($data) { return (new FetchModel)->order($data); }
-
     function featuredProducts() { return (new FetchModel)->featuredProducts(); }
+    function productsFilterOnly($data) { return (new FetchModel)->productsFilterOnly($data); }
+    function allproductIds() { return (new FetchModel)->allProductIds(); }
     
 }
