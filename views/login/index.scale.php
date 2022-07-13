@@ -71,10 +71,12 @@
     <script>
         function checkAuth() {
             const popup_message = document.querySelector("#popup-message");
+
             fadeOut(popup_message);
             setTimeout(() => {
                 const email_inputs = document.querySelectorAll("#email_form input");
                 let inputs = {};
+
                 email_inputs.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
@@ -87,15 +89,19 @@
                     .then(response => response.text())
                     .then(text => {
                         let json = null;
+
                         try {
                             json = JSON.parse(text);
                         } catch (error) {
-                            console.log(text);
+                            console.error(text);
+                            return;
                         }
+
                         if (json["status"] === 200) {
                             window.location.href = "../auth/loginredirect";
                             return;
                         }
+
                         popup_message.setAttribute("contain", "danger");
                         popup_message.setAttribute("bordered", "");
                         popup_message.setAttribute("fullwidth", "");

@@ -77,7 +77,7 @@
                     <div>
                         <input type="text" id="search-input" placeholder="Search here" form-input>
                         <div style="padding: 1em 0;">
-                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProduct()">
+                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProduct(filter)">
                                 Search
                             </button>
                         </div>
@@ -117,7 +117,7 @@
                 <div flex="h" flex-wrap id="products-container">
                 </div>
                 <div flex="h" h-center fullwidth id="show-more-container">
-                    <button style="outline: none; border: 0; width: 250px; padding: .5em .7em;" button="secondary" id="show-more" onclick="fetchMoreProducts()">Show More Products</button>
+                    <button style="outline: none; border: 0; width: 250px; padding: .5em .7em;" button="secondary" id="show-more" onclick="fetchMoreProducts(filter)">Show More Products</button>
                 </div>
             </div>
         </div>
@@ -127,14 +127,13 @@
         const LIMIT = 25;
         var page = 0;
         var container = document.querySelector("#products-container");
+        var filter = null;
 
-        fetchProducts();
+        fetchProducts(filter);
 
 
-        function fetchProducts() {
+        function fetchProducts(filter = null) {
             clearContainer(container);
-
-            let filter = null;
 
             fetch(`../api/products?filter=${filter}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                 if (json["status"] !== 200) console.error(json);
@@ -145,10 +144,8 @@
         }
 
 
-        function fetchMoreProducts() {
+        function fetchMoreProducts(filter = null) {
             ++page;
-
-            let filter = null;
 
             fetch(`../api/products?filter=${filter}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                 if (json["status"] !== 200) console.error(json);
@@ -231,12 +228,15 @@
 
 
         function searchProduct() {
-            console.log("banana");
-        }
+            filter = document.querySelector("input#search-input").value;
+            fetchProducts(filter);
 
+            let show_more_button = document.querySelector("button#show-more");
+            let show_more_container = document.querySelector("div#show-more-container");
 
-        function searchProductWithFilters() {
+            show_more_container.innerHTML = "<i>No more products to display.</i>";
 
+            
         }
     </script>
 </body>

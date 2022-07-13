@@ -7,9 +7,10 @@ class AuthModel {
 
     function login($data) {
         $data = json_decode($data, true);
+
         $conn = (new Config())->openDbConnection();
 
-        $sql = 'SELECT `id`,`first_name`, `last_name`, `type`, `dp_path`
+        $sql = 'SELECT `id`,`first_name`, `last_name`, `type`, `dp_path`, `password`
         FROM users
         WHERE `email`=?
         AND `date_removed` IS NULL
@@ -24,6 +25,8 @@ class AuthModel {
         $row = $result->fetch_assoc();
 
         if ($row === NULL) return ["status" => 404];
+
+        if (!password_verify($data["password"], $row["password"])) return ["status" => 401];
         
         return ["status" => 200, "user" => $row];
     }

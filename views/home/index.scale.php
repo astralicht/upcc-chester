@@ -109,7 +109,7 @@
                 let card = document.createElement("div");
 
                 card.className = "card";
-                card.innerHTML = `<img src="../${row["image_path"]}" alt="${row["image_name"]}" class="card-img">
+                card.innerHTML = `<img src="../${row["image_path"]}" alt="${row["image_name"]}" class="card-img" style="object-fit: cover;">
                                     <div>
                                         <span class="card-title">${row["name"]}</span>
                                     </div>
