@@ -74,15 +74,10 @@
             </div>
             <div style="background-color: white; position: absolute; left: 320px; right: 150px; min-width: 700px; padding: 50px; 
                         padding-left: 170px; box-shadow: 0 0 9px 3px rgba(0, 0, 0, .15); overflow-x: auto;" flex>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Gravida dictum fusce ut placerat
-                orci nulla pellentesque dignissim enim. Sociis natoque penatibus et magnis. Mauris pharetra et ultrices neque ornare
-                aenean euismod. At urna condimentum mattis pellentesque id. Nunc sed blandit libero volutpat sed cras ornare arcu dui.
-                Sit amet aliquam id diam maecenas ultricies mi. Risus pretium quam vulputate dignissim suspendisse. At imperdiet dui
-                accumsan sit amet nulla facilisi. Vulputate ut pharetra sit amet aliquam id diam maecenas. Pretium nibh ipsum consequat
-                nisl vel pretium lectus quam id. Habitant morbi tristique senectus et netus et. Mattis ullamcorper velit sed ullamcorper
-                morbi tincidunt ornare massa eget. Duis convallis convallis tellus id interdum velit laoreet. Lacus vel facilisis
-                volutpat est velit. Quam quisque id diam vel. Et egestas quis ipsum suspendisse ultrices. Amet dictum sit amet justo.
+                With an ever-growing demand for brand loyalty and repeat business, UPCC has done just that in large part due to keeping 
+                up with the times. Stocking the newest and more improved materials, to associating ourselves with the latest international 
+                standards, to being prevalent in its digital information and accessibility, we are a company of experience, instilled with 
+                youth and both immersed in dedication.
             </div>
         </div>
     </div>
