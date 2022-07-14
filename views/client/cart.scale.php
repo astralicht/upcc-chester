@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,6 +67,7 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
         <?php include_once("views/shared/client_nav.php"); ?>
         <div style="display: none" id="user-id"><?php echo $_SESSION["id"]; ?></div>
         <div main back-light fullwidth flex="v">
+            <?php include_once("views/shared/client_header_nav.php"); ?>
             <h1>Your Cart</h1>
             <table id="cart-table" table contain="white" style="width: 100%;">
                 <tbody></tbody>

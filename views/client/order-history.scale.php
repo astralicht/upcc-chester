@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +50,7 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
     <div flex="h" nogap>
         <?php include_once("views/shared/client_nav.php"); ?>
         <div main back-light fullwidth flex="v">
+            <?php include_once("views/shared/client_header_nav.php"); ?>
             <h1>Order History</h1>
             <div contain="white" fullwidth>
                 <table id="orders-table" table>
@@ -127,7 +128,7 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                         continue;
                     }
                     if (key === "order_id") {
-                        
+
                     }
 
                     td.innerText = row[key];

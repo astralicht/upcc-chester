@@ -109,11 +109,14 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 products_page = 0;
 
                 let filter = null;
+                let brand = null;
+                let type = null;
+                let page = pages["products"];
 
                 setTimeout(() => {
                     filter = document.querySelector("#search-input").value;
 
-                    fetch(`../api/products?filter=${filter}&page=${products_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+                    fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                         if (json["status"] !== 200) console.error(json);
                         if (json["rows"] === undefined) return;
 
@@ -263,6 +266,19 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         fadeOut(message);
                     }, 5150);
                 });
+            }
+
+
+            function editProduct() {
+                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+                let product_ids = [];
+
+                for (let index = 0; index < tickedBoxes.length; index++) {
+                    product_ids.push(tickedBoxes[index].value);
+                }
+
+                window.location.href = `../admin/edit-product?id=${product_ids[0]}`;
             }
         </script>
 </body>

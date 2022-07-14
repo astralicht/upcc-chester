@@ -113,7 +113,7 @@ if (isset($_SESSION["id"])) {
         </div>
         <div flex="h" style="gap: 1.4em">
             <div style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0;">
-                <img src="" alt="" id="product-image">
+                <img src="" alt="" id="product-image" style="object-fit: cover;">
             </div>
             <div flex="v" style="gap: 1em; padding: 15px 0; width: 100%;">
                 <div class="products-section" flex="v" style="gap: .7em;">

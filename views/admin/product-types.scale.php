@@ -101,7 +101,6 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
 
             function fetchProductTypes(product_types_page) {
                 clearTableBody(table_bodies["product-types"]);
-                product_types_page = 0;
 
                 let filter = null;
 

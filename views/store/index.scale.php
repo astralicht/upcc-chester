@@ -134,7 +134,7 @@
             clearContainer(container);
             page = 0;
 
-            fetch(`../api/products?filter=${filter}&brand=${brand}&type=${type}&page=${page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
+            fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
                 try {
                     json = JSON.parse(json);
                 } catch {
@@ -153,7 +153,7 @@
         function fetchMoreProducts() {
             ++page;
 
-            fetch(`../api/products?filter=${filter}&brand=${brand}&type=${type}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+            fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                 if (json["status"] !== 200) console.error(json);
                 if (json["rows"] === undefined) return;
 
@@ -302,7 +302,6 @@
                 if (json["rows"] === undefined) return;
 
                 printProductsToContainer(json);
-                console.log(json);
             });
         }
     </script>

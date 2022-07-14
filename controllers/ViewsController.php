@@ -35,6 +35,7 @@ class ViewsController {
     function adminNewProduct(): string { return self::getFile('views/admin/new-product.scale.php'); }
     function adminNewProductType(): string { return self::getFile('views/admin/new-product-type.scale.php'); }
     function adminViewOrder(): string { return self::getFile('views/admin/view-order.scale.php'); }
+    function adminEditProduct(): string { return self::getFile('views/admin/edit-product.scale.php'); }
     function signupSuccess(): string { return self::getFile('views/signup/success.scale.php'); }
     function clientAccountDetails(): string { return self::getFile('views/client/account-details.scale.php'); }
     function clientOrderHistory(): string { return self::getFile('views/client/order-history.scale.php'); }

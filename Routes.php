@@ -38,72 +38,92 @@ class Routes {
             "api/assets/img?name=*&type=*" => ["AssetsController", "img", "GET"],
 
             "api/verifylogin" => ["AuthController", "login", "POST"],
+            "api/checkauth" => ["AuthController", "checkAuth", "GET"],
+
             "api/users/count" => ["FetchController", "usersCount", "GET"],
-            "api/products/count" => ["FetchController", "productsCount", "GET"],
-            "api/orders/count" => ["FetchController", "ordersCount", "GET"],
             "api/users?filter=*&page=*&limit=*" => ["FetchController", "users", "GET"],
-            "api/products?filter=*&page=*&limit=*" => ["FetchController", "products", "GET"],
-            "api/orders?filter=*&page=*&limit=*" => ["FetchController", "allOrders", "GET"],
             "api/edituser" => ["UpdateController", "user", "POST"],
-            "api/editproduct" => ["UpdateController", "product", "POST"],
             "api/remove-users" => ["DeleteController", "users", "POST"],
+            "api/createuser" => ["CreateController", "user", "POST"],
+            "api/user?id=*" => ["FetchController", "user", "GET"],
+
+            "api/products/count" => ["FetchController", "productsCount", "GET"],
+            "api/product?id=*" => ["FetchController", "product", "GET"],
+            "api/editproduct" => ["UpdateController", "product", "POST"],
             "api/remove-products" => ["DeleteController", "products", "POST"],
+            "api/createproduct" => ["CreateController", "products", "POST"],
+            "api/create-product" => ["CreateController", "product", "POST"],
+            "api/products?filter=*&brand=*&typeid=*&page=*&limit=*" => ["FetchController", "products", "GET"],
+
+            "api/orders/count" => ["FetchController", "ordersCount", "GET"],
+            "api/orders?filter=*&page=*&limit=*" => ["FetchController", "allOrders", "GET"],
             "api/approveorder" => ["UpdateController", "approveOrder", "POST"],
             "api/declineorder" => ["UpdateController", "declineOrder", "POST"],
-            "api/createuser" => ["CreateController", "user", "POST"],
-            "api/createproduct" => ["CreateController", "products", "POST"],
+            "api/order?id=*" => ["FetchController", "order", "GET"],
+            
             "api/companynatures" => ["FetchController", "companyNatures", "GET"],
             "api/uploads/img?name=*&type=*" => ["AssetsController", "imgUploaded", "GET"],
-            "api/product?id=*" => ["FetchController", "product", "GET"],
-            "api/user?id=*" => ["FetchController", "user", "GET"],
-            "api/checkauth" => ["AuthController", "checkAuth", "GET"],
+            
             "api/addtocart?product_id=*&quantity=*" => ["CreateController", "cartItem", "GET"],
+
             "api/product-types" => ["FetchController", "productTypesAll", "GET"],
-            "api/products?filter=*&brand=*&type=*&page=*&limit=*" => ["FetchController", "productTypes", "GET"],
-            "api/create-product" => ["CreateController", "product", "POST"],
+            "api/product-types?filter=*&page=*&limit=*" => ["FetchController", "productTypes", "GET"],
             "api/create-product-type" => ["CreateController", "productType", "POST"],
+            "api/remove-product-types" => ["DeleteController", "productTypes", "POST"],
+
             "api/client/cart?client_id=*" => ["FetchController", "clientCart", "GET"],
             "api/client/remove-from-cart?id=*" => ["DeleteController", "clientCartItem", "GET"],
             "api/client/orders" => ["FetchController", "clientOrders", "GET"],
             "api/client/save-info" => ["UpdateController", "clientInfo", "POST"],
-            "api/order?id=*" => ["FetchController", "order", "GET"],
+            
             "api/featured-products" => ["FetchController", "featuredProducts", "GET"],
-            "api/remove-product-types" => ["DeleteController", "productTypes", "POST"],
+
             "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
+
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
+
             "api/fetch/types-brands" => ["FetchController", "typesAndBrands", "GET"],
+
 
             
             "default" => "home/index",
             "home/index" => ["ViewsController", "home"],
+
             "store/index" => ["ViewsController", "store"],
             "store/viewproduct?id=*" => ["ViewsController", "viewProduct"],
+
             "login/index" => ["ViewsController", "login"],
+
             "signup/index" => ["ViewsController", "signup"],
             "signup/success" => ["ViewsController", "signupSuccess"],
+
             "auth/logout" => ["AuthController", "logout"],
             "auth/loginredirect" => ["AuthController", "loginRedirect"],
+
             "admin/dashboard" => ["ViewsController", "adminDashboard"],
             "admin/users" => ["ViewsController", "adminUsers"],
             "admin/products" => ["ViewsController", "adminProducts"],
             "admin/product-types" => ["ViewsController", "adminProductTypes"],
             "admin/orders" => ["ViewsController", "adminOrders"],
             "admin/edituser?id=*" => ["ViewsController", "adminEditUser"],
-            "admin/editproduct?id=*" => ["ViewsController", "adminEditProduct"],
+            "admin/edit-product?id=*" => ["ViewsController", "adminEditProduct"],
             "admin/removeusers" => ["ViewsController", "adminRemoveUsers"],
             "admin/removeproducts" => ["ViewsController", "adminRemoveProducts"],
             "admin/new-product" => ["ViewsController", "adminNewProduct"],
             "admin/new-product-type" => ["ViewsController", "adminNewProductType"],
             "admin/view-order?order_id=*" => ["ViewsController", "adminViewOrder"],
+
             "client/account-details" => ["ViewsController", "clientAccountDetails"],
             "client/order-history" => ["ViewsController", "clientOrderHistory"],
             "client/order?id*" => ["ViewsController", "clientOrder"],
             "client/cart" => ["ViewsController", "clientCart"],
             "client/edit-info?id=*" => ["ViewsController", "clientEditInfo"],
+
             "agent/dashboard" => ["ViewsController", "agentDashboard"],
             "agent/orders" => ["ViewsController", "agentOrders"],
             "agent/view-order?order_id=*" => ["ViewsController", "agentViewOrder"],
             "agent/new-order" => ["ViewsController", "agentNewOrder"],
+
             "cookies/index" => ["ViewsController", "cookies"],
             "relevance/index" => ["RecommendationController", "computeRelevance"],
         ];

@@ -2,6 +2,8 @@
 
 namespace Main\Controllers;
 
+session_start();
+
 include "wtAvg.php";
 
 // build a matrix of values from cookies for comparison
@@ -37,6 +39,16 @@ class RecommendationController {
         ];
 
         $products = (new \Main\Models\FetchModel())->allProductsComplete()["rows"];
+
+        if (!isset($_SESSION["type"])) {
+            $productsCopy = [];
+
+            foreach ($products as $product) {
+                $productsCopy[$product["id"]] = 0;
+            }
+
+            return $productsCopy;
+        }
 
         $cookies = self::getCookies();
 

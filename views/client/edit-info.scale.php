@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
