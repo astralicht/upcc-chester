@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +37,10 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main fullwidth>
                 <div flex="h">
-                    <h1>Users</h1>
+                    <div flex="h" v-center>
+                        <h1>Users</h1>
+                        <a href="../signup/index" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
+                    </div>
                     <div flex="h" h-end fullwidth>
                         <div flex="v">
                             <h3 nomargin>Search</h3>
@@ -52,7 +55,6 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                 </div>
                 <div flex="v">
                     <div flex="h" id="action-buttons">
-                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editUser()">Edit</div>
                         <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteUsers()">Delete</div>
                     </div>
                     <div id="message" contain="danger" bordered dark-text style="display: none; opacity: 0;"></div>
@@ -70,10 +72,11 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Name of Company</th>
-                                <th>Company Address</th>
                                 <th>Nature of Company</th>
+                                <th>Company Address</th>
                                 <th>Phone Number</th>
                                 <th>Email Address</th>
+                                <th>Date Created</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -210,31 +213,19 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                 const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
 
                 if (tickedBoxes.length === 0) {
-                    document.querySelector("#edit-button").style.display = "none";
                     document.querySelector("#delete-button").style.display = "none";
                     return;
                 }
 
                 if (tickedBoxes.length < 2) {
-                    document.querySelector("#edit-button").style.display = "block";
                     document.querySelector("#delete-button").style.display = "block";
                     return;
                 }
 
                 if (tickedBoxes.length > 1) {
-                    document.querySelector("#edit-button").style.display = "none";
                     document.querySelector("#delete-button").style.display = "block";
                     return;
                 }
-            }
-
-
-            function editUser() {
-                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
-
-                if (tickedBoxes.length > 1) return;
-
-                window.location.href = `../admin/edituser?id=${tickedBoxes[0].value}`;
             }
 
 

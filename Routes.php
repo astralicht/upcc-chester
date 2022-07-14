@@ -59,7 +59,7 @@ class Routes {
             "api/checkauth" => ["AuthController", "checkAuth", "GET"],
             "api/addtocart?product_id=*&quantity=*" => ["CreateController", "cartItem", "GET"],
             "api/product-types" => ["FetchController", "productTypesAll", "GET"],
-            "api/product-types?filter=*&page=*&limit=*" => ["FetchController", "productTypes", "GET"],
+            "api/products?filter=*&brand=*&type=*&page=*&limit=*" => ["FetchController", "productTypes", "GET"],
             "api/create-product" => ["CreateController", "product", "POST"],
             "api/create-product-type" => ["CreateController", "productType", "POST"],
             "api/client/cart?client_id=*" => ["FetchController", "clientCart", "GET"],
@@ -71,6 +71,7 @@ class Routes {
             "api/remove-product-types" => ["DeleteController", "productTypes", "POST"],
             "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
+            "api/fetch/types-brands" => ["FetchController", "typesAndBrands", "GET"],
 
             
             "default" => "home/index",

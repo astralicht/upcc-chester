@@ -74,13 +74,13 @@ class FetchModel
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
-        $sql = "SELECT `id`, `first_name`, `last_name`, `company_name`, `company_nature`, `company_address`, `phone_number`, `email`
+        $sql = "SELECT `id`, `first_name`, `last_name`, `company_name`, `company_nature`, `company_address`, `phone_number`, `email`, `date_created`
                 FROM users
                 WHERE `date_removed` IS NULL
                 LIMIT ?, ?";
 
         if ($filter !== "") {
-            $sql = "SELECT `id`, `first_name`, `last_name`, `company_name`, `company_nature`, `company_address`, `phone_number`, `email`
+            $sql = "SELECT `id`, `first_name`, `last_name`, `company_name`, `company_nature`, `company_address`, `phone_number`, `email`, `date_created`
                     FROM users
                     WHERE `date_removed` IS NULL
                     AND `first_name` LIKE '%$filter%'
@@ -96,35 +96,42 @@ class FetchModel
 
     function products($data) {
         $filter = $data["filter"];
+        $brand = $data["brand"];
+        $typeId = $data["typeid"];
         $page = $data["page"];
         $limit = $data["limit"];
         $offset = $page * $limit;
         $range = [$offset, $limit];
 
+        if ($typeId === null) $typeId = "null";
+
         $weightedProducts = (new \Main\Controllers\RecommendationController())->computeRelevance();
         $productKeys = implode(", ", array_keys($weightedProducts));
 
-        $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`
+        $filterString = "";
+        $brandAndType = "";
+
+        if ($filter !== "null") $filterString = "AND p.`name` LIKE '%$filter%'";
+
+        if ($brand !== "null" && $typeId === "null") $brandAndType = "AND (p.`brand`='$brand')";
+
+        if ($brand === "null" && $typeId !== "null") $brandAndType = "AND (p.`type_id`='$typeId')";
+
+        if ($brand !== "null" && $typeId !== "null") $brandAndType = "AND (p.`brand`='$brand' AND p.`type_id`='$typeId')";
+
+        $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`, p.`date_added`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
-                ORDER BY field(p.`id`, $productKeys)
+                $filterString
+                $brandAndType
+                GROUP BY p.`id`
+                ORDER BY FIELD(p.`id`, $productKeys)
                 LIMIT ?, ?";
 
-        if ($filter !== "null") {
-            $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`
-                    FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
-                    WHERE p.`date_removed` IS NULL
-                    AND p.`id`=pr.`product_id`
-                    AND p.`type_id`=pt.`id`
-                    AND (p.`name` LIKE '%$filter%'
-                    OR  pt.`name` LIKE '%$filter%'
-                    OR  p.`brand` LIKE '%$filter%')
-                    ORDER BY field(p.`id`, $productKeys)
-                    LIMIT ?, ?";
-        }
-
+        // return [$brand, $typeId, $sql];
+                
         return self::getResult($sql, $range);
     }
 
@@ -338,6 +345,17 @@ class FetchModel
         $sql = "SELECT `id`, `name`, `image_path`, `image_name` FROM products WHERE `date_removed` IS NULL ORDER BY `date_added` DESC LIMIT 4";
 
         return self::getResult($sql);
+    }
+
+
+    function typesAndBrands() {
+        $sql = "SELECT `brand` FROM products WHERE `date_removed` IS NULL GROUP BY `brand`";
+        $arr["brands"] = self::getResult($sql)["rows"];
+
+        $sql = "SELECT `id`, `name` FROM product_types WHERE `date_removed` IS NULL";
+        $arr["types"] = self::getResult($sql)["rows"];
+
+        return $arr;
     }
 
 }

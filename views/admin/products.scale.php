@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"])) header("Location: ../error/403");
+if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +70,9 @@ if (!isset($_SESSION["type"])) header("Location: ../error/403");
                                 <th>Type</th>
                                 <th>Brand</th>
                                 <th>Unit Price</th>
+                                <th>Image Path</th>
+                                <th>Image Name</th>
+                                <th>Date Added</th>
                             </thead>
                             <tbody></tbody>
                         </table>

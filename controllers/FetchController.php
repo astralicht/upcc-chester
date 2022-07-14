@@ -26,5 +26,6 @@ class FetchController {
     function featuredProducts() { return (new FetchModel)->featuredProducts(); }
     function productsFilterOnly($data) { return (new FetchModel)->productsFilterOnly($data); }
     function allproductIds() { return (new FetchModel)->allProductIds(); }
+    function typesAndBrands() { return (new FetchModel)->typesAndBrands(); }
     
 }

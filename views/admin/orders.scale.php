@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
+if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,6 +71,7 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "ADMIN") header("Location
                                 <th>Total Price</th>
                                 <th></th>
                                 <th>Status</th>
+                                <th>Date Created</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -151,7 +152,7 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "ADMIN") header("Location
                         }
                         if (key === "order_id_redr") {
                             let a = document.createElement("a");
-                            a.href = `../agent/view-order?order_id=${row[key]}`;
+                            a.href = `../admin/view-order?order_id=${row[key]}`;
                             a.innerText = "View Order";
                             td.appendChild(a);
                             tr.appendChild(td);
@@ -167,7 +168,7 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "ADMIN") header("Location
                             div.setAttribute("contain", "secondary");
 
                             if (row[key] === "APPROVED") div.setAttribute("contain", "good");
-                            if (row[key] === "DECLINED") div.setAttribute("contain", "danger");
+                            if (row[key] === "DENIED") div.setAttribute("contain", "danger");
 
                             td.appendChild(div);
                             tr.appendChild(td);

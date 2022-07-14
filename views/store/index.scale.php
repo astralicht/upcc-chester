@@ -87,22 +87,15 @@
                         <div>
                             <h3 class="header">Type</h3>
                             <hr>
-                            <select form-input id="type_select">
-                                <option value="NULL">Select type</option>
+                            <select form-input id="type-select">
+                                <option value="null">Select type</option>
                             </select>
                         </div>
                         <div>
                             <h3 class="header">Brand</h3>
                             <hr>
-                            <select form-input id="type_select">
-                                <option value="NULL">Select brand</option>
-                            </select>
-                        </div>
-                        <div>
-                            <h3 class="header">Variant</h3>
-                            <hr>
-                            <select form-input id="type_select">
-                                <option value="NULL">Select variant</option>
+                            <select form-input id="brand-select">
+                                <option value="null">Select brand</option>
                             </select>
                         </div>
                         <div style="padding: 1em 0;">
@@ -117,6 +110,7 @@
                 <div flex="h" flex-wrap id="products-container">
                 </div>
                 <div flex="h" h-center fullwidth id="show-more-container">
+                    <i id="show-more-message" style="display: none;">No more products to display.</i>
                     <button style="outline: none; border: 0; width: 250px; padding: .5em .7em;" button="secondary" id="show-more" onclick="fetchMoreProducts(filter)">Show More Products</button>
                 </div>
             </div>
@@ -127,15 +121,27 @@
         const LIMIT = 25;
         var page = 0;
         var container = document.querySelector("#products-container");
-        var filter = null;
+        var filter = "null";
+        var type = "null";
+        var brand = "null";
 
-        fetchProducts(filter);
+
+        fetchProducts();
+        fetchTypesAndBrands();
 
 
-        function fetchProducts(filter = null) {
+        function fetchProducts() {
             clearContainer(container);
+            page = 0;
 
-            fetch(`../api/products?filter=${filter}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+            fetch(`../api/products?filter=${filter}&brand=${brand}&type=${type}&page=${page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch {
+                    console.error(json);
+                    return;
+                }
+
                 if (json["status"] !== 200) console.error(json);
                 if (json["rows"] === undefined) return;
 
@@ -144,10 +150,10 @@
         }
 
 
-        function fetchMoreProducts(filter = null) {
+        function fetchMoreProducts() {
             ++page;
 
-            fetch(`../api/products?filter=${filter}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+            fetch(`../api/products?filter=${filter}&brand=${brand}&type=${type}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                 if (json["status"] !== 200) console.error(json);
                 if (json["rows"] === undefined) return;
 
@@ -160,10 +166,11 @@
             const CONTAINER = container;
             let rows = json["rows"];
 
-            if (rows.length === 0) {
-                CONTAINER.innerHTML = "<i>No products to display.</i>";
-                return;
-            }
+            let show_more_button = document.querySelector("button#show-more");
+            let show_more_message = document.querySelector("i#show-more-message");
+
+            show_more_button.style.display = "block";
+            show_more_message.style.display = "none";
 
             for (let row of rows) {
                 let div = document.createElement("div");
@@ -193,10 +200,11 @@
 
             if (rows.length === 0) {
                 let show_more_button = document.querySelector("button#show-more");
-                let show_more_container = document.querySelector("div#show-more-container");
+                let show_more_message = document.querySelector("i#show-more-message");
 
-                show_more_container.removeChild(show_more_button);
-                show_more_container.innerHTML = "<i>No more products to display.</i>";
+                show_more_button.style.display = "none";
+                show_more_message.style.display = "block";
+                return;
             }
 
             for (let row of rows) {
@@ -230,13 +238,72 @@
         function searchProduct() {
             filter = document.querySelector("input#search-input").value;
             fetchProducts(filter);
+        }
 
-            let show_more_button = document.querySelector("button#show-more");
-            let show_more_container = document.querySelector("div#show-more-container");
 
-            show_more_container.innerHTML = "<i>No more products to display.</i>";
+        function fetchTypesAndBrands() {
+            fetch("../api/fetch/types-brands").then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch {
+                    console.error(json);
+                }
 
-            
+                let brands = json["brands"];
+                let types = json["types"];
+
+                let brandSelect = document.querySelector("select#brand-select");
+                let typeSelect = document.querySelector("select#type-select");
+
+                for (let brand of brands) {
+                    let option = document.createElement("option");
+
+                    option.value = brand["brand"];
+                    option.innerText = brand["brand"];
+
+                    brandSelect.appendChild(option);
+                }
+
+                for (let type of types) {
+                    let option = document.createElement("option");
+
+                    option.value = type["id"];
+                    option.innerText = type["name"];
+
+                    typeSelect.appendChild(option);
+                }
+            });
+        }
+
+
+        function searchProductWithFilters() {
+            let brandSelect = document.querySelector("select#brand-select");
+            let typeSelect = document.querySelector("select#type-select");
+            let searchInput = document.querySelector("input#search-input");
+
+            brand = brandSelect.value;
+            type = typeSelect.value;
+            filter = searchInput.value;
+
+            clearContainer(container);
+            page = 0;
+
+            if (filter == "") filter = "null";
+
+            fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch {
+                    console.error(json);
+                    return;
+                }
+
+                if (json["status"] !== 200) console.error(json);
+                if (json["rows"] === undefined) return;
+
+                printProductsToContainer(json);
+                console.log(json);
+            });
         }
     </script>
 </body>

@@ -18,6 +18,7 @@ class wtAvg {
 
         if (count($cookies) < 1) return $this;
 
+        // Counting frequency from cookies
         foreach ($cookies as $userIds) {
             foreach ($userIds as $input) {
                 $input = json_decode($input, true);
@@ -31,6 +32,7 @@ class wtAvg {
             }
         }
 
+        // Weighted average to all
         foreach (self::$weights as $key => $values) {
             foreach ($values as $key2 => $value) {
                 self::$weights[$key][$key2] = round($value / $total, 4);
@@ -47,27 +49,6 @@ class wtAvg {
     function sortWeights(): wtAvg {
         arsort(self::$weights);
         return $this;
-    }
-
-
-    function printWeights($OPTIONS): void {
-        $weights = [];
-
-        foreach (self::$weights as $key => $value) {
-            echo nl2br(sprintf("%s = %f\r\n", $OPTIONS[$key], $value * 100));
-        }
-
-        self::$weights = $weights;
-
-        $keys = array_keys($weights);
-        $limit = 2;
-        $recommended = [];
-
-        for ($index = 0; $index < $limit; $index++) {
-            array_push($recommended, array_shift($keys));
-        }
-        
-        echo sprintf("The most recommended fruits are %s and %s.", $recommended[0], $recommended[1]);
     }
 
 

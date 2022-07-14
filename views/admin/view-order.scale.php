@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location: ../error/403");
+if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -255,9 +255,9 @@ if (!isset($_SESSION["type"]) && $_SESSION["type"] !== "AGENT") header("Location
                     return;
                 }
 
-                console.log(json);
-
                 if (json["status"] !== 200) return console.error(json["message"]);
+
+                window.location.reload();
             });
         }
     </script>
