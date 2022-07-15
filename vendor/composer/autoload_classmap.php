@@ -16,6 +16,7 @@ return array(
     'Main\\Controllers\\DeleteController' => $baseDir . '/controllers/DeleteController.php',
     'Main\\Controllers\\FetchController' => $baseDir . '/controllers/FetchController.php',
     'Main\\Controllers\\MailController' => $baseDir . '/controllers/MailController.php',
+    'Main\\Controllers\\RecommendationController' => $baseDir . '/controllers/RecommendationController.php',
     'Main\\Controllers\\UpdateController' => $baseDir . '/controllers/UpdateController.php',
     'Main\\Controllers\\UploadController' => $baseDir . '/controllers/UploadController.php',
     'Main\\Controllers\\ViewsController' => $baseDir . '/controllers/ViewsController.php',

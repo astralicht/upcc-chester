@@ -21,14 +21,21 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
     <div flex="h">
         <?php include_once("views/shared/admin_nav.php"); ?>
         <div flex="v" fullwidth nogap>
-            <div main>
+            <div main flex="v">
                 <div flex="h" v-center>
                     <button onclick="history.back()" contain="secondary" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/arrow-right.webp" style="transform: rotate(180deg);" alt=""></button>
                     <h1>Edit Product #<?php echo $_GET["id"]; ?></h1>
                 </div>
+                <img src="" alt="" id="product-image" style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0; object-fit: cover;">
+                <form action="../upload/image" method="POST" enctype="multipart/form-data" flex="v">
+                    <input type="file" name="image-input" id="image-input" form-input style="width: 300px; background-color: #ccc">
+                    <input type="hidden" value="PRODUCT" name="image-type" id="image-type">
+                    <input type="hidden" value="" name="old-image-path" id="old-image-path">
+                    <input type="hidden" value="<?php echo $_GET["id"]; ?>" name="id" id="product-id">
+                    <button type="submit" id="product-image-upload" form-input button contain="info" small style="width: 300px; border-radius: var(--border-radius);">Upload photo</button>
+                </form>
                 <form flex="v" onsubmit="submitProduct(); return false;">
                     <div id="message-box" bordered fullwidth dark-text dark-text-all></div>
-                    <img src="../uploads/img/default_img.webp" alt="" id="product-image" style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0; object-fit: cover;">
                     <div form-group>
                         <div flex="h" v-center>
                             <h3 nomargin>Name</h3>
@@ -112,17 +119,49 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
         </div>
     </div>
     <script>
-        fetch("../api/product-types").then(response => response.text()).then(data => {
+        fetch("../api/product-types").then(response => response.text()).then(json => {
             try {
-                data = JSON.parse(data);
+                json = JSON.parse(json);
             } catch (error) {
-                console.error(error);
+                console.error(json);
             }
 
-            if (data["status"] == 200) {
-                populateProductTypes(data["rows"]);
+            if (json["status"] == 200) {
+                populateProductTypes(json["rows"]);
             }
         });
+
+
+        let productId = document.querySelector("input#product-id").value;
+        setTimeout(() => {
+            fetch(`../api/product?id=${productId}`).then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch {
+                    console.error(json);
+                    return;
+                }
+
+                let product = json["rows"][0];
+
+                document.querySelector("input#name").value = product["name"];
+                document.querySelector("input#material").value = product["material"];
+                document.querySelector("input#length").value = product["length"];
+                document.querySelector("input#width").value = product["width"];
+                document.querySelector("input#thickness").value = product["thickness"];
+                document.querySelector("input#brand").value = product["brand"];
+                document.querySelector("input#connection-type").value = product["connection_type"];
+                document.querySelector("input#unit-price").value = product["unit_price"];
+                document.querySelector("input#old-image-path").value = `${product["image_path"]}`;
+                document.querySelector("img#product-image").src = `../${product["image_path"]}`;
+
+                let productTypeOptions = document.querySelector("select#product-type").children;
+
+                for (let productTypeOption of productTypeOptions) {
+                    if (productTypeOption.value == product["type_id"]) productTypeOption.setAttribute("selected", "");
+                }
+            });
+        }, 10);
 
 
         function populateProductTypes(types = null) {
@@ -159,26 +198,28 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 });
             }
 
-            fetch("../api/create-product", {
+            inputs["product-id"] = document.querySelector("input#product-id").value;
+
+            fetch("../api/editproduct", {
                 "method": "POST",
                 "Content-Type": "application/json; charset=UTF-8",
                 "body": JSON.stringify(inputs),
-            }).then(response => response.text()).then(data => {
+            }).then(response => response.text()).then(json => {
                 try {
-                    data = JSON.parse(data);
+                    json = JSON.parse(json);
                 } catch (error) {
-                    console.error(error);
+                    console.error(json);
                 }
 
-                if (data["status"] != 200) {
+                if (json["status"] != 200) {
                     MESSAGE_BOX.setAttribute("contain", "danger");
-                    MESSAGE_BOX.innerText = data["message"];
+                    MESSAGE_BOX.innerText = json["message"];
                     fadeInOut(MESSAGE_BOX);
                     return;
                 }
 
                 MESSAGE_BOX.setAttribute("contain", "good");
-                MESSAGE_BOX.innerHTML = `Product <i>"${inputs["name"]}"</i> created successfully`;
+                MESSAGE_BOX.innerHTML = `Product <i>"${inputs["name"]}"</i> updated successfully`;
                 fadeInOut(MESSAGE_BOX);
                 FORM.reset();
             });

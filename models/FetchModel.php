@@ -269,7 +269,7 @@ class FetchModel
     
     function product($data) {
         $id = [$data["id"]];
-        $sql = "SELECT p.`name`, pt.`name` AS connection_type, p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name` as image_name, p.`image_path`, pr.`unit_price`
+        $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name` as image_name, p.`image_path`, pr.`unit_price`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types AS pt
                 WHERE p.`id`=?
                 AND p.`id`=pr.`product_id`

@@ -10,5 +10,6 @@ class UpdateController {
 
     function clientInfo($data) { return (new UpdateModel)->clientInfo($data); }
     function orderStatus($data) { return (new UpdateModel)->orderStatus($data); }
+    function product($data) { return (new UpdateModel)->product($data); }
     
 }

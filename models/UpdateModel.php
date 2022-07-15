@@ -33,6 +33,18 @@ class UpdateModel {
     }
 
 
+    private function flattenAssocArray($array) {
+        $flatArray = [];
+
+        foreach ($array as $value) {
+            $flatArray[] = $value;
+        }
+
+        return $flatArray;
+    }
+
+
+
     function clientInfo($data) {
         $data = json_decode($data, true);
 
@@ -49,6 +61,37 @@ class UpdateModel {
         $sql = "UPDATE orders SET `status`=? WHERE `id`=?";
 
         return self::getResult($sql, $params);
+    }
+
+    
+    function updateImageData($fileDestination, $fileName, $imageType, $id) {
+        if ($imageType === NULL) return;
+        if ($imageType === "PRODUCT") $sql = "UPDATE products SET `image_path`=?, `image_name`=? WHERE `id`=?";
+        if ($imageType === "USER") $sql = "UPDATE users SET `image_path`=?, `image_name`=? WHERE `id`=?";
+
+        $data = [$fileDestination, $fileName, $id];
+
+        return self::getResult($sql, $data);
+    }
+
+
+    function product($data) {
+        $data = json_decode($data, true);
+
+        unset($data["image-input"], $data["image-type"], $data["old-image-path"]);
+
+        $productPricesArr = [$data["product-id"], $data["unit-price"]];
+
+        unset($data["product-id"], $data["unit-price"]);
+
+        $data = self::flattenAssocArray($data);
+
+        $sql = "UPDATE products AS p INNER JOIN products_prices AS pr
+                SET p.`name`=?, p.`material`=?, p.`brand`=?, p.`connection_type`=?, p.`length`=?, p.`width`=?, p.`thickness`=?, pr.`unit_price`=?, p.`type_id`=?
+                WHERE p.`id`=?
+                AND p.`id`=pr.`product_id`";
+
+        return self::getResult($sql, $data);
     }
 
 }

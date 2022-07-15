@@ -17,7 +17,7 @@ if (isset($_SESSION["id"])) {
     ]);
 
     setcookie(
-        $_SESSION["id"]."_".uniqid(),
+        $_SESSION["id"] . "_" . uniqid(),
         $cookieValues,
         time() + 10800,
         "/"
@@ -120,6 +120,10 @@ if (isset($_SESSION["id"])) {
                     <h2 id="name" style="margin: 0;">Product Name</h2>
                     <div style="padding: 1em; background-color: #F5F5F5;">
                         <p nomargin>
+                            <strong>Type:</strong>
+                            <span id="type"></span>
+                        </p>
+                        <p nomargin>
                             <strong>Brand:</strong>
                             <span id="brand"></span>
                         </p>
@@ -195,7 +199,7 @@ if (isset($_SESSION["id"])) {
                 </div>
                 <div flex="v" style="padding: 25px 35px;">
                     <div>
-                        <h2 id="product_name">Product Name</h2>
+                        <h2 id="name">Product Name</h2>
                     </div>
                     <div>
                         <form onsubmit="return false" method="POST" id="email_form">
@@ -234,7 +238,7 @@ if (isset($_SESSION["id"])) {
             for (let key of keys) {
                 let element = document.querySelector(`#${key}`);
 
-                if (product[key] === null) {
+                if (product[key] === null || product[key] === "") {
                     if (element === null) continue;
 
                     element.innerText = "N/A";
@@ -255,6 +259,8 @@ if (isset($_SESSION["id"])) {
                     image.alt = product[key];
                     continue;
                 }
+
+                if (key === "type_id") continue;
 
                 element.innerText = product[key];
             }

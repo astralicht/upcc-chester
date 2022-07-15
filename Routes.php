@@ -125,7 +125,9 @@ class Routes {
             "agent/new-order" => ["ViewsController", "agentNewOrder"],
 
             "cookies/index" => ["ViewsController", "cookies"],
+
             "relevance/index" => ["RecommendationController", "computeRelevance"],
+            "upload/image" => ["UploadController", "image", "POST"],
         ];
     }
 

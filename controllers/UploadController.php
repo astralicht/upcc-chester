@@ -9,25 +9,46 @@ session_start();
 class UploadController {
     
     // Uses POST HTTP request type
-    function image($data) {
-        $file = $_FILES['file'];
-        $fileName = $_FILES['file']['name'];
-        $fileTmpName = $_FILES['file']['name'];
-        $fileSize = $_FILES['file']['name'];
-        $fileError = $_FILES['file']['name'];
-        $fileType = $_FILES['file']['name'];
+    function image() {
+        $file = $_FILES["image-input"];
+        $data = $_POST;
 
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-        $allowed = array('jpg', 'png', 'webp');
-        if (!in_array($fileActualExt, $allowed)) echo "Invalid file type!";
-        if (!$fileError === 0) echo "There was an error uploading your file";
-        if ($fileSize < 10000000000) echo "The file that you are trying to upload is too big";
-        $fileNameNew = uniqid('', true) . "." . $fileActualExt;
+        $fileName = $file["name"];
+        $fileTempName = $file["tmp_name"];
+        $fileSize = $file["size"];
+        $fileError = $file["error"];
+        $imageType = $data["image-type"]; //image type is either user or product
 
-        $fileDestination = 'uploads/img/' . $fileNameNew;
-        move_uploaded_file($fileTmpName, $fileDestination);
-        header("Location: index.php?uploadsuccess");
+        $fileExt = explode(".", $fileName);
+        $fileExt = strtolower(end($fileExt));
+        $allowed = ["jpg", "png", "webp"];
+
+        if (!in_array($fileExt, $allowed)) {
+            echo "That image format is not supported!";
+            return;
+        }
+
+        if ($fileError !== 0) {
+            echo "There was an error uploading your file";
+            return;
+        }
+
+        if ($fileSize > 10000000) {
+            echo "The file that you are trying to upload is too big";
+            return;
+        }
+
+        $fileNameNew = uniqid("", true) . "." . $fileExt;
+
+        $fileDestination = "uploads/img/" . $fileNameNew;
+        move_uploaded_file($fileTempName, $fileDestination);
+
+        $UpdateModel = new UpdateModel();
+        $response = $UpdateModel->updateImageData($fileDestination, $fileName, $imageType, $data["id"]);
+        
+        if ($response["status"] === 200) unlink($data["old-image-path"]);
+
+        header("Location: ../" . strtolower($_SESSION["type"]) . "/edit-product?id=" . $data["id"]);
     }
     
 }

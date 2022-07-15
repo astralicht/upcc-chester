@@ -46,6 +46,7 @@ class ComposerStaticInit9ccd909a1a0d4f3c0b030b707c984bdb
         'Main\\Controllers\\DeleteController' => __DIR__ . '/../..' . '/controllers/DeleteController.php',
         'Main\\Controllers\\FetchController' => __DIR__ . '/../..' . '/controllers/FetchController.php',
         'Main\\Controllers\\MailController' => __DIR__ . '/../..' . '/controllers/MailController.php',
+        'Main\\Controllers\\RecommendationController' => __DIR__ . '/../..' . '/controllers/RecommendationController.php',
         'Main\\Controllers\\UpdateController' => __DIR__ . '/../..' . '/controllers/UpdateController.php',
         'Main\\Controllers\\UploadController' => __DIR__ . '/../..' . '/controllers/UploadController.php',
         'Main\\Controllers\\ViewsController' => __DIR__ . '/../..' . '/controllers/ViewsController.php',
