@@ -80,18 +80,24 @@ class UpdateModel {
 
         unset($data["image-input"], $data["image-type"], $data["old-image-path"]);
 
-        $productPricesArr = [$data["product-id"], $data["unit-price"]];
+        $productPricesArr = [$data["unit-price"], $data["product-id"]];
 
         unset($data["product-id"], $data["unit-price"]);
 
         $data = self::flattenAssocArray($data);
+        $data[] = $productPricesArr[1];
 
-        $sql = "UPDATE products AS p INNER JOIN products_prices AS pr
-                SET p.`name`=?, p.`material`=?, p.`brand`=?, p.`connection_type`=?, p.`length`=?, p.`width`=?, p.`thickness`=?, pr.`unit_price`=?, p.`type_id`=?
-                WHERE p.`id`=?
-                AND p.`id`=pr.`product_id`";
+        $sql = "UPDATE products
+                SET `name`=?, `material`=?, `brand`=?, `connection_type`=?, `length`=?, `width`=?, `thickness`=?, `type_id`=?
+                WHERE `id`=?";
 
-        return self::getResult($sql, $data);
+        self::getResult($sql, $data);
+
+        $sql = "UPDATE products_prices
+                SET `unit_price`=?
+                WHERE `product_id`=?";
+
+        return self::getResult($sql, $productPricesArr);
     }
 
 }

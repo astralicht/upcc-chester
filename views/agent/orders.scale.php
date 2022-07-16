@@ -51,8 +51,8 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "AGENT") header("Location
                 </div>
                 <div flex="v">
                     <div flex="h">
-                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editProduct()">Edit</div>
-                        <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteProducts()">Delete</div>
+                        <div contain="primary" button small style="border-radius: 5px; display: none;" id="edit-button" onclick="editOrder()">Edit</div>
+                        <div contain="danger" button small style="border-radius: 5px; display: none;" id="delete-button" onclick="deleteOrders()">Delete</div>
                     </div>
                     <div flex="v">
                         <div id="orders-page-controls" h-end fullwidth contain="white" small flex="h">
@@ -259,6 +259,61 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "AGENT") header("Location
 
                 document.querySelector("#edit-button").style.display = "none";
                 document.querySelector("#delete-button").style.display = "none";
+            }
+
+
+            function deleteOrders() {
+                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+                let order_ids = [];
+
+                for (let index = 0; index < tickedBoxes.length; index++) {
+                    order_ids.push(tickedBoxes[index].value);
+                }
+
+                fetch("../api/remove-orders", {
+                    "method": "POST",
+                    "Content-Type": "application/json",
+                    "body": JSON.stringify(order_ids),
+                }).then(response => response.text()).then(data => {
+                    try {
+                        data = JSON.parse(data);
+                    } catch {
+                        console.error(data);
+                        return;
+                    }
+
+                    if (data["status"] !== 200) return console.error(data["message"]);
+
+                    let tbody = table_bodies["orders"];
+                    tbody = clearTableBody(tbody);
+
+                    fetchOrders(pages["orders"]);
+                    fetchTotalOrdersCount();
+
+                    document.querySelector("#edit-button").style.display = "none";
+                    document.querySelector("#delete-button").style.display = "none";
+
+                    let message = document.querySelector("div#message");
+                    message.innerText = "Order(s) removed successfully!";
+                    fadeIn(message);
+                    setTimeout(() => {
+                        fadeOut(message);
+                    }, 5150);
+                });
+            }
+
+
+            function editOrder() {
+                const tickedBoxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+                let order_ids = [];
+
+                for (let index = 0; index < tickedBoxes.length; index++) {
+                    order_ids.push(tickedBoxes[index].value);
+                }
+
+                window.location.href = `../admin/edit-order?id=${order_ids[0]}`;
             }
         </script>
 </body>

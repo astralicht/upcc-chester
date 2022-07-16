@@ -139,11 +139,11 @@ class FetchModel
     function productsFilterOnly($data) {
         $filter = $data["filter"];
 
-        $sql = "SELECT `id`, `name`
+        $sql = "SELECT `id`, `name`, `image_path`
                 FROM products
                 WHERE `date_removed` IS NULL
                 AND (`name` LIKE '%$filter%'
-                OR  `id`='%$filter%')";
+                OR  `id`='$filter')";
 
         return self::getResult($sql);
     }
@@ -190,6 +190,7 @@ class FetchModel
                 AND op.`order_id`=o.`id`
                 AND pr.`product_id`=p.`id`
                 AND o.`user_id`=u.`id`
+                AND o.`date_removed` IS NULL
                 GROUP BY o.`id`
                 ORDER BY o.`date_added` DESC
                 LIMIT ?, ?";

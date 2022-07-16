@@ -74,4 +74,17 @@ class DeleteModel {
         return self::getResult($sql, $data);
     }
 
+
+    function orders($data) {
+        $data = json_decode($data, true);
+        $date_now = date("Y-m-d H:i:s");
+        $clause = implode(',', array_fill(0, count($data), '?'));
+
+        $sql = "UPDATE orders SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+
+        echo $sql;
+
+        return self::getResult($sql, $data);
+    }
+
 }

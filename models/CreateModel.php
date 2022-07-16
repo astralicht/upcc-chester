@@ -189,23 +189,31 @@ class CreateModel {
 
     function order($data) {
         $data = json_decode($data, true);
-        $order_details = $data["order_details"];
-        $order_items = $data["order_items"];
 
-        $sql = "INSERT INTO orders(`user_id`, `total_amount`, `discount_amount`) VALUES (?, ?, ?);
-                SELECT LAST_INSERT_ID();";
+        var_dump($data["product-ids"]);
 
-        $rows = self::executeQueryWithResult($sql, $order_details);
-        $order_id = $rows[0]["id"];
+        $productIdsArr = explode(" ", $data["product-ids"]);
+        array_pop($productIdsArr[count($productIdsArr)]);
 
-        $sql .= "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES;";
+        $productIds = $productIdsArr;
+
+        var_dump($productIds);
+
+        $userId = $data["user-id"];
+
+        $sql = "INSERT INTO orders(`user_id`) VALUES (?);";
+
+        $rows = self::executeQuery($sql, [$userId], true);
+        $orderId = $rows["id"];
+
+        $sql = "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES;";
         $items = [];
 
-        for ($index = 0; $index < count($order_items); $index++) {
-            if ($index + 1 == count($order_items)) $sql .= "(?, ?, ?);";
-            else $sql .= "(?, ?, ?), ";
+        for ($index = 0; $index < count($productIds); $index++) {
+            if ($index + 1 == count($productIds)) $sql .= "(?, ?, 1);";
+            else $sql .= "(?, ?, 1), ";
 
-            $items = [$order_id, ...$order_items[$index]];
+            $items = [$order_id, ...$productIds[$index]];
         }
 
         return self::executeQuery($sql, $items);

@@ -54,12 +54,15 @@ class Routes {
             "api/createproduct" => ["CreateController", "products", "POST"],
             "api/create-product" => ["CreateController", "product", "POST"],
             "api/products?filter=*&brand=*&typeid=*&page=*&limit=*" => ["FetchController", "products", "GET"],
+            "api/products?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
 
             "api/orders/count" => ["FetchController", "ordersCount", "GET"],
             "api/orders?filter=*&page=*&limit=*" => ["FetchController", "allOrders", "GET"],
             "api/approveorder" => ["UpdateController", "approveOrder", "POST"],
             "api/declineorder" => ["UpdateController", "declineOrder", "POST"],
             "api/order?id=*" => ["FetchController", "order", "GET"],
+            "api/remove-orders" => ["DeleteController", "orders", "POST"],
+            "api/create-order" => ["CreateController", "order", "POST"],
             
             "api/companynatures" => ["FetchController", "companyNatures", "GET"],
             "api/uploads/img?name=*&type=*" => ["AssetsController", "imgUploaded", "GET"],

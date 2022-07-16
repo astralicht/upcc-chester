@@ -24,5 +24,6 @@ class DeleteController {
         die;
     }
     function productTypes($data) { if ($_SESSION["type"] === "ADMIN") return (new DeleteModel)->productTypes($data); }
+    function orders($data) { if ($_SESSION["type"] === "AGENT") return (new DeleteModel)->orders($data); }
     
 }
