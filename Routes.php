@@ -82,6 +82,7 @@ class Routes {
             "api/featured-products" => ["FetchController", "featuredProducts", "GET"],
 
             "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
+            "api/admin/create-user" => ["CreateController", "adminNewUser", "POST"],
 
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
 
@@ -115,6 +116,7 @@ class Routes {
             "admin/new-product" => ["ViewsController", "adminNewProduct"],
             "admin/new-product-type" => ["ViewsController", "adminNewProductType"],
             "admin/view-order?order_id=*" => ["ViewsController", "adminViewOrder"],
+            "admin/new-user" => ["ViewsController", "adminNewUser"],
 
             "client/account-details" => ["ViewsController", "clientAccountDetails"],
             "client/order-history" => ["ViewsController", "clientOrderHistory"],

@@ -39,7 +39,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 <div flex="h">
                     <div flex="h" v-center>
                         <h1>Users</h1>
-                        <a href="../signup/index" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
+                        <a href="../admin/new-user" contain="good" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/add.svg" alt=""></a>
                     </div>
                     <div flex="h" h-end fullwidth>
                         <div flex="v">

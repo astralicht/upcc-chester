@@ -112,10 +112,16 @@ class CreateModel {
     function user($data) {
         $data = json_decode($data, true);
 
-        if ($data["password"] === $data["confirm_password"]) {
-            unset($data["confirm_password"]);
-            $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
-        }
+        $sql = "SELECT `email` FROM users WHERE `email`=? AND `date_removed` IS NULL LIMIT 1";
+
+        $result = self::executeQueryWithResult($sql, [$data["email"]]);
+
+        if (count($result["rows"]) > 0) return ["status" => 409, "message" => "That email already exists!"];
+
+        if ($data["password"] !== $data["confirm_password"]) return ["status" => 409, "message" => "Passwords do not match!"];
+
+        unset($data["confirm_password"]);
+        $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
 
         $data = self::flattenAssocArray($data);
 
@@ -128,6 +134,8 @@ class CreateModel {
 
 
     function product($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
         $data = json_decode($data, true);
         $unitPrice = $data["unit-price"];
         unset($data["unit-price"]);
@@ -156,6 +164,8 @@ class CreateModel {
 
 
     function productPrice($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
         $data = json_decode($data, true);
         $sql = "INSERT INTO products_prices(`product_id`, `unit_price`) VALUES(?, ?)";
 
@@ -164,6 +174,8 @@ class CreateModel {
 
 
     function productType($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
         $data = json_decode($data, true);
         $flatData = self::flattenAssocArray($data);
 
@@ -180,6 +192,8 @@ class CreateModel {
 
 
     function productStock($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
         $data = json_decode($data, true);
         $sql = "INSERT INTO products_stocks(`products_id`, `unit_price`) VALUES(?, ?)";
 
@@ -188,12 +202,14 @@ class CreateModel {
 
 
     function order($data) {
+        if ($_SESSION["type"] !== "AGENT") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
         $data = json_decode($data, true);
 
         var_dump($data["product-ids"]);
 
         $productIdsArr = explode(" ", $data["product-ids"]);
-        array_pop($productIdsArr[count($productIdsArr)]);
+        array_pop($productIdsArr);
 
         $productIds = $productIdsArr;
 
@@ -247,6 +263,32 @@ class CreateModel {
         if ($result["status"] != 200) return $result;
 
         return ["status" => 200, "cart_count" => $_SESSION["cart_count"]];
+    }
+
+
+    function adminNewUser($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
+        $data = json_decode($data, true);
+
+        $sql = "SELECT `email` FROM users WHERE `email`=? AND `date_removed` IS NULL LIMIT 1";
+
+        $result = self::executeQueryWithResult($sql, [$data["email"]]);
+
+        if (count($result["rows"]) > 0) return ["status" => 409, "message" => "That email already exists!"];
+
+        if ($data["password"] !== $data["confirm_password"]) return ["status" => 409, "message" => "Passwords do not match!"];
+
+        unset($data["confirm_password"]);
+        $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
+
+        $data = self::flattenAssocArray($data);
+
+        $sql = "INSERT INTO users(`first_name`, `last_name`, `company_name`,
+                    `email`, `phone_number`, `password`, `type`, `company_nature`, `company_address`)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        return self::executeQuery($sql, $data);
     }
 
 }

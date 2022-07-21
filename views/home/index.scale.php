@@ -44,7 +44,7 @@
                         Mill, Food/Beverage, Distillery & International Sub contructors.
                     </div>
                     <div flex="h" h-end>
-                        <a href="#" button="primary" white-text-all>
+                        <a href="../store/index" button="primary" white-text-all>
                             <b>Explore Valves</b>
                         </a>
                     </div>
