@@ -183,11 +183,6 @@ if (isset($_SESSION["id"])) {
                         </div>
                     </div>
                 </div>
-                <div class="products-section" flex="v" style="background-color: #f5f5f5;">
-                    <h3>Recommended Items</h3>
-                </div>
-            </div>
-            <div flex="v" style="min-width: 350px; height: 500px; background-color: #F5F5F5;">
             </div>
         </div>
         <div id="email-popup-container" style="flex-shrink: 0;">
