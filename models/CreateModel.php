@@ -4,6 +4,7 @@ namespace Main\Models;
 session_start();
 
 use Main\Config;
+use Main\Models\FetchModel;
 
 class CreateModel {
 
@@ -206,33 +207,72 @@ class CreateModel {
 
         $data = json_decode($data, true);
 
-        var_dump($data["product-ids"]);
+        $userEmail = $data["user-email"];
+        $productIds = $data["product-ids"];
 
-        $productIdsArr = explode(" ", $data["product-ids"]);
-        array_pop($productIdsArr);
+        $sql = "SELECT `id` FROM users WHERE `email`=?";
 
-        $productIds = $productIdsArr;
+        $userId = self::executeQueryWithResult($sql, [$userEmail]);
+        $userId = $userId["rows"][0]["id"];
 
-        var_dump($productIds);
-
-        $userId = $data["user-id"];
+        if ($userId === NULL) return ["status" => 409, "message" => "That email does not exist!"];
 
         $sql = "INSERT INTO orders(`user_id`) VALUES (?);";
 
         $rows = self::executeQuery($sql, [$userId], true);
         $orderId = $rows["id"];
 
-        $sql = "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES;";
+        $sql = "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES ";
         $items = [];
 
-        for ($index = 0; $index < count($productIds); $index++) {
-            if ($index + 1 == count($productIds)) $sql .= "(?, ?, 1);";
-            else $sql .= "(?, ?, 1), ";
+        $idsCount = count($productIds);
+        $count = 0;
 
-            $items = [$order_id, ...$productIds[$index]];
+        foreach ($productIds as $key => $value) {
+            if ($count + 1 == $idsCount) $sql .= "(?, ?, ?);";
+            else $sql .= "(?, ?, ?), ";
+
+            ++$count;
+
+            $key = explode("prod-", $key)[1];
+
+            $items[] = $orderId;
+            $items[] = $key;
+            $items[] = $value;
         }
 
-        return self::executeQuery($sql, $items);
+        $result = self::executeQuery($sql, $items);
+
+        $ids = array_keys($productIds);
+
+        foreach ($ids as $id) {
+            self::cookie($id);
+        }
+
+        return $result;
+    }
+
+
+    function cookie($productId) {
+        if (isset($_SESSION["id"])) {
+            $FetchModel = new FetchModel();
+            $product = $FetchModel->productDetailsComplete($productId)["rows"][0];
+
+            $cookieValues = json_encode([
+                "product_id" => $_GET["id"],
+                "type" => $product["type"],
+                "material" => $product["material"],
+                "brand" => $product["brand"],
+                "connection_type" => $product["connection_type"],
+            ]);
+
+            setcookie(
+                $_SESSION["id"] . "_" . uniqid(),
+                $cookieValues,
+                time() + 31540000000,
+                "/"
+            );
+        }
     }
 
 

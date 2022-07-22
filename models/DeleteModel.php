@@ -82,8 +82,6 @@ class DeleteModel {
 
         $sql = "UPDATE orders SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
 
-        echo $sql;
-
         return self::getResult($sql, $data);
     }
 

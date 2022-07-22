@@ -19,7 +19,7 @@ if (isset($_SESSION["id"])) {
     setcookie(
         $_SESSION["id"] . "_" . uniqid(),
         $cookieValues,
-        time() + 10800,
+        time() + 31540000000,
         "/"
     );
 }

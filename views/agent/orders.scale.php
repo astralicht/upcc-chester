@@ -116,7 +116,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "AGENT") header("Location
                     fetch(`../api/orders?filter=${filter}&page=${orders_page}&limit=${LIMIT}`).then(response => response.text()).then(json => {
                         try {
                             json = JSON.parse(json);
-                        } catch (error) {
+                        } catch {
                             console.error(error);
                         }
 
