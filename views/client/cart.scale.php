@@ -77,7 +77,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 <div style="flex-shrink: 0;">Total — <h3 id="total-price" style="color: #ed7d61; display: inline-block;">₱0.00</h3>
                 </div>
                 <div flex="h" h-end style="flex-grow: 1;">
-                    <button onclick="" button contain="primary">Get Quote</button>
+                    <button onclick="checkoutCart()" button contain="info">Checkout</button>
                 </div>
             </div>
         </div>
@@ -217,6 +217,11 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
 
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+
+        function checkoutCart() {
+            
         }
     </script>
 </body>
