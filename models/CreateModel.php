@@ -253,6 +253,49 @@ class CreateModel {
     }
 
 
+    function clientOrder() {
+        if ($_SESSION["type"] !== "CLIENT") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+    
+        $data = json_decode($data, true);
+        $clientId = $_SESSION["id"];
+        $productIds = $data["product-ids"];
+
+        $sql = "INSERT INTO orders(`user_id`) VALUES (?);";
+
+        $rows = self::executeQuery($sql, [$clientId], true);
+        $orderId = $rows["id"];
+
+        $sql = "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES ";
+        $items = [];
+
+        $idsCount = count($productIds);
+        $count = 0;
+
+        foreach ($productIds as $key => $value) {
+            if ($count + 1 == $idsCount) $sql .= "(?, ?, ?);";
+            else $sql .= "(?, ?, ?), ";
+
+            ++$count;
+
+            $key = explode("prod-", $key)[1];
+
+            $items[] = $orderId;
+            $items[] = $key;
+            $items[] = $value;
+        }
+
+        $result = self::executeQuery($sql, $items);
+
+        $ids = array_keys($productIds);
+
+        foreach ($ids as $id) {
+            self::cookie($id);
+        }
+
+        return $result;
+    }
+
+
     function cookie($productId) {
         if (isset($_SESSION["id"])) {
             $FetchModel = new FetchModel();
