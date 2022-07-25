@@ -58,6 +58,31 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             width: 150px;
             max-width: 150px;
         }
+
+        #popup-container {
+            height: 100vh;
+            width: 100vw;
+            backdrop-filter: blur(3px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            opacity: 0;
+            transition: opacity .15s ease-in-out;
+            background-color: rgba(0, 0, 0, .1);
+        }
+
+        #popup {
+            display: block;
+            margin: 0;
+            height: auto;
+            width: 700px;
+            background-color: white;
+            box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
+        }
     </style>
     <title>Cart | UPCC Client</title>
 </head>
@@ -77,7 +102,25 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 <div style="flex-shrink: 0;">Total — <h3 id="total-price" style="color: #ed7d61; display: inline-block;">₱0.00</h3>
                 </div>
                 <div flex="h" h-end style="flex-grow: 1;">
-                    <button onclick="checkoutCart()" button contain="info">Checkout</button>
+                    <button onclick="showPopup()" button contain style="background-color: #ed7d61;" id="checkout-button">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="popup-container" style="flex-shrink: 0;">
+        <div id="popup" flex="v" style="flex-shrink: 0;">
+            <div flex="h" h-end>
+                <div style="height: 50px; width: 50px; background-color: #333; cursor: pointer;" flex="h" h-center v-center onclick="hidePopup()">
+                    <img src="../views/assets/img/close.webp" alt="close">
+                </div>
+            </div>
+            <div flex="v" style="padding: 25px 35px;">
+                <div>
+                    <h2 id="name">Checkout?</h2>
+                </div>
+                <div flex="h">
+                    <button onclick="checkoutCart()" button contain="good">Yes</button>
+                    <button onclick="hidePopup()" button contain="danger">No</button>
                 </div>
             </div>
         </div>
@@ -102,6 +145,9 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 div.innerHTML = "<i>Your cart is empty!<i>";
                 div.setAttribute("contain", "overlight");
                 CART_TBODY.appendChild(div);
+
+                document.querySelector("#checkout-button").style.display = "none";
+
                 return;
             }
 
@@ -221,7 +267,31 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
 
 
         function checkoutCart() {
-            
+            fetch("../api/client/create-order").then(response => response.text()).then(json => {
+                try {
+                    json = JSON.parse(json);
+                } catch {
+                    console.error(json);
+                    return;
+                }
+
+                location.reload();
+            });
+        }
+
+
+        function showPopup() {
+            let popupContainer = document.querySelector("div#popup-container");
+
+            fadeIn(popupContainer);
+            document.body.style.overflowY = "hidden";
+        }
+
+
+        function hidePopup() {
+            let popupContainer = document.querySelector("div#popup-container");
+
+            fadeOut(popupContainer);
         }
     </script>
 </body>

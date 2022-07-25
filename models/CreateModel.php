@@ -258,7 +258,9 @@ class CreateModel {
     
         $data = json_decode($data, true);
         $clientId = $_SESSION["id"];
-        $productIds = $data["product-ids"];
+
+        $sql = "SELECT `product_id`, `product_quantity` FROM users_carts WHERE `user_id`=?";
+        $productIdsQuantities = self::executeQueryWithResult($sql, [$clientId])["rows"];
 
         $sql = "INSERT INTO orders(`user_id`) VALUES (?);";
 
@@ -268,29 +270,31 @@ class CreateModel {
         $sql = "INSERT INTO orders_products(`order_id`, `product_id`, `item_count`) VALUES ";
         $items = [];
 
-        $idsCount = count($productIds);
+        $idsCount = count($productIdsQuantities);
         $count = 0;
+        $productIds = [];
 
-        foreach ($productIds as $key => $value) {
-            if ($count + 1 == $idsCount) $sql .= "(?, ?, ?);";
+        for ($index = 0; $index < $idsCount; $index++) {
+            if ($index + 1 == $idsCount) $sql .= "(?, ?, ?);";
             else $sql .= "(?, ?, ?), ";
 
-            ++$count;
-
-            $key = explode("prod-", $key)[1];
-
             $items[] = $orderId;
-            $items[] = $key;
-            $items[] = $value;
+            $items[] = $productIdsQuantities[$index]["product_id"];
+            $items[] = $productIdsQuantities[$index]["product_quantity"];
+
+            $productIds[] = $productIdsQuantities[$index]["product_id"];
         }
 
-        $result = self::executeQuery($sql, $items);
+        self::executeQuery($sql, $items);
 
         $ids = array_keys($productIds);
 
-        foreach ($ids as $id) {
-            self::cookie($id);
-        }
+        foreach ($ids as $id) self::cookie($id);
+
+        $sql = "DELETE FROM users_carts WHERE `user_id`=?";
+        $result = self::executeQuery($sql, [$clientId]);
+
+        $_SESSION["cart_count"] = 0;
 
         return $result;
     }

@@ -63,6 +63,7 @@ class Routes {
             "api/order?id=*" => ["FetchController", "order", "GET"],
             "api/remove-orders" => ["DeleteController", "orders", "POST"],
             "api/create-order" => ["CreateController", "order", "POST"],
+            "api/client/create-order" => ["CreateController", "clientOrder", "POST"],
             
             "api/companynatures" => ["FetchController", "companyNatures", "GET"],
             "api/uploads/img?name=*&type=*" => ["AssetsController", "imgUploaded", "GET"],
