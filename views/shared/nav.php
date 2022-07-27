@@ -2,7 +2,7 @@
 
 <div contain="white" nav="h" style="height: 4em;">
     <div>
-        <h2 nomargin>UPCC</h2>
+        <a href="../home/index" style="text-decoration: none;"><h2 nomargin>UPCC</h2></a>
     </div>
     <div items fullwidth flex="h" h-end v-center nogap>
         <a href="../home/index" nav-item contain="overlight">Home</a>

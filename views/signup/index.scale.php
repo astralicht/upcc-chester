@@ -66,10 +66,10 @@
 
 <body>
     <?php include_once("views/shared/nav.php"); ?>
-    <div main flex="v" fullwidth back-light style="height: calc(100vh - 4em);" v-center>
+    <div main flex="v" fullwidth back-light v-center>
         <div class="content-section" flex="v" h-center style="box-shadow: 0 6px 6px -6px rgba(0, 0, 0, .3);">
             <div class="card" flex="v" style="justify-content: center; gap: 0; background-color: #FFF;">
-                <form onsubmit="return false;">
+                <form onsubmit="event.preventDefault(); submitSignup();">
                     <div class="row">
                         <div class="column header-container" id="headers" style="gap: 10px; text-align: center; padding-top: 30px; min-width: 200px;">
                             <h1 style="margin: 0;">Signup!</h1>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <input form-input type="text" id="company_name" placeholder="Name of company">
+                                <input form-input type="text" id="company_name" placeholder="Name of company" required>
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <textarea form-input id="address" placeholder="Address" rows="4"></textarea>
+                                <textarea form-input id="address" placeholder="Address" rows="4" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -134,7 +134,7 @@
                         </div>
                         <div class="column">
                             <div flex>
-                                <select form-input id="company_nature">
+                                <select form-input id="company_nature" required>
                                     <option value="NULL">Select company nature</option>
                                 </select>
                             </div>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="column" style="gap: 1em;">
                             <div flex>
-                                <input form-input type="number" id="mobile_number" placeholder="Mobile number">
+                                <input form-input type="text" id="mobile_number" placeholder="Mobile number" required>
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                             <a href="../login/index" style="color: #CCC">Already have an account? Login here!</a>
                         </div>
                         <div class="column" style="align-items: flex-end">
-                            <button type="submit" button contain="good" style="width: 150px; border-radius: 1000px;" onclick="submitSignUp()">Sign up</button>
+                            <button type="submit" button contain="good" style="width: 150px; border-radius: 1000px;">Sign up</button>
                         </div>
                     </div>
                 </form>
@@ -227,14 +227,17 @@
         }
 
 
-        function submitSignUp() {
+        function submitSignup() {
             let password_field = document.querySelector("#password");
             let password_confirm_field = document.querySelector("#confirm_password");
 
             if (password_field.value !== password_confirm_field.value) {
                 password_field.style.border = "2px solid rgb(218, 72, 72);";
                 password_confirm_field.style.border = "2px solid rgb(218, 72, 72);";
-                return;
+
+                alert("Passwords do not match!");
+
+                return false;
             }
 
             const INPUT_FIELDS = document.querySelectorAll("input");
@@ -242,22 +245,21 @@
             const TEXTAREAS = document.querySelectorAll("textarea");
             let inputs = {};
 
-            if (INPUT_FIELDS.length !== 0) {
+            try {
                 INPUT_FIELDS.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
-            }
 
-            if (SELECTS.length !== 0) {
                 SELECTS.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
-            }
 
-            if (TEXTAREAS.length !== 0) {
                 TEXTAREAS.forEach((field) => {
                     inputs[field.id] = field.value;
                 });
+            } catch (error) {
+                console.error(error);
+                return false;
             }
 
             fetch("../api/createuser", {
@@ -267,11 +269,15 @@
             }).then(response => response.text()).then(json => {
                 try {
                     json = JSON.parse(json);
-                } catch (error) {
-                    return console.error(error);
+                } catch {
+                    console.error(json);
+                    return false;
                 }
 
-                if (json["status"] !== 200) return console.error(json);
+                if (json["status"] !== 200) {
+                    console.error(json);
+                    return false;
+                }
 
                 window.location.href = "../signup/success";
             });
