@@ -48,5 +48,6 @@ class ViewsController {
     function agentNewOrder(): string { return self::getFile('views/agent/new-order.scale.php'); }
     function cookies(): string { return self::getFile('views/cookies/index.scale.php'); }
     function adminNewUser(): string { return self::getFile('views/admin/new-user.scale.php'); }
+    function forgotPassword(): string { return self::getFile('views/login/forgot-password.scale.php'); }
 
 }

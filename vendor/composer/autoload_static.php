@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit9ccd909a1a0d4f3c0b030b707c984bdb
 {
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
         'M' => 
         array (
             'Main\\Services\\' => 14,
@@ -17,6 +21,10 @@ class ComposerStaticInit9ccd909a1a0d4f3c0b030b707c984bdb
     );
 
     public static $prefixDirsPsr4 = array (
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
         'Main\\Services\\' => 
         array (
             0 => __DIR__ . '/../..' . '/services',
@@ -45,7 +53,6 @@ class ComposerStaticInit9ccd909a1a0d4f3c0b030b707c984bdb
         'Main\\Controllers\\CreateController' => __DIR__ . '/../..' . '/controllers/CreateController.php',
         'Main\\Controllers\\DeleteController' => __DIR__ . '/../..' . '/controllers/DeleteController.php',
         'Main\\Controllers\\FetchController' => __DIR__ . '/../..' . '/controllers/FetchController.php',
-        'Main\\Controllers\\MailController' => __DIR__ . '/../..' . '/controllers/MailController.php',
         'Main\\Controllers\\RecommendationController' => __DIR__ . '/../..' . '/controllers/RecommendationController.php',
         'Main\\Controllers\\UpdateController' => __DIR__ . '/../..' . '/controllers/UpdateController.php',
         'Main\\Controllers\\UploadController' => __DIR__ . '/../..' . '/controllers/UploadController.php',
@@ -58,6 +65,12 @@ class ComposerStaticInit9ccd909a1a0d4f3c0b030b707c984bdb
         'Main\\Models\\UpdateModel' => __DIR__ . '/../..' . '/models/UpdateModel.php',
         'Main\\Resource' => __DIR__ . '/../..' . '/Resource.php',
         'Main\\Routes' => __DIR__ . '/../..' . '/Routes.php',
+        'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
+        'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
+        'PHPMailer\\PHPMailer\\OAuthTokenProvider' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuthTokenProvider.php',
+        'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
+        'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
+        'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

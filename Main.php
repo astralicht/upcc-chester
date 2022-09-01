@@ -60,6 +60,7 @@ class Main {
 
         // This line is used to get POST contents sent from JS HTTP requests.
         !empty($_POST) ?: $_POST = file_get_contents("php://input");
+
         $Resource = $Controller->getResource($route, $_GET, $_POST);
 
         $data = null;

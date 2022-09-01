@@ -98,6 +98,9 @@ class Routes {
             "store/viewproduct?id=*" => ["ViewsController", "viewProduct"],
 
             "login/index" => ["ViewsController", "login"],
+            "login/forgot-password" => ["ViewsController", "forgotPassword"],
+
+            "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
 
             "signup/index" => ["ViewsController", "signup"],
             "signup/success" => ["ViewsController", "signupSuccess"],

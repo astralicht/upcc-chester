@@ -15,7 +15,6 @@ return array(
     'Main\\Controllers\\CreateController' => $baseDir . '/controllers/CreateController.php',
     'Main\\Controllers\\DeleteController' => $baseDir . '/controllers/DeleteController.php',
     'Main\\Controllers\\FetchController' => $baseDir . '/controllers/FetchController.php',
-    'Main\\Controllers\\MailController' => $baseDir . '/controllers/MailController.php',
     'Main\\Controllers\\RecommendationController' => $baseDir . '/controllers/RecommendationController.php',
     'Main\\Controllers\\UpdateController' => $baseDir . '/controllers/UpdateController.php',
     'Main\\Controllers\\UploadController' => $baseDir . '/controllers/UploadController.php',
@@ -28,4 +27,10 @@ return array(
     'Main\\Models\\UpdateModel' => $baseDir . '/models/UpdateModel.php',
     'Main\\Resource' => $baseDir . '/Resource.php',
     'Main\\Routes' => $baseDir . '/Routes.php',
+    'PHPMailer\\PHPMailer\\Exception' => $vendorDir . '/phpmailer/phpmailer/src/Exception.php',
+    'PHPMailer\\PHPMailer\\OAuth' => $vendorDir . '/phpmailer/phpmailer/src/OAuth.php',
+    'PHPMailer\\PHPMailer\\OAuthTokenProvider' => $vendorDir . '/phpmailer/phpmailer/src/OAuthTokenProvider.php',
+    'PHPMailer\\PHPMailer\\PHPMailer' => $vendorDir . '/phpmailer/phpmailer/src/PHPMailer.php',
+    'PHPMailer\\PHPMailer\\POP3' => $vendorDir . '/phpmailer/phpmailer/src/POP3.php',
+    'PHPMailer\\PHPMailer\\SMTP' => $vendorDir . '/phpmailer/phpmailer/src/SMTP.php',
 );

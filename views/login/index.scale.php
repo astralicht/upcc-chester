@@ -4,6 +4,10 @@
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
+        html, body {
+            height: 100%;
+        }
+
         .card {
             width: 60%;
             height: 500px;
@@ -33,7 +37,6 @@
             background-position: center;
             background-size: cover;
             background-attachment: fixed;
-            height: 100vh;
             width: 100%;
         }
     </style>
@@ -42,7 +45,7 @@
 
 <body>
     <?php include_once("views/shared/nav.php"); ?>
-    <div class="main-content" flex="v">
+    <div class="main-content" flex="v" fullheight>
         <div class="content-section" flex="v" v-center h-center fullheight>
             <div class="card" flex="v" v-center style="gap: 30px; width: 500px;">
                 <div style="text-align: center;">
@@ -57,8 +60,9 @@
                         <button button id="login" contain="good" onclick="checkAuth()" style="border-radius:1000px; width: 100%;">Login</button>
                     </div>
                 </form>
-                <div flex="h" h-center>
+                <div flex="v" h-center>
                     <a href="../signup/index" style="color: #ccc;">Don't have an account? Sign up here!</a>
+                    <a href="../login/forgot-password" style="color: #ccc;">Forgot password?</a>
                 </div>
             </div>
         </div>
