@@ -28,6 +28,13 @@ class Config {
             'password' => '',
             'db_name' => 'upcc',
         ];
+
+        // self::$db_config = [
+        //     'host' => 'localhost',
+        //     'username' => 'eneiopzv_upcc_admin',
+        //     'password' => 'upcc2022A!',
+        //     'db_name' => 'eneiopzv_upcc',
+        // ];
     }
 
     /**

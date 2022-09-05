@@ -359,4 +359,12 @@ class FetchModel
         return $arr;
     }
 
+    function isAccountEmail($email) {
+        $sql = "SELECT `email`
+                FROM users
+                WHERE `email`=?";
+
+        return self::getResult($sql, [$email]);
+    }
+
 }

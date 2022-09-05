@@ -27,5 +27,7 @@ class FetchController {
     function productsFilterOnly($data) { return (new FetchModel)->productsFilterOnly($data); }
     function allproductIds() { return (new FetchModel)->allProductIds(); }
     function typesAndBrands() { return (new FetchModel)->typesAndBrands(); }
+
+    function isAccountEmail($email) { return (new FetchModel)->isAccountEmail($email); }
     
 }

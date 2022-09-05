@@ -48,8 +48,8 @@
         <div contain="overlight" noshadow flex="v">
             <h1 nomargin>Forgot Password?</h1>
             <p nomargin>Enter your account email below and, if the account exists, an email will be sent to that email with steps to reset your password.</p>
-            <form onsubmit="sendPasswordResetEmail(); return false;" flex="v" id="reset-form" method="POST">
-                <input type="email" form-input placeholder="Enter email here..." style="background-color: white; color: #333;" id="email">
+            <form action="../forgot-password/email" flex="v" id="reset-form" method="POST" enctype="application/x-www-form-urlencoded">
+                <input type="email" form-input placeholder="Enter email here..." style="background-color: white; color: #333;" id="email" required name="email">
                 <button type="submit" button contain="good" style="width: 100%;">Send Reset Email</button>
             </form>
         </div>
@@ -59,20 +59,6 @@
             Copyright © 2022 | All rights reserved.
         </div>
     </div>
-
-    <script>
-        function sendPasswordResetEmail() {
-            let form = document.querySelector("form#reset-form");
-            let email = form.children["email"].value;
-
-            fetch("../forgot-password/email", {
-                "method": "POST",
-                "body": {
-                    "email": email,
-                },
-            })
-        }
-    </script>
 </body>
 
 </html>
