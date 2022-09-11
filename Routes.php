@@ -30,6 +30,7 @@ class Routes {
 
             "error/403" => ["ViewsController", "error403"],
             "error/404" => ["ViewsController", "error404"],
+            "error/404" => ["ViewsController", "error500"],
             "api/error/403" => ["ApiController", "error403"],
             "api/error/404" => ["ApiController", "error404"],
 
@@ -99,6 +100,7 @@ class Routes {
 
             "login/index" => ["ViewsController", "login"],
             "login/forgot-password" => ["ViewsController", "forgotPassword"],
+            "login/reset-email-sent" => ["ViewsController", "resetEmailSent"],
 
             "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
 

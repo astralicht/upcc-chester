@@ -52,19 +52,24 @@ class MailController {
         $email = $_POST["email"];
 
         $FetchController = new FetchController();
+        $response = $FetchController->isAccountEmail($email);
 
-        if($FetchController->isAccountEmail($email)["status"] !== 200 && count($FetchController->isAccountEmail($email)["rows"]) < 1) return json_encode("FAIL");
+        if($response["status"] !== 200) return header("Location: ../error/500");
+
+        if(count($response["rows"]) < 1) return header("Location: ../login/reset-email-sent");
 
         date_default_timezone_set("Asia/Manila");
 
         $token = bin2hex(random_bytes(64));
         $expiryDate = date_add(date_create(date("Y-m-d H:i:s")), date_interval_create_from_date_string("5 minutes"));
+        $expiryDate = $expiryDate->format("Y-m-d H:i:s");
 
         $CreateModel = new CreateModel();
-        $response = $CreateModel->token($token, $expiryDate);
+        $response = $CreateModel->token($token, $expiryDate, $email);
+
+        if($response["status"] !== 200) return header("Location: ../error/500");
 
         var_dump($response);
-
         die;
 
         $link = "";
@@ -77,7 +82,7 @@ class MailController {
         $Mailer = self::setMailParameters($message, $subject, $email);
         $Mailer->send();
 
-        return json_encode("SUCCESS");
+        return header("Location: ../login/reset-email-sent");
     }
 
 }

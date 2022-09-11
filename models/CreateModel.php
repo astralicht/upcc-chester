@@ -378,4 +378,12 @@ class CreateModel {
         return self::executeQuery($sql, $data);
     }
 
+
+    function token($token, $expiryDate, $email) {
+        $sql = "INSERT INTO tokens(`token`, `expiry_date`, `email`)
+                VALUES (?, ?, ?);";
+
+        return self::executeQuery($sql, [$token, $expiryDate, $email]);
+    }
+
 }

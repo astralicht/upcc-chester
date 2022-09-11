@@ -21,6 +21,7 @@ class ViewsController {
 
     function error403(): string { return self::getFile('views/403/index.php'); }
     function error404(): string { return self::getFile('views/404/index.php'); }
+    function error500(): string { return self::getFile('views/500/index.php'); }
     function home(): string { return self::getFile('views/home/index.scale.php'); }
     function store(): string { return self::getFile('views/store/index.scale.php'); }
     function login(): string { return self::getFile('views/login/index.scale.php'); }
@@ -49,5 +50,6 @@ class ViewsController {
     function cookies(): string { return self::getFile('views/cookies/index.scale.php'); }
     function adminNewUser(): string { return self::getFile('views/admin/new-user.scale.php'); }
     function forgotPassword(): string { return self::getFile('views/login/forgot-password.scale.php'); }
+    function resetEmailSent(): string { return self::getFile('views/login/reset-email-sent.scale.php'); }
 
 }
