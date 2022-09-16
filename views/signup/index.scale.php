@@ -4,6 +4,10 @@
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
+        html, body {
+            height: 100%;
+        }
+        
         .card {
             width: 100%;
             height: auto;
@@ -66,7 +70,7 @@
 
 <body>
     <?php include_once("views/shared/nav.php"); ?>
-    <div main flex="v" fullwidth back-light v-center>
+    <div main flex="v" fullwidth back-light v-center fullheight>
         <div class="content-section" flex="v" h-center style="box-shadow: 0 6px 6px -6px rgba(0, 0, 0, .3);">
             <div class="card" flex="v" style="justify-content: center; gap: 0; background-color: #FFF;">
                 <form onsubmit="event.preventDefault(); submitSignup();">

@@ -54,9 +54,15 @@ class MailController {
         $FetchController = new FetchController();
         $response = $FetchController->isAccountEmail($email);
 
-        if($response["status"] !== 200) return header("Location: ../error/500");
+        if ($response["status"] !== 200) {
+            header("Location: ../error/500");
+            return;
+        }
 
-        if(count($response["rows"]) < 1) return header("Location: ../login/reset-email-sent");
+        if(count($response["rows"]) < 1) {
+            header("Location: ../login/reset-email-sent");
+            return;
+        }
 
         date_default_timezone_set("Asia/Manila");
 
@@ -67,7 +73,12 @@ class MailController {
         $CreateModel = new CreateModel();
         $response = $CreateModel->token($token, $expiryDate, $email);
 
-        if($response["status"] !== 200) return header("Location: ../error/500");
+        if($response["status"] !== 200) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        // generate link containing token to be put in the email for password reset.
 
         var_dump($response);
         die;
