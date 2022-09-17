@@ -256,7 +256,6 @@ class CreateModel {
     function clientOrder() {
         if ($_SESSION["type"] !== "CLIENT") return ["status" => 403, "message" => "You cannot have access to this resource!"];
     
-        $data = json_decode($data, true);
         $clientId = $_SESSION["id"];
 
         $sql = "SELECT `product_id`, `product_quantity` FROM users_carts WHERE `user_id`=?";

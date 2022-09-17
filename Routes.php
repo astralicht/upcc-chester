@@ -103,6 +103,7 @@ class Routes {
             "login/reset-email-sent" => ["ViewsController", "resetEmailSent"],
 
             "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
+            "auth/password-reset?token=*" => ["AuthController", "verifyToken", "GET"],
 
             "signup/index" => ["ViewsController", "signup"],
             "signup/success" => ["ViewsController", "signupSuccess"],

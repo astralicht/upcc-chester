@@ -2,6 +2,7 @@
 namespace Main\Controllers;
 
 use Main\Models\AuthModel;
+use Main\Models\FetchModel;
 
 session_start();
 
@@ -67,6 +68,18 @@ class AuthController {
     function checkAuth() {
         if (isset($_SESSION["type"])) return ["is_auth" => "TRUE"];
         return ["is_auth" => "FALSE"];
+    }
+
+
+    function verifyToken() {
+        $token = $_GET["token"];
+
+        $FetchModel = new FetchModel();
+        $response = $FetchModel->isTokenValid($token);
+
+        var_dump($response);
+        die;
+        
     }
 
 }
