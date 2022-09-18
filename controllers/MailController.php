@@ -80,20 +80,15 @@ class MailController {
 
         $host = $_SERVER["HTTP_HOST"];
         $link = "http://$host/upcc/auth/password-reset?token=$token";
-
-        var_dump($link);
-        die;
-
         $customerServiceEmail = "upcc@eneioarzew.online";
-        $html = "<style>body { font-family: Arial; }</style><h2>UPCC Account Password Reset</h2>\n<p>To reset your account's password, either copy and paste the link below, or simply click it to proceed: \n$link</p><p>If you did not request a password reset, disregard this email. For other concerns about your account, you may reach customer service at $customerServiceEmail.</p>";
-
-        $message = $html;
+        $message = "<style>body { font-family: Arial; }</style><h2>UPCC Account Password Reset</h2>\n<p>To reset your account's password, either copy and paste the link below, or simply click it to proceed: \r\n<a href='$link'>$link</a></p><p>If you did not request a password reset, disregard this email. For other concerns about your account, you may reach our customer service at <a href='mailto:$customerServiceEmail'>$customerServiceEmail</a>.</p>";
         $subject = "UPCC | Account Password Reset Request";
 
         $Mailer = self::setMailParameters($message, $subject, $email);
         $Mailer->send();
 
-        return header("Location: ../login/reset-email-sent");
+        header("Location: ../login/reset-email-sent");
+        return;
     }
 
 }

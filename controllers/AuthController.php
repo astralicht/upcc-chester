@@ -77,9 +77,7 @@ class AuthController {
         $FetchModel = new FetchModel();
         $response = $FetchModel->isTokenValid($token);
 
-        var_dump($response);
-        die;
-        
+        if 
     }
 
 }

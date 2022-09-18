@@ -359,12 +359,25 @@ class FetchModel
         return $arr;
     }
 
+
     function isAccountEmail($email) {
         $sql = "SELECT `email`
                 FROM users
                 WHERE `email`=?";
 
         return self::getResult($sql, [$email]);
+    }
+
+
+    function isTokenValid($token) {
+        if (!isset($_SESSION["email"])) return ["status" => 403];
+
+        $sql = "SELECT *
+                FROM tokens
+                WHERE `token`=?
+                AND `email`=?";
+
+        return self::getResult($sql, [$token, $_SESSION["email"]]);
     }
 
 }
