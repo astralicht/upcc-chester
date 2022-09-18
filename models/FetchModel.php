@@ -370,14 +370,32 @@ class FetchModel
 
 
     function isTokenValid($token) {
-        if (!isset($_SESSION["email"])) return ["status" => 403];
-
-        $sql = "SELECT *
+        $sql = "SELECT `expiry_date`, `email`
                 FROM tokens
                 WHERE `token`=?
-                AND `email`=?";
+                LIMIT 1";
 
-        return self::getResult($sql, [$token, $_SESSION["email"]]);
+        $result = self::getResult($sql, [$token]);
+
+        if ($result["status"] === 500) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        // if (count($result["rows"]) < 1) {
+        //     header("Location: ../auth/invalid-token");
+        //     return;
+        // }
+
+        $row = $result["rows"][0];
+
+        $diff = date_create(date("Y-m-d H:i:s"))->diff(date_create($row["expiry_date"]));
+
+        if ($diff->i > 5) {
+            
+        }
+
+        die;
     }
 
 }

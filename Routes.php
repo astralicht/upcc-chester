@@ -110,6 +110,8 @@ class Routes {
 
             "auth/logout" => ["AuthController", "logout"],
             "auth/loginredirect" => ["AuthController", "loginRedirect"],
+            "auth/invalid-token" => ["ViewsController", "invalidToken"],
+            "auth/not-logged-in" => ["ViewsController", "notLoggedIn"],
 
             "admin/dashboard" => ["ViewsController", "adminDashboard"],
             "admin/users" => ["ViewsController", "adminUsers"],
