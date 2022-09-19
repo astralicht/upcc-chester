@@ -100,4 +100,19 @@ class UpdateModel {
         return self::getResult($sql, $productPricesArr);
     }
 
+
+    function password($newPassword) {
+        $sql = "UPDATE users
+                SET `password`=?
+                WHERE `email`=?";
+
+        $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $response = self::getResult($sql, [$newPassword, $_SESSION["email-for-password-reset"]]);
+
+        unset($_SESSION["email-for-password-reset"]);
+        session_destroy();
+
+        return $response;
+    }
+
 }

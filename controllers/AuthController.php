@@ -3,6 +3,7 @@ namespace Main\Controllers;
 
 use Main\Models\AuthModel;
 use Main\Models\FetchModel;
+use Main\Models\UpdateModel;
 
 session_start();
 
@@ -95,7 +96,27 @@ class AuthController {
             return;
         }
 
+        session_start();
+        $_SESSION["email-for-password-reset"] = $row["email"];
         
+        header("Location: ../auth/reset-password");
+        return;
+    }
+
+
+    function resetPasswordSubmit() {
+        $newPassword = $_POST["password"];
+
+        $UpdateModel = new UpdateModel();
+        $response = $UpdateModel->password($newPassword);
+
+        if ($response["status"] === 500) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        header("Location: ../auth/password-reset-successful");
+        return;
     }
 
 }

@@ -53,5 +53,7 @@ class ViewsController {
     function resetEmailSent(): string { return self::getFile('views/login/reset-email-sent.scale.php'); }
     function invalidToken(): string { return self::getFile('views/auth/invalid-token.scale.php'); }
     function notLoggedIn(): string { return self::getFile('views/auth/not-logged-in.scale.php'); }
+    function resetPassword(): string { return self::getFile('views/auth/reset-password.scale.php'); }
+    function passwordResetSuccessful(): string { return self::getFile('views/auth/successful-password-reset.scale.php'); }
 
 }
