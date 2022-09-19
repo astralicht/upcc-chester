@@ -7,7 +7,7 @@
 </head>
 
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>
-    <h1> Invalid Token! </h1>
+    <h1> Invalid or expired token! </h1>
     <p text="medium">Redirecting you to login in <i id="count">5</i>...</p>
     <script>
         setInterval(() => {

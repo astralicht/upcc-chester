@@ -375,27 +375,7 @@ class FetchModel
                 WHERE `token`=?
                 LIMIT 1";
 
-        $result = self::getResult($sql, [$token]);
-
-        if ($result["status"] === 500) {
-            header("Location: ../error/500");
-            return;
-        }
-
-        // if (count($result["rows"]) < 1) {
-        //     header("Location: ../auth/invalid-token");
-        //     return;
-        // }
-
-        $row = $result["rows"][0];
-
-        $diff = date_create(date("Y-m-d H:i:s"))->diff(date_create($row["expiry_date"]));
-
-        if ($diff->i > 5) {
-            
-        }
-
-        die;
+        return self::getResult($sql, [$token]);
     }
 
 }

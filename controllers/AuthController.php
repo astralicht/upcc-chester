@@ -77,7 +77,23 @@ class AuthController {
         $FetchModel = new FetchModel();
         $response = $FetchModel->isTokenValid($token);
 
-        var_dump($response);
+        if ($response["status"] === 500) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        if (count($response["rows"]) < 1) {
+            header("Location: ../auth/invalid-token");
+            return;
+        }
+
+        $row = $response["rows"][0];
+        $diff = date_create(date("Y-m-d H:i:s"))->diff(date_create($row["expiry_date"]));
+
+        if ($diff->i > 5) {
+            header("Location: ../auth/invalid-token");
+            return;
+        }
     }
 
 }
