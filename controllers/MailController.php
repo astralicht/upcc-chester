@@ -10,14 +10,14 @@ session_start();
 class MailController {
 
     public function setMailParameters($message, $subject, $target) {
-        $sender_email = "upcc@eneioarzew.online";
+        $sender_email = "upcc-password@industrialsalesassist.com";
         $sender_name = "UPCC";
 
         $Mailer = new PHPMailer(true);
         $Mailer->isSMTP();
-        $Mailer->Host = "mail.eneioarzew.online";
+        $Mailer->Host = "mail.industrialsalesassist.com";
         $Mailer->SMTPAuth = true;
-        $Mailer->Username = "upcc@eneioarzew.online";
+        $Mailer->Username = "upcc-password@industrialsalesassist.com";
         $Mailer->Password = "upcc2022A!";
         $Mailer->SMTPOptions = array(
             "ssl" => array(
@@ -79,13 +79,18 @@ class MailController {
         }
 
         $host = $_SERVER["HTTP_HOST"];
-        $link = "http://$host/upcc/auth/password-reset?token=$token";
-        $customerServiceEmail = "upcc@eneioarzew.online";
+        $link = "http://$host/auth/password-reset?token=$token";
+        $customerServiceEmail = "inquiries@industrialsalesassist.com";
         $message = "<style>body { font-family: Arial; }</style><h2>UPCC Account Password Reset</h2>\n<p>To reset your account's password, either copy and paste the link below, or simply click it to proceed: \r\n<a href='$link'>$link</a></p><p>If you did not request a password reset, disregard this email. For other concerns about your account, you may reach our customer service at <a href='mailto:$customerServiceEmail'>$customerServiceEmail</a>.</p>";
         $subject = "UPCC | Account Password Reset Request";
 
         $Mailer = self::setMailParameters($message, $subject, $email);
-        $Mailer->send();
+        try {
+            $Mailer->send();
+        } catch (Error $e) {
+            var_dump($e);
+            die;
+        }
 
         header("Location: ../login/reset-email-sent");
         return;
