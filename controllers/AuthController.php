@@ -94,6 +94,8 @@ class AuthController {
             header("Location: ../auth/invalid-token");
             return;
         }
+
+        
     }
 
 }
