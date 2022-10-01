@@ -378,4 +378,24 @@ class FetchModel
         return self::getResult($sql, [$token]);
     }
 
+
+    function getProductNamesFromIds($ids) {
+        $idsString = implode(", ", $ids);
+        $sql = "SELECT `id`, `name`
+                FROM products
+                WHERE `id` IN ($idsString)";
+
+        return self::getResult($sql);
+    }
+
+
+    function agentEmails() {
+        $sql = "SELECT `email`
+                FROM users
+                WHERE `type`='AGENT'
+                AND `date_removed` IS NULL";
+
+        return self::getResult($sql);
+    }
+
 }

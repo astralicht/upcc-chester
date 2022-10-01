@@ -2,7 +2,9 @@
 
 namespace Main\Controllers;
 
+use Exception;
 use Main\Models\CreateModel;
+use Main\Models\FetchModel;
 use PHPMailer\PHPMailer\PHPMailer;
 
 session_start();
@@ -85,14 +87,40 @@ class MailController {
         $subject = "UPCC | Account Password Reset Request";
 
         $Mailer = self::setMailParameters($message, $subject, $email);
-        try {
-            $Mailer->send();
-        } catch (Error $e) {
-            var_dump($e);
-            die;
-        }
+        $Mailer->send();
 
         header("Location: ../login/reset-email-sent");
+        return;
+    }
+
+
+    function sendToRandomAgent($orderId, $clientId, $productIds, $items) {
+        $firstName = $_SESSION["first_name"];
+        $lastName = $_SESSION["last_name"];
+        $clientEmail = $_SESSION["email"];
+
+        $message = "Order #$orderId | $firstName $lastName $clientEmail <br>";
+
+        $FetchModel = new FetchModel();
+        $response = $FetchModel->getProductNamesFromIds($productIds);
+        $rows = $response["rows"];
+
+        foreach ($rows as $row) {
+            $message .= sprintf("%s %s<br>", $row["id"], $row["name"]);
+        }
+
+        $response = $FetchModel->agentEmails();
+        $rows = $response["rows"];
+
+        $agentEmail = $rows[rand(0, count($rows)-1)]["email"];
+        
+        $Mailer = self::setMailParameters($message, "Order #$orderId", $agentEmail);
+
+        $Mailer->ClearReplyTos();
+
+        $Mailer->addReplyTo($clientEmail, "$firstName $lastName");
+        $Mailer->send();
+
         return;
     }
 

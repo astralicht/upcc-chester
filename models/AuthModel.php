@@ -10,7 +10,7 @@ class AuthModel {
 
         $conn = (new Config())->openDbConnection();
 
-        $sql = 'SELECT `id`,`first_name`, `last_name`, `type`, `dp_path`, `password`
+        $sql = 'SELECT `id`, `first_name`, `last_name`, `email`, `type`, `dp_path`, `password`
         FROM users
         WHERE `email`=?
         AND `date_removed` IS NULL

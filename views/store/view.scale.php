@@ -326,8 +326,6 @@ if (isset($_SESSION["id"])) {
                         return;
                     }
 
-                    console.log();
-
                     document.querySelector("#cart-items-count").innerText = json["cart_count"];
 
                     popup_message.setAttribute("contain", "good");

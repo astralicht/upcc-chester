@@ -4,6 +4,7 @@ namespace Main\Models;
 session_start();
 
 use Main\Config;
+use Main\Controllers\MailController;
 use Main\Models\FetchModel;
 
 class CreateModel {
@@ -270,7 +271,6 @@ class CreateModel {
         $items = [];
 
         $idsCount = count($productIdsQuantities);
-        $count = 0;
         $productIds = [];
 
         for ($index = 0; $index < $idsCount; $index++) {
@@ -294,6 +294,9 @@ class CreateModel {
         $result = self::executeQuery($sql, [$clientId]);
 
         $_SESSION["cart_count"] = 0;
+
+        $MailController = new MailController();
+        $MailController->sendToRandomAgent($orderId, $clientId, $productIds, $items);
 
         return $result;
     }
@@ -326,8 +329,8 @@ class CreateModel {
         $product_id = $data["product_id"];
         $quantity = $data["quantity"];
 
-        $sql = "SELECT COUNT(`product_id`) AS 'count' FROM users_carts WHERE `product_id`=?";
-        $rows = self::executeQueryWithResult($sql, [$product_id]);
+        $sql = "SELECT COUNT(`product_id`) AS 'count' FROM users_carts WHERE `product_id`=? AND `user_id`=?";
+        $rows = self::executeQueryWithResult($sql, [$product_id, $_SESSION["id"]]);
 
         $count = $rows["rows"][0]["count"];
 
@@ -335,17 +338,17 @@ class CreateModel {
             $sql = "INSERT INTO users_carts(`user_id`, `product_id`, `product_quantity`) VALUES(?, ?, ?)";
             $data = [$_SESSION["id"], $product_id, $quantity];
             ++$_SESSION["cart_count"];
-
             $result = self::executeQuery($sql, $data);
+
             if ($result["status"] != 200) return $result;
 
             return ["status" => 200, "cart_count" => $_SESSION["cart_count"]];
         }
 
-        $sql = "UPDATE users_carts SET `product_quantity`=`product_quantity`+? WHERE `product_id`=?";
-        $data = [$quantity, $product_id];
-
+        $sql = "UPDATE users_carts SET `product_quantity`=`product_quantity`+? WHERE `product_id`=? AND `user_id`=?";
+        $data = [$quantity, $product_id, $_SESSION["id"]];
         $result = self::executeQuery($sql, $data);
+
         if ($result["status"] != 200) return $result;
 
         return ["status" => 200, "cart_count" => $_SESSION["cart_count"]];

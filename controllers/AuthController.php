@@ -28,6 +28,7 @@ class AuthController {
             $userDetails = $response["user"];
 
             $_SESSION["id"] = $userDetails["id"];
+            $_SESSION["email"] = $userDetails["email"];
             $_SESSION["first_name"] = $userDetails["first_name"];
             $_SESSION["last_name"] = $userDetails["last_name"];
             $_SESSION["type"] = $userDetails["type"];
