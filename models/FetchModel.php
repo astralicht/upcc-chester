@@ -8,7 +8,7 @@ use Main\Config;
 class FetchModel
 {
 
-    private function getResult($sql, $params = null) {
+    function getResult($sql, $params = null) {
         $conn = (new Config())->openDbConnection();
 
         try {
