@@ -29,5 +29,12 @@
  *  - adminNewUser
  *  - token
  * # Delete
+ *  - getResult (the same as executeQuery)
+ *  - users
+ *  - products
+ *  - productTypes
+ *  - clientCartItem
+ *  - orders
+ * # Fetch
  *  - 
  */
