@@ -171,7 +171,7 @@ class FetchModel
                 FROM products AS p INNER JOIN product_types as pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
-                AND p.`id`=$id";
+                AND p.`id`='$id'";
 
         return self::getResult($sql);
     }
