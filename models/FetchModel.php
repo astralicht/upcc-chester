@@ -4,6 +4,7 @@ namespace Main\Models;
 session_start();
 
 use Main\Config;
+use TypeError;
 
 class FetchModel
 {
@@ -14,10 +15,10 @@ class FetchModel
         try {
             $query = $conn->prepare($sql);
         } catch (\Exception $e) {
-            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString(), "rows" => []];
         }
         
-        if ($params !== NULL) {
+        if ($params != null) {
             $literals = "";
             foreach ($params as $param) {
                 $literals .= "s";
@@ -28,7 +29,7 @@ class FetchModel
         try {
             $query->execute();
         } catch (\Exception $e) {
-            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString(), "rows" => []];
         }
 
         $result = $query->get_result();
@@ -351,10 +352,14 @@ class FetchModel
 
     function typesAndBrands() {
         $sql = "SELECT `brand` FROM products WHERE `date_removed` IS NULL GROUP BY `brand`";
-        $arr["brands"] = self::getResult($sql)["rows"];
+        $result = self::getResult($sql);
+        $arr["brands"] = $result["rows"];
+        $arr["status"] = $result["status"];
 
         $sql = "SELECT `id`, `name` FROM product_types WHERE `date_removed` IS NULL";
-        $arr["types"] = self::getResult($sql)["rows"];
+        $result = self::getResult($sql);
+        $arr["types"] = $result["rows"];
+        $arr["status"] = $result["status"];
 
         return $arr;
     }
@@ -380,10 +385,16 @@ class FetchModel
 
 
     function getProductNamesFromIds($ids) {
+        if (gettype($ids) == "string" || $ids == null) $ids = [];
+
         $idsString = implode(", ", $ids);
         $sql = "SELECT `id`, `name`
                 FROM products
                 WHERE `id` IN ($idsString)";
+
+        if (empty($ids)) $sql = "SELECT `id`, `name`
+                                FROM products
+                                WHERE `id`=''";
 
         return self::getResult($sql);
     }
