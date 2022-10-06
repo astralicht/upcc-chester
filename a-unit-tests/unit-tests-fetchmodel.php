@@ -3,7 +3,7 @@
 use Main\Controllers\RecommendationController;
 use Main\Models\FetchModel;
 
-include_once "vendor/autoload.php";
+include_once "../vendor/autoload.php";
 include_once "unit-test-tools.php";
 
 /**

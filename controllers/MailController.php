@@ -2,9 +2,9 @@
 
 namespace Main\Controllers;
 
-use Exception;
 use Main\Models\CreateModel;
 use Main\Models\FetchModel;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
 session_start();
@@ -106,7 +106,7 @@ class MailController {
         $rows = $response["rows"];
 
         foreach ($rows as $row) {
-            $message .= sprintf("%s %s<br>", $row["id"], $row["name"]);
+            $message .= sprintf("Product #%s: %s<br>", $row["id"], $row["name"]);
         }
 
         $response = $FetchModel->agentEmails();
@@ -118,10 +118,14 @@ class MailController {
 
         $Mailer->ClearReplyTos();
 
-        $Mailer->addReplyTo($clientEmail, "$firstName $lastName");
+        try {
+            $Mailer->addReplyTo($clientEmail, "$firstName $lastName");
+        } catch (PHPMailerException $e) {
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+        }
         $Mailer->send();
 
-        return;
+        return ["status" => 200];
     }
 
 }

@@ -11,7 +11,10 @@ function checkIfSuccess($task, $class, $method, $params = "NA", $otherConditions
         else if ($otherConditions === "zero") $otherConditions = count($response["rows"]) < 1;
 
         if ($response["status"] === 200 && $otherConditions) printSuccess($task);
-        else printFailed($task);
+        else {
+            printFailed($task);
+            echo "<li>".$response["message"]."</li>";
+        }
     } catch(mysqli_sql_exception $e) {
         printFailed($task);
         echo "<li>$e</li>";

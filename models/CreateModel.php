@@ -139,6 +139,10 @@ class CreateModel {
         if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
 
         $data = json_decode($data, true);
+
+        if (empty($data["name"]) || $data["name"] == "" || $data["name"] == null) return ["status" => 409, "message" => "Product name is required."];
+        if (empty($data["type_id"]) || $data["type_id"] == "" || $data["type_id"] == null || $data["type_id"] == 0) return ["status" => 409, "message" => "Product type is required."];
+
         $unitPrice = $data["unit-price"];
         unset($data["unit-price"]);
 
@@ -169,6 +173,10 @@ class CreateModel {
         if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
 
         $data = json_decode($data, true);
+
+        if (empty($data[0]) || $data[0] == "" || $data[0] == null || $data[0] == 0) return ["status" => 409, "message" => "Product id is required."];
+        if (empty($data[1]) || $data[1] == "" || $data[1] == null || $data[1] == 0) return ["status" => 409, "message" => "Product unit price is required."];
+
         $sql = "INSERT INTO products_prices(`product_id`, `unit_price`) VALUES(?, ?)";
 
         return self::executeQuery($sql, $data);
@@ -179,13 +187,16 @@ class CreateModel {
         if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
 
         $data = json_decode($data, true);
+
+        if (empty($data["name"]) || $data["name"] == "" || $data["name"] == null) return ["status" => 409, "message" => "Product type name is required."];
+
         $flatData = self::flattenAssocArray($data);
 
         $sql = "SELECT `name` FROM product_types WHERE `name`=?";
         $rows = self::executeQueryWithResult($sql, [$data["name"]]);
         $count = count($rows["rows"]);
 
-        if ($count > 0) return ["status" => 400, "message" => "That product type already exists."];
+        if ($count > 0) return ["status" => 409, "message" => "That product type already exists."];
 
         $sql = "INSERT INTO product_types(`name`, `description`) VALUES(?, ?)";
 
@@ -197,7 +208,7 @@ class CreateModel {
         if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
 
         $data = json_decode($data, true);
-        $sql = "INSERT INTO products_stocks(`products_id`, `unit_price`) VALUES(?, ?)";
+        $sql = "INSERT INTO products_stocks(`product_id`, `unit_price`) VALUES(?, ?)";
 
         return self::executeQuery($sql, $data);
     }
@@ -210,6 +221,10 @@ class CreateModel {
 
         $userEmail = $data["user-email"];
         $productIds = $data["product-ids"];
+
+        if (empty($userEmail) || $userEmail == "" || $userEmail == null) return ["status" => 409, "message" => "User email is required."];
+        if (empty($productIds) || $productIds == "" || $productIds == null) return ["status" => 409, "message" => "Product ids and quantites are required."];
+        if (gettype($productIds) !== "array") return ["status" => 409, "message" => "Product ids and qunatites should be in an array."];
 
         $sql = "SELECT `id` FROM users WHERE `email`=?";
 
@@ -262,6 +277,8 @@ class CreateModel {
         $sql = "SELECT `product_id`, `product_quantity` FROM users_carts WHERE `user_id`=?";
         $productIdsQuantities = self::executeQueryWithResult($sql, [$clientId])["rows"];
 
+        if (count($productIdsQuantities) < 1) return ["status" => "409", "message" => "User cart is empty!"];
+
         $sql = "INSERT INTO orders(`user_id`) VALUES (?);";
 
         $rows = self::executeQuery($sql, [$clientId], true);
@@ -296,13 +313,15 @@ class CreateModel {
         $_SESSION["cart_count"] = 0;
 
         $MailController = new MailController();
-        $MailController->sendToRandomAgent($orderId, $clientId, $productIds, $items);
+        $response = $MailController->sendToRandomAgent($orderId, $clientId, $productIds, $items);
+        
+        if ($response["status"] !== 200) return $response;
 
         return $result;
     }
 
 
-    function cookie($productId) {
+    function cookie($productId, $plusExpiration = 31540000000) {
         if (isset($_SESSION["id"])) {
             $FetchModel = new FetchModel();
             $product = $FetchModel->productDetailsComplete($productId)["rows"][0];
@@ -318,7 +337,7 @@ class CreateModel {
             setcookie(
                 $_SESSION["id"] . "_" . uniqid(),
                 $cookieValues,
-                time() + 31540000000,
+                time() + $plusExpiration,
                 "/"
             );
         }
@@ -328,6 +347,9 @@ class CreateModel {
     function cartItem($data) {
         $product_id = $data["product_id"];
         $quantity = $data["quantity"];
+
+        if (empty($data["product_id"]) || $data["product_id"] == "" || $data["product_id"] == null || $data["product_id"] == 0) return ["status" => 409, "message" => "Product id is required."];
+        if (empty($data["quantity"]) || $data["quantity"] == "" || $data["quantity"] == null || $data["quantity"] == 0) return ["status" => 409, "message" => "Product quantity is required."];
 
         $sql = "SELECT COUNT(`product_id`) AS 'count' FROM users_carts WHERE `product_id`=? AND `user_id`=?";
         $rows = self::executeQueryWithResult($sql, [$product_id, $_SESSION["id"]]);
