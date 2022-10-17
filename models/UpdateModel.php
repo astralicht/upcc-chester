@@ -2,6 +2,8 @@
 
 namespace Main\Models;
 
+date_default_timezone_set("Asia/Manila");
+
 use Main\Config;
 
 class UpdateModel {
@@ -66,10 +68,14 @@ class UpdateModel {
     
     function updateImageData($fileDestination, $fileName, $imageType, $id) {
         if ($imageType === NULL) return;
-        if ($imageType === "PRODUCT") $sql = "UPDATE products SET `image_path`=?, `image_name`=? WHERE `id`=?";
-        if ($imageType === "USER") $sql = "UPDATE users SET `image_path`=?, `image_name`=? WHERE `id`=?";
-
-        $data = [$fileDestination, $fileName, $id];
+        if ($imageType === "PRODUCT") {
+            $sql = "UPDATE products SET `image_path`=?, `image_name`=? WHERE `id`=?";
+            $data = [$fileDestination, $fileName, $id];
+        }
+        if ($imageType === "USER") {
+            $sql = "UPDATE users SET `dp_path`=? WHERE `id`=?";
+            $data = [$fileDestination, $id];
+        }
 
         return self::getResult($sql, $data);
     }

@@ -2,6 +2,7 @@
 namespace Main\Models;
 
 session_start();
+date_default_timezone_set("Asia/Manila");
 
 use Main\Config;
 use Main\Controllers\MailController;
@@ -321,29 +322,6 @@ class CreateModel {
     }
 
 
-    function cookie($productId, $plusExpiration = 31540000000) {
-        if (isset($_SESSION["id"])) {
-            $FetchModel = new FetchModel();
-            $product = $FetchModel->productDetailsComplete($productId)["rows"][0];
-
-            $cookieValues = json_encode([
-                "product_id" => $_GET["id"],
-                "type" => $product["type"],
-                "material" => $product["material"],
-                "brand" => $product["brand"],
-                "connection_type" => $product["connection_type"],
-            ]);
-
-            setcookie(
-                $_SESSION["id"] . "_" . uniqid(),
-                $cookieValues,
-                time() + $plusExpiration,
-                "/"
-            );
-        }
-    }
-
-
     function cartItem($data) {
         $product_id = $data["product_id"];
         $quantity = $data["quantity"];
@@ -377,6 +355,35 @@ class CreateModel {
     }
 
 
+    function cookie($plusExpiration = (60*60*24*30*12)) {
+        if (isset($_SESSION["id"])) {
+            $FetchModel = new FetchModel();
+            $product = $FetchModel->productDetailsComplete($_GET["id"])["rows"][0];
+
+            $cookieValues = json_encode([
+                "product_id" => $_GET["id"],
+                "type" => $product["type"],
+                "material" => $product["material"],
+                "brand" => $product["brand"],
+                "connection_type" => $product["connection_type"],
+            ]);
+
+            $cookieId = uniqid($_SESSION["id"], true);
+
+            setcookie(
+                $cookieId,
+                $cookieValues,
+                time() + $plusExpiration,
+                "/"
+            );
+
+            $_SESSION["cookieId"] = $cookieId;
+
+            return ["status" => 200];
+        }
+    }
+
+
     function adminNewUser($data) {
         if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
 
@@ -403,11 +410,18 @@ class CreateModel {
     }
 
 
-    function token($token, $expiryDate, $email) {
+    function token($email) {
+        $token = bin2hex(random_bytes(64));
+        $expiryDate = date_add(date_create(date("Y-m-d H:i:s")), date_interval_create_from_date_string("5 minutes"));
+        $expiryDate = $expiryDate->format("Y-m-d H:i:s");
+
         $sql = "INSERT INTO tokens(`token`, `expiry_date`, `email`)
                 VALUES (?, ?, ?);";
 
-        return self::executeQuery($sql, [$token, $expiryDate, $email]);
+        $response = self::executeQuery($sql, [$token, $expiryDate, $email]);
+        $response["token"] = $token;
+
+        return $response;
     }
 
 }

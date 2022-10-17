@@ -2,6 +2,8 @@
 
 namespace Main\Models;
 
+date_default_timezone_set("Asia/Manila");
+
 use Main\Config;
 
 class DeleteModel {

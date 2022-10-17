@@ -68,17 +68,15 @@ class MailController {
 
         date_default_timezone_set("Asia/Manila");
 
-        $token = bin2hex(random_bytes(64));
-        $expiryDate = date_add(date_create(date("Y-m-d H:i:s")), date_interval_create_from_date_string("5 minutes"));
-        $expiryDate = $expiryDate->format("Y-m-d H:i:s");
-
         $CreateModel = new CreateModel();
-        $response = $CreateModel->token($token, $expiryDate, $email);
+        $response = $CreateModel->token($email);
 
         if($response["status"] !== 200) {
             header("Location: ../error/500");
             return;
         }
+
+        $token = $response["token"];
 
         $host = $_SERVER["HTTP_HOST"];
         $link = "http://$host/auth/password-reset?token=$token";
