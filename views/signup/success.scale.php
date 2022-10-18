@@ -61,12 +61,12 @@
             border-radius: 0;
         }
     </style>
-    <title>Signup | UPCC</title>
+    <title>Signup | Industrial Sales Assist</title>
 </head>
 
 <body>
     <div main flex="v" fullwidth back-light style="height: 100vh;">
-        <h1>UPCC</h1>
+        <h1>Industrial Sales Assist</h1>
         <h1 nomargin>Signup successful!</h1>
         <p nomargin>We sent you a <strong><em>confirmation email</em></strong> to complete your signup.</p>
         <p nomargin>Click <a href="../login/index">here</a> to login.</p>

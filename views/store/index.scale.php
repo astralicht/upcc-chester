@@ -61,7 +61,7 @@
             color: #ed7d61;
         }
     </style>
-    <title>Products | UPCC</title>
+    <title>Products | Industrial Sales Assist</title>
 </head>
 
 <body>

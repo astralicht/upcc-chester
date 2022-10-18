@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <?php include_once 'views/shared/headers.php'; ?>
-    <title>403 | UPCC</title>
+    <title>403 | Industrial Sales Assist</title>
 </head>
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>
     <h1> 403 </h1>

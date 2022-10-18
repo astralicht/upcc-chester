@@ -23,7 +23,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "AGENT") header("Location
             background-color: #E5E5E5;
         }
     </style>
-    <title>Orders | UPCC Agent</title>
+    <title>Orders | ISA Agent</title>
 </head>
 
 <body back-light>

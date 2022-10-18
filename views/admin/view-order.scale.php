@@ -50,7 +50,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
         }
     </style>
-    <title>View Order #<?php echo $_GET["order_id"]; ?> | UPCC Admin</title>
+    <title>View Order #<?php echo $_GET["order_id"]; ?> | ISA Admin</title>
 </head>
 
 <body back-light>

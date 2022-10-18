@@ -39,7 +39,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "AGENT") header("Location
             background-attachment: fixed;
         }
     </style>
-    <title>Dashboard | UPCC Agent</title>
+    <title>Dashboard | ISA Agent</title>
 </head>
 
 <body back-light>

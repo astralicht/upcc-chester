@@ -23,7 +23,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             background-color: #E5E5E5;
         }
     </style>
-    <title>Products | UPCC Admin</title>
+    <title>Products | ISA Admin</title>
 </head>
 
 <body back-light>

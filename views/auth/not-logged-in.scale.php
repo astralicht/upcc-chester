@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once 'views/shared/headers.php'; ?>
-    <title>Not Logged In | UPCC</title>
+    <title>Not Logged In | Industrial Sales Assist</title>
 </head>
 
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>

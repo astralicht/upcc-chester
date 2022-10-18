@@ -65,7 +65,7 @@
             border-radius: 0;
         }
     </style>
-    <title>Reset Password | UPCC</title>
+    <title>Reset Password | Industrial Sales Assist</title>
 </head>
 
 <body>

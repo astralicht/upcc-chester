@@ -65,7 +65,7 @@
             border-radius: 0;
         }
     </style>
-    <title>Signup | UPCC</title>
+    <title>Signup | Industrial Sales Assist</title>
 </head>
 
 <body>

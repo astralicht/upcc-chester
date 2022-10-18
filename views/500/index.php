@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <?php include_once 'views/shared/headers.php'; ?>
-    <title>500 | UPCC</title>
+    <title>500 | Industrial Sales Assist</title>
 </head>
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>
     <h1 nomargin> 500 </h1>
