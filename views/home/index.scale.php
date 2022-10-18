@@ -30,48 +30,7 @@
 <body>
     <div body back-light>
         <?php include_once("views/shared/nav.php"); ?>
-        <div class="hero">
-            <div style="height: calc(100vh - 3em); width: 100%; background-image: linear-gradient(to right, transparent, transparent, #000); position: absolute; top: 4em; left: 0;"></div>
-            <div fullwidth></div>
-            <div class="hero-content" flex="h" v-center style="width: 100%;">
-                <div style="background-color: rgba(0, 0, 0, .7); backdrop-filter: blur(3px);" flex="v">
-                    <div style="color: white;">
-                        <h1 style=" display: inline; color: white; font-size: 3em;">ISA</h1><br>Industrial Sales Assist
-                    </div>
-                    <div flex="h" h-end>
-                        <a href="../store/index" button="primary" white-text-all style="width: fit-content;">
-                            <b>Explore Products</b>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div main flex="v">
-            <div id="featured-products">
-                <div>
-                    <h1 style="width: 100%; text-align: center; font-size: 2.5em;">Featured Products</h1>
-                </div>
-                <div>
-                    <div class="cards-container" flex="h" h-center></div>
-                    <div fullwidth flex="h" h-center fullpadding>
-                        <a href="../store/index" button="secondary" style="outline: none; border: 0; width: 300px; padding: .5em .7em;">View more in store</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div flex="h" h-center v-center style="height: 600px;" id="about-us">
-            <div style="background-color: #0f2755; height: 300px; width: 300px; z-index: 2; left: 150px;
-                        position: absolute; justify-content: center; align-items: center;
-                        box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, .3);" flex>
-                <h1 style="font-size: 2.5em; color: white;">
-                    About Us
-                </h1>
-            </div>
-            <div style="background-color: white; position: absolute; left: 320px; right: 150px; min-width: 700px; padding: 50px; 
-                        padding-left: 170px; box-shadow: 0 0 9px 3px rgba(0, 0, 0, .15); overflow-x: auto;" flex>
-                We at Industrial Sales Assist aim to provide ease of searching and purchasing of parts and tools to our customers.
-            </div>
-        </div>
+        
     </div>
     <?php include_once "views/shared/footers.php"; ?>
     <script>

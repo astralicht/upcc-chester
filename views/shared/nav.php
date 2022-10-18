@@ -8,10 +8,8 @@
     </div>
     <div items fullwidth flex="h" h-end v-center nogap>
         <a href="../home/index" nav-item contain="overlight">Home</a>
-        <a href="../home/index#featured-products" nav-item contain="overlight">Featured Products</a>
-        <a href="../home/index#about-us" nav-item contain="overlight">About</a>
-        <a href="../home/index#contact" nav-item contain="overlight">Contact</a>
-        <a href="../store/index" nav-item contain="overlight">Store</a>
+        <a href="../shops/index" nav-item contain="overlight">Shops</a>
+        <a href="../products/index" nav-item contain="overlight">Products</a>
         <?php if (!isset($_SESSION["type"])) { ?>
             <a href="../login/index" nav-item contain="overlight">Login</a>
         <?php } else { ?>
