@@ -228,7 +228,7 @@ if (isset($_SESSION["id"])) {
             let product = json["rows"][0];
             let keys = Object.keys(product);
 
-            document.title = `${product["name"]} | UPCC Store`;
+            document.title = `${product["name"]} | ISA Store`;
 
             for (let key of keys) {
                 let element = document.querySelector(`#${key}`);

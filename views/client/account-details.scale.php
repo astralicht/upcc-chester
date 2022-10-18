@@ -39,7 +39,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             background-attachment: fixed;
         }
     </style>
-    <title>Account Details | UPCC Client</title>
+    <title>Account Details | ISA Client</title>
 </head>
 
 <body back-light>

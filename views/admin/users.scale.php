@@ -27,7 +27,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             transition: opacity .15s;
         }
     </style>
-    <title>Users | UPCC Admin</title>
+    <title>Users | ISA Admin</title>
 </head>
 
 <body back-light>

@@ -67,7 +67,7 @@
             transition: opacity .15s;
         }
     </style>
-    <title>Signup | UPCC</title>
+    <title>Signup | Industrial Sales Assist</title>
 </head>
 
 <body>

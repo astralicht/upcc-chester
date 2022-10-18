@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once 'views/shared/headers.php'; ?>
-    <title>Successful Password Reset | UPCC</title>
+    <title>Successful Password Reset | Industrial Sales Assist</title>
 </head>
 
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>

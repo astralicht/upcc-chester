@@ -14,7 +14,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             transition: opacity .15s;
         }
     </style>
-    <title>Edit Product #<?php echo $_GET["id"]; ?> | UPCC Admin</title>
+    <title>Edit Product #<?php echo $_GET["id"]; ?> | ISA Admin</title>
 </head>
 
 <body back-light>

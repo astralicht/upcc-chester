@@ -39,7 +39,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             background-attachment: fixed;
         }
     </style>
-    <title>Dashboard | UPCC Admin</title>
+    <title>Dashboard | ISA Admin</title>
 </head>
 
 <body back-light>

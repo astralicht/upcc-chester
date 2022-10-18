@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <?php include_once 'views/shared/headers.php'; ?>
-    <title>Password Reset Email Sent | UPCC</title>
+    <title>Password Reset Email Sent | Industrial Sales Assist</title>
 </head>
 <body contain="overlight" noshadow flex="v" h-center fullwidth nogap>
     <h1 nomargin> Password Reset Email Sent! </h1>

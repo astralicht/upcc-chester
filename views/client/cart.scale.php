@@ -84,7 +84,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
         }
     </style>
-    <title>Cart | UPCC Client</title>
+    <title>Cart | ISA Client</title>
 </head>
 
 <body>

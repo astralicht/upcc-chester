@@ -37,7 +37,7 @@
             width: 100%;
         }
     </style>
-    <title>Forgot Password | UPCC</title>
+    <title>Forgot Password | Industrial Sales Assist</title>
 </head>
 
 <body>

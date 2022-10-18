@@ -3,7 +3,7 @@
 <div contain="white" nav="h" style="height: 4em;">
     <div style="width: 100%;">
         <a href="../home/index" style="text-decoration: none;">
-            <h3 nomargin>Industrial Sales Assist</h3>
+            <h3 nomargin>ISA</h3>
         </a>
     </div>
     <div items fullwidth flex="h" h-end v-center nogap>

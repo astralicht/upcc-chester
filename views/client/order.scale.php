@@ -43,7 +43,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             text-align: left;
         }
     </style>
-    <title>Order History | UPCC Client</title>
+    <title>Order History | ISA Client</title>
 </head>
 
 <body>

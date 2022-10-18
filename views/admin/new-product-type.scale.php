@@ -14,7 +14,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             transition: opacity .15s;
         }
     </style>
-    <title>New Product Type | UPCC Admin</title>
+    <title>New Product Type | ISA Admin</title>
 </head>
 
 <body back-light>
