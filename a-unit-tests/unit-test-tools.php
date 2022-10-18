@@ -8,12 +8,16 @@ function checkIfSuccess($task, $class, $method, $params = [], $otherConditions =
             if (gettype($params) === "string" && $params !== "") {
                 $response = $class->$method($params);
             }
-            else if ($params["options"] === "MULTIPLE") {
+            else if (isset($params["options"]) && $params["options"] === "MULTIPLE") {
                 unset($params["options"]);
                 $response = call_user_func_array(array($class, $method), $params);
+            } else {
+                $response = $class->$method($params);
             }
         }
-        else $response = $class->$method();
+        else  {
+            $response = $class->$method();
+        }
 
         if ($otherConditions === "non-zero") $otherConditions = count($response["rows"]) > 0;
         else if ($otherConditions === "zero") $otherConditions = count($response["rows"]) < 1;

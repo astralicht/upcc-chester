@@ -373,7 +373,7 @@ class CreateModel {
             setcookie(
                 $cookieId,
                 $cookieValues,
-                time() + $plusExpiration,
+                time() + (int)$plusExpiration,
                 "/"
             );
 

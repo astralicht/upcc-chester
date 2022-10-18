@@ -52,18 +52,21 @@ checkIfSuccess($task, $CreateModel, "productPrice", json_encode(["9", "10.01"]))
 // checkIfSuccess($task, $CreateModel, "productStock", json_encode(["", ""]));
 
 $_SESSION["type"] = "AGENT";
-$_SESSION["id"] = "31";
+$_SESSION["id"] = "30";
 
 $task = "Create order (agent)";
 checkIfSuccess($task, $CreateModel, "order", json_encode([
-    "user-email" => "julac_15@yahoo.com",
+    "user-email" => "unit-test@mail.com",
     "product-ids" => [
         "prod-1" => 1,
     ],
 ]));
 
+$_SESSION["id"] = "33";
 $_SESSION["type"] = "CLIENT";
 $_SESSION["email"] = "julac_15@yahoo.com";
+$_SESSION["first_name"] = "Julac";
+$_SESSION["last_name"] = "Ontina";
 
 $task = "Create cart item (client)";
 checkIfSuccess($task, $CreateModel, "cartItem", [
@@ -71,8 +74,8 @@ checkIfSuccess($task, $CreateModel, "cartItem", [
     "quantity" => "1",
 ]);
 
-$task = "Create order from cart (client)";
-checkIfSuccess($task, $CreateModel, "clientOrder");
+// $task = "Create order from cart (client)";
+// checkIfSuccess($task, $CreateModel, "clientOrder");
 
 $task = "Create 5-second cookie";
 checkIfSuccess($task, $CreateModel, "cookie", 5);
