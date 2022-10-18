@@ -1,8 +1,10 @@
 <?php session_start(); ?>
 
 <div contain="white" nav="h" style="height: 4em;">
-    <div>
-        <a href="../home/index" style="text-decoration: none;"><h2 nomargin>UPCC</h2></a>
+    <div style="width: 100%;">
+        <a href="../home/index" style="text-decoration: none;">
+            <h3 nomargin>Industrial Sales Assist</h3>
+        </a>
     </div>
     <div items fullwidth flex="h" h-end v-center nogap>
         <a href="../home/index" nav-item contain="overlight">Home</a>

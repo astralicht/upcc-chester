@@ -1,6 +1,6 @@
 <div flex="v" h-center contain="info" nopadding style="width: 250px; padding: 1em 0; height: 100vh; background-color: #0f2755; flex-shrink: 0;" sharp-edges>
-    <div fullwidth flex="v" h-center nogap>
-        <h1 nomargin white-text text="bigger">UPCC</h1>
+    <div fullwidth flex="v" style="padding: 0 1.5em;" nogap>
+        <h1 nomargin white-text text="big">IAS</h1>
         <span white-text>Client Panel</span>
     </div>
     <div flex="v" nogap noshadowtoall fullwidth>

@@ -40,7 +40,7 @@
             width: 100%;
         }
     </style>
-    <title>Login | UPCC</title>
+    <title>Login | Industrial Sales Assist</title>
 </head>
 
 <body>

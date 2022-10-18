@@ -24,7 +24,7 @@
             line-height: 1.5em;
         }
     </style>
-    <title>Home | UPCC</title>
+    <title>Home | Industrial Sales Assist</title>
 </head>
 
 <body>
@@ -36,16 +36,11 @@
             <div class="hero-content" flex="h" v-center style="width: 100%;">
                 <div style="background-color: rgba(0, 0, 0, .7); backdrop-filter: blur(3px);" flex="v">
                     <div style="color: white;">
-                        <h1 style=" display: inline; color: white; font-size: 3em;">UPCC</h1> has been at the forefront of the valve pipeline steel business in the
-                        Philippines. We carry a wide range of High Pressure Steam valves carbon steel, forged steel, SS 304(CF8)/316L(CF8M) body
-                        construction with pipe fittings/flanges and seamless pipes, Boiler tubes, and High Pressure Plates from Japan, Italy, Brazil,
-                        Germany, Korea, China, and the United States. We hold the distinction of being ranked as one of the regular vendor of some of
-                        the Philippines' biggest companies from sectors in Oil Refinery, Petroleum, Geothermal, LNG, LPG, Power/Energy, Chemical, Sugar
-                        Mill, Food/Beverage, Distillery & International Sub contructors.
+                        <h1 style=" display: inline; color: white; font-size: 3em;">ISA</h1><br>Industrial Sales Assist
                     </div>
                     <div flex="h" h-end>
-                        <a href="../store/index" button="primary" white-text-all>
-                            <b>Explore Valves</b>
+                        <a href="../store/index" button="primary" white-text-all style="width: fit-content;">
+                            <b>Explore Products</b>
                         </a>
                     </div>
                 </div>
@@ -74,10 +69,7 @@
             </div>
             <div style="background-color: white; position: absolute; left: 320px; right: 150px; min-width: 700px; padding: 50px; 
                         padding-left: 170px; box-shadow: 0 0 9px 3px rgba(0, 0, 0, .15); overflow-x: auto;" flex>
-                With an ever-growing demand for brand loyalty and repeat business, UPCC has done just that in large part due to keeping 
-                up with the times. Stocking the newest and more improved materials, to associating ourselves with the latest international 
-                standards, to being prevalent in its digital information and accessibility, we are a company of experience, instilled with 
-                youth and both immersed in dedication.
+                We at Industrial Sales Assist aim to provide ease of searching and purchasing of parts and tools to our customers.
             </div>
         </div>
     </div>
