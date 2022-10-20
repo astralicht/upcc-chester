@@ -9,6 +9,10 @@
     include_once "views/shared/headers.php"; ?>
     <link rel="stylesheet" href="api/assets/css?name=main.css">
     <style>
+        html, body {
+            height: 100%;
+        }
+
         #search-filter-container {
             padding: 15px 20px;
             gap: 10px;
@@ -30,16 +34,48 @@
     <title>Select product for price comparison | Industrial Sales Assist</title>
 </head>
 
-<body>
+<body flex="v" nogap>
     <?php include_once("views/shared/nav.php"); ?>
-    <div flex="v" main>
+    <div flex="v" main style="flex-grow: 1;">
         <div>
-            <h1>Products</h1>
-            <h3 nomargin>Choose product to compare with</h3>
-            <div>
-                <?php echo (new FetchModel())->product(["id" => $_GET["first"]])["rows"][0]["name"]; ?>
+            <div flex="h">
+                <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../views/assets/img/arrow-right.webp" alt="back" style="transform: rotate(180deg);">Back</button>
+            </div>
+            <h1>Compare Products</h1>
+            <div style="padding: 1em; width: fit-content;">
+                <h3 nomargin style="margin-bottom: .5em;">Choose products to compare</h3>
+                <div flex="h">
+                    <div style="max-width: 200px;">
+                        <?php
+                        $product = (new FetchModel())->product(["id" => $_GET["first"]])["rows"][0];
+                        $card = file_get_contents("views/templates/_card_product.html");
+                        $card = str_replace("{{product_id}}", $_GET["first"], $card);
+                        $card = str_replace("{{product_img_path}}", $product["image_path"], $card);
+                        $card = str_replace("{{product_name}}", $product["name"], $card);
+                        $card = str_replace("{{product_price}}", $product["unit_price"], $card);
+
+                        echo $card;
+                        ?>
+                    </div>
+                    <div style="max-width: 200px;">
+                        <?php
+                        if (isset($_GET["second"]) && $_GET["second"] != "") {
+                            $product = (new FetchModel())->product(["id" => $_GET["second"]])["rows"][0];
+                            $card = file_get_contents("views/templates/_card_product.html");
+
+                            $card = str_replace("{{product_id}}", $_GET["second"], $card);
+                            $card = str_replace("{{product_img_path}}", $product["image_path"], $card);
+                            $card = str_replace("{{product_name}}", $product["name"], $card);
+                            $card = str_replace("{{product_price}}", $product["unit_price"], $card);
+
+                            echo $card;
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
+        <?php if ($_GET["second"] == "") { ?>
         <div flex="h">
             <div flex="v" style="gap: 1em;" fullwidth>
                 <div flex="h" flex-wrap id="products-container">
@@ -50,6 +86,7 @@
                 </div>
             </div>
         </div>
+        <?php } ?>
     </div>
     <?php include_once "views/shared/footers.php"; ?>
     <script>
@@ -109,7 +146,7 @@
 
             for (let row of rows) {
                 let div = document.createElement("div");
-                let string = `<a href="../products/view?id={{product_id}}" class="card" flex="v">
+                let string = `<a style="cursor: pointer" onclick="window.location.href+={{product_id}}" class="card" flex="v">
                         <img src="../{{product_img_path}}" class="card-img" loading="lazy" style="object-fit: cover;">
                         <div class="card-body">
                             <div class="card-title">{{product_name}}</div>
