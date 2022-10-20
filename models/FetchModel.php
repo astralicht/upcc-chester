@@ -304,7 +304,7 @@ class FetchModel
 
     
     function product($data) {
-        $id = [$data["id"]];
+        $id = $data["id"];
         $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name` as image_name, p.`image_path`, pr.`unit_price`
                 FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types AS pt
                 WHERE p.`id`=?
@@ -312,7 +312,7 @@ class FetchModel
                 AND p.`type_id`=pt.`id`
                 AND p.`date_removed` IS NULL";
 
-        return self::getResult($sql, $id);
+        return self::getResult($sql, [$id]);
     }
 
 
@@ -452,6 +452,7 @@ class FetchModel
                 AND pr.`product_id`=p.`id`
                 AND op.`product_id`=p.`id`
                 GROUP BY p.`id`
+                ORDER BY o.`date_added`
                 LIMIT ?";
 
         return self::getResult($sql, [$limit]);
@@ -605,7 +606,7 @@ class FetchModel
     }
 
 
-    function featuredProducts() {
+    function featuredProducts($limit) {
         $sql = "SELECT p.`id` AS product_id,
                     p.`name` AS product_name,
                     p.`image_path` AS product_img_path,
@@ -623,9 +624,10 @@ class FetchModel
                 ORDER BY
                     p.`clicks` DESC,
                     pr.`unit_price` ASC,
-                    shop_count DESC";
+                    shop_count DESC
+                LIMIT ?";
 
-        return self::getResult($sql);
+        return self::getResult($sql, [$limit]);
     }
 
 
@@ -660,10 +662,23 @@ class FetchModel
 
 
     function shopProducts($shopId) {
-        $sql = "SELECT *
-                FROM products
-                WHERE `shop_id`=?
-                AND `date_removed` IS NULL;";
+        $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    p.`image_name` AS product_img_name,
+                    pr.`unit_price` AS product_price,
+                    p.`clicks`
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
+                AND p.`shop_id`=?
+                GROUP BY p.`id`
+                ORDER BY
+                    p.`clicks` DESC,
+                    pr.`unit_price` ASC";
 
         return self::getResult($sql, [$shopId]);
     }
@@ -687,6 +702,20 @@ class FetchModel
                 AND o.`status`='APPROVED'";
 
         return self::getResult($sql, [$id]);
+    }
+
+
+    function userShopId($userId) {
+        $sql = "SELECT `shop_id` FROM shops_users WHERE `user_id`=?";
+        
+        return self::getResult($sql, [$userId]);
+    }
+
+
+    function shopProductsCount($shopId) {
+        $sql = "SELECT `id` FROM products WHERE `shop_id`=?";
+
+        return self::getResult($sql, [$shopId]);
     }
 
 }

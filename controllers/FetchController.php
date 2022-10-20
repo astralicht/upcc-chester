@@ -30,5 +30,6 @@ class FetchController {
     function isAccountEmail($email) { return (new FetchModel)->isAccountEmail($email); }
     function previousOrderedProducts($limit) { return (new FetchModel)->previousOrderedProducts($limit); }
     function search($param) { return (new FetchModel)->search($param); }
+    function shopProductsCount($param) { return (new FetchModel)->shopProductsCount($param); }
     
 }

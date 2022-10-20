@@ -26,9 +26,9 @@
         }
 
         .cards-container {
-            overflow-x: auto;
             width: 100%;
             padding: 1em 0;
+            flex-wrap: wrap;
         }
     </style>
     <title>Home | Industrial Sales Assist</title>
@@ -46,7 +46,7 @@
                 <div class="cards-container" id="shops" flex="h">
                     <?php
                     $FetchModel = new FetchModel();
-                    $results = $FetchModel->featuredShops(10);
+                    $results = $FetchModel->featuredShops(7);
                     $rows = $results["rows"];
                     foreach ($rows as $row) {
                         $card = file_get_contents("views/templates/_card_shop.html");
@@ -78,7 +78,7 @@
                 <div class="cards-container" id="products" flex="h">
                     <?php
                     $FetchModel = new FetchModel();
-                    $results = $FetchModel->featuredProducts();
+                    $results = $FetchModel->featuredProducts(10);
                     $rows = $results["rows"];
                     foreach ($rows as $row) {
                         $img_path = $row["product_img_path"];

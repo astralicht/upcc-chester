@@ -150,7 +150,7 @@ $UpdateModel->productClicks($_GET["id"]);
                         </button>
                     </div>
                 </div>
-                <div class="products-section" flex="h">
+                <div class="products-section" flex="h" v-center>
                     <button button="secondary" style="gap: .5em; width: 200px; height: 3em;" flex="h" v-center onclick="showEmailPopup()">
                         <img src="../views/assets/img/email.webp" alt="email">
                         Email Now
@@ -159,6 +159,7 @@ $UpdateModel->productClicks($_GET["id"]);
                         <img src="../views/assets/img/add-to-cart.webp" alt="add to cart">
                         Add to Cart
                     </button>
+                    <a href="../store/compare?param=&first=<?php echo $_GET["id"]; ?>&second=">Compare price with another product</a>
                 </div>
                 <div class="products-section">
                     <div id="popup-message" style="opacity: 0; display: none; padding: 1em 1.5em; transition: opacity .3s ease-in-out;" flex></div>

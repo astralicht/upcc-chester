@@ -55,7 +55,7 @@
                 <i fullwidth style="text-align: right;"><a href="../products/index">View all products ></a></i>
             </div>
             <div style="background-color: #f5f5f5; padding: 0.5em 1em; width: fit-content;" flex="h" v-center>
-                <b>Sort by:</b>
+                <b style="padding: 0 .5em;">Sort by:</b>
                 <span button active sharp-edges class="filter-button" onclick="selectFilter(this)">Relevance</span>
                 <span button sharp-edges class="filter-button" onclick="selectFilter(this)">Latest</span>
                 <span button sharp-edges class="filter-button" onclick="selectFilter(this)">Top Sales</span>

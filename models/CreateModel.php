@@ -137,9 +137,12 @@ class CreateModel {
 
 
     function product($data) {
-        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
-
         $data = json_decode($data, true);
+
+        if (isset($data["product-type"])) {
+            $data["type_id"] = $data["product-type"];
+            unset($data["product-type"]);
+        }
 
         if (empty($data["name"]) || $data["name"] == "" || $data["name"] == null) return ["status" => 409, "message" => "Product name is required."];
         if (empty($data["type_id"]) || $data["type_id"] == "" || $data["type_id"] == null || $data["type_id"] == 0) return ["status" => 409, "message" => "Product type is required."];
@@ -160,6 +163,12 @@ class CreateModel {
         if ($count > 0) return ["status" => 400, "message" => "That product already exists."];
 
         $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `type_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+
+        if ($_SESSION["type"] === "SHOP-ADMIN") {
+            $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `type_id`, `shop_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            $flatData[] = $_SESSION["shop_id"];
+        }
+
         $result = self::executeQuery($sql, $flatData, true);
         $productId = $result["id"];
 

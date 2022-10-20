@@ -34,10 +34,11 @@ class AuthController {
             $_SESSION["type"] = $userDetails["type"];
             $_SESSION["dp_path"] = $userDetails["dp_path"];
 
-            $FetchController = new FetchController();
-            $cart_items_count = $FetchController->cartItemsCount()["rows"][0]["cart_items_count"];
-
+            $FetchModel = new FetchModel();
+            $cart_items_count = $FetchModel->cartItemsCount()["rows"][0]["cart_items_count"];
             $_SESSION["cart_count"] = $cart_items_count;
+
+            $_SESSION["shop_id"] = $FetchModel->userShopId($userDetails["id"])["rows"][0]["shop_id"];
 
             return [
                 "status" => 200,
@@ -60,10 +61,12 @@ class AuthController {
 
 
     function loginRedirect() {
+        var_dump($_SESSION["type"]);
         if (!isset($_SESSION["type"])) return null;
         if ($_SESSION["type"] === "ADMIN") header("Location: ../admin/dashboard");
         if ($_SESSION["type"] === "CLIENT") header("Location: ../client/account-details");
         if ($_SESSION["type"] === "AGENT") header("Location: ../agent/dashboard");
+        if ($_SESSION["type"] === "SHOP-ADMIN") header("Location: ../shop-admin/dashboard");
     }
 
 

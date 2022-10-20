@@ -2,7 +2,11 @@
 <html lang="en">
 
 <head>
-    <?php include_once "views/shared/headers.php"; ?>
+    <?php
+
+    use Main\Models\FetchModel;
+
+    include_once "views/shared/headers.php"; ?>
     <style>
         html,
         body {
@@ -77,6 +81,12 @@
         #price-header * {
             color: #ed7d61;
         }
+
+        .cards-container {
+            width: 100%;
+            padding: 1em 0;
+            flex-wrap: wrap;
+        }
     </style>
     <title>{{name}} | ISA</title>
 </head>
@@ -90,6 +100,34 @@
         <div flex="h">
             <img src="../{{image_path}}" alt="shop image" style="height: 75px; width: 75px; border-radius: 100%;">
             <h3>{{name}}</h3>
+        </div>
+        <div class="cards-container" id="products" flex="h">
+            <?php
+            $FetchModel = new FetchModel();
+            $results = $FetchModel->shopProducts($_GET["id"]);
+            $rows = $results["rows"];
+            foreach ($rows as $row) {
+                $img_path = $row["product_img_path"];
+                $img_name = $row["product_img_name"];
+                $name = $row["product_name"];
+                $id = $row["product_id"];
+                $price = $row["product_price"];
+                $clicks = $row["clicks"];
+                $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
+                                    <div class='card' flex='v'>
+                                        <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
+                                        <div class='card-body'>
+                                            <span class='card-title'>$name</span>
+                                            <div flex='h'>
+                                                <span class='card-price' fullwidth>₱$price</span>
+                                                <i fullwidth flex='h' h-end>$clicks views</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>";
+                echo $card;
+            }
+            ?>
         </div>
     </div>
     <?php include_once "views/shared/footers.php"; ?>

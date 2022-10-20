@@ -146,4 +146,103 @@ class ViewsController {
         return self::getFile("views/shops/index.scale.php");
     }
 
+
+    function compare() {
+        $FetchModel = new FetchModel();
+        $data = $FetchModel->search();
+
+        $view = self::getFile('views/search/compare.scale.php');
+        $param = $_GET["param"];
+
+        $shops = $data["shops"];
+        $view = str_replace("{{search_param}}", $param, $view);
+
+        $cards = "";
+
+        foreach ($shops as $shop) {
+            try {
+                $card = file_get_contents("views/templates/_card_shop.html");
+                $card = str_replace("{{shop_name}}", $shop["name"], $card);
+                $card = str_replace("{{shop_img_path}}", $shop["image_path"], $card);
+                $card = str_replace("{{shop_id}}", $shop["id"], $card);
+
+                $rows = $FetchModel->shopProducts($shop["id"])["rows"];
+                $card = str_replace("{{shop_products_count}}", count($rows), $card);
+
+                $rating = $FetchModel->shopRating($shop["id"])["rows"][0]["rating"];
+
+                if ($rating == null || $rating == "") $rating = 0.0;
+
+                $card = str_replace("{{shop_rating}}", $rating, $card);
+
+                $cards .= $card;
+            } catch (\TypeError $e) {
+            }
+        }
+
+        if ($cards == "") $view = str_replace("{{shops_search_results}}", "<i>No shops found.</i>", $view);
+        else $view = str_replace("{{shops_search_results}}", $cards, $view);
+
+
+        $products = $data["products"];
+        $cards = "";
+
+        foreach ($products as $product) {
+            try {
+                $card = file_get_contents("views/templates/_card_product.html");
+                $card = str_replace("{{product_name}}", $product["product_name"], $card);
+                $card = str_replace("{{product_id}}", $product["product_id"], $card);
+                $card = str_replace("{{product_img_path}}", $product["product_img_path"], $card);
+                $card = str_replace("{{product_price}}", $product["product_price"], $card);
+
+                if (isset($product["items_sold"])) {
+                    $items_sold = $product["items_sold"];
+                    $items_sold = "<i fullwidth flex='h' h-end>$items_sold sold</i>";
+                    $card = str_replace("{{products_more_info}}", $items_sold, $card);
+                } else if (isset($product["clicks"])) {
+                    $clicks = $product["clicks"];
+                    $clicks = "<i fullwidth flex='h' h-end>$clicks views</i>";
+                    $card = str_replace("{{products_more_info}}", $clicks, $card);
+                }
+                $cards .= $card;
+            } catch (\TypeError $e) {
+            }
+        }
+
+        if ($cards == "") $view = str_replace("{{products_search_results}}", "<i>No products found.</i>", $view);
+        else $view = str_replace("{{products_search_results}}", $cards, $view);
+
+        return $view;
+    }
+
+
+    function shopAdminDashboard() {
+        return self::getFile("views/shop-admin/dashboard.scale.php");
+    }
+
+
+    function shopAdminProducts() {
+        return self::getFile("views/shop-admin/products.scale.php");
+    }
+
+
+    function shopAdminOrders() {
+        return self::getFile("views/shop-admin/orders.scale.php");
+    }
+
+
+    function shopAdminViewOrder() {
+        return self::getFile("views/shop-admin/view-order.scale.php");
+    }
+
+    
+    function shopAdminEditProduct() {
+        return self::getFile("views/shop-admin/edit-product.scale.php");
+    }
+
+
+    function shopAdminNewProduct() {
+        return self::getFile("views/shop-admin/new-product.scale.php");
+    }
+
 }

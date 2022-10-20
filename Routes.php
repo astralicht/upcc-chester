@@ -49,6 +49,7 @@ class Routes {
             "api/user?id=*" => ["FetchController", "user", "GET"],
 
             "api/products/count" => ["FetchController", "productsCount", "GET"],
+            "api/products/count?shop-id=*" => ["FetchController", "shopProductsCount", "GET"],
             "api/product?id=*" => ["FetchController", "product", "GET"],
             "api/editproduct" => ["UpdateController", "product", "POST"],
             "api/remove-products" => ["DeleteController", "products", "POST"],
@@ -90,7 +91,7 @@ class Routes {
 
             "api/fetch/types-brands" => ["FetchController", "typesAndBrands", "GET"],
             "store/search?param=*" => ["ViewsController", "search"],
-
+            "store/compare?param=*&first=*&second=*" => ["ViewsController", "compare"],
 
             
             "default" => "home/index",
@@ -133,6 +134,13 @@ class Routes {
             "admin/new-product-type" => ["ViewsController", "adminNewProductType"],
             "admin/view-order?order_id=*" => ["ViewsController", "adminViewOrder"],
             "admin/new-user" => ["ViewsController", "adminNewUser"],
+
+            "shop-admin/dashboard" => ["ViewsController", "shopAdminDashboard"],
+            "shop-admin/products" => ["ViewsController", "shopAdminProducts"],
+            "shop-admin/orders" => ["ViewsController", "shopAdminOrders"],
+            "shop-admin/removeproducts" => ["ViewsController", "shopAdminRemoveProducts"],
+            "shop-admin/new-product" => ["ViewsController", "shopAdminNewProduct"],
+            "shop-admin/view-order?order_id=*" => ["ViewsController", "shopAdminViewOrder"],
 
             "client/account-details" => ["ViewsController", "clientAccountDetails"],
             "client/order-history" => ["ViewsController", "clientOrderHistory"],
