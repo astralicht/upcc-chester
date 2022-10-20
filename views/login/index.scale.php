@@ -4,7 +4,8 @@
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
         }
 
@@ -67,11 +68,7 @@
             </div>
         </div>
     </div>
-    <div contain="dark" fullwidth sharp-edges>
-        <div id="copyright" style="text-align: right; color: #aaa; font-size: 0.8em;">
-            Copyright © 2022 | All rights reserved.
-        </div>
-    </div>
+    <?php include_once "views/shared/footers.php"; ?>
     <script>
         function checkAuth() {
             const popup_message = document.querySelector("#popup-message");

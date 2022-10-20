@@ -1,12 +1,36 @@
 <?php session_start(); ?>
+<style>
+    #search-bar {
+        border: 1px solid #e5e5e5;
+        border-radius: 5px 0 0 5px;
+        width: 250px;
+        min-width: 250px;
+    }
 
+    #search-button {
+        background-color: #e5e5e5;
+        outline: none;
+        border: none;
+        height: 100%;
+    }
+
+    #search-button:hover {
+        background-color: #ccc;
+    }
+</style>
 <div contain="white" nav="h" style="height: 4em;">
     <div style="width: 100%;">
         <a href="../home/index" style="text-decoration: none;">
-            <h3 nomargin>ISA</h3>
+            <h3 nomargin>Industrial Sales Assist</h3>
         </a>
     </div>
     <div items fullwidth flex="h" h-end v-center nogap>
+        <form action="../store/search" method="GET" flex="h" style="padding: .5em 1em;" nogap fullheight>
+            <input type="text" id="search-bar" name="param" placeholder="Search..." form-input>
+            <button flex="h" v-center style="padding: 0 .5em; border-radius: 0 5px 5px 0;" id="search-button">
+                <img src="../views/assets/img/search.svg" alt="search">
+            </button>
+        </form>
         <a href="../home/index" nav-item contain="overlight">Home</a>
         <a href="../shops/index" nav-item contain="overlight">Shops</a>
         <a href="../products/index" nav-item contain="overlight">Products</a>

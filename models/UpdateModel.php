@@ -121,4 +121,13 @@ class UpdateModel {
         return $response;
     }
 
+
+    function productClicks($id) {
+        $sql = "UPDATE products
+                SET `clicks`=`clicks`+1
+                WHERE `id`=?";
+
+        return self::getResult($sql, [$id]);
+    }
+
 }

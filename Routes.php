@@ -89,14 +89,18 @@ class Routes {
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
 
             "api/fetch/types-brands" => ["FetchController", "typesAndBrands", "GET"],
+            "store/search?param=*" => ["ViewsController", "search"],
 
 
             
             "default" => "home/index",
             "home/index" => ["ViewsController", "home"],
 
-            "store/index" => ["ViewsController", "store"],
-            "store/viewproduct?id=*" => ["ViewsController", "viewProduct"],
+            "products/index" => ["ViewsController", "products"],
+            "products/view?id=*" => ["ViewsController", "viewProduct"],
+
+            "shops/index" => ["ViewsController", "shops"],
+            "shops/view?id=*" => ["ViewsController", "viewShop"],
 
             "login/index" => ["ViewsController", "login"],
             "login/forgot-password" => ["ViewsController", "forgotPassword"],

@@ -83,6 +83,14 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             background-color: white;
             box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2);
         }
+
+        #checkout-button {
+            background-color: #ed7d61;
+        }
+
+        #checkout-button[disabled] {
+            background-color: #777;
+        }
     </style>
     <title>Cart | ISA Client</title>
 </head>
@@ -102,7 +110,11 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 <div style="flex-shrink: 0;">Total — <h3 id="total-price" style="color: #ed7d61; display: inline-block;">₱0.00</h3>
                 </div>
                 <div flex="h" h-end style="flex-grow: 1;">
-                    <button onclick="showPopup()" button contain style="background-color: #ed7d61;" id="checkout-button">Checkout</button>
+                    <div>
+                        <input type="checkbox" name="tnccheck" id="tnccheck" onclick="activateCheckout(this)">
+                        <label for="tnccheck">I have read and agree to the <a href="#">Terms and Conditions</a>.</label>
+                        <button onclick="showPopup()" disabled button contain id="checkout-button">Checkout</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -292,6 +304,14 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             let popupContainer = document.querySelector("div#popup-container");
 
             fadeOut(popupContainer);
+        }
+
+
+        function activateCheckout(checkbox) {
+            let checkoutButton = document.querySelector("#checkout-button");
+
+            if (checkbox.checked) checkoutButton.removeAttribute("disabled");
+            else checkoutButton.setAttribute("disabled", "");
         }
     </script>
 </body>

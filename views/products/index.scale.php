@@ -5,10 +5,6 @@
     <?php include_once "views/shared/headers.php"; ?>
     <link rel="stylesheet" href="api/assets/css?name=main.css">
     <style>
-        :root {
-            --card-width: 200px;
-        }
-
         #search-filter-container {
             padding: 15px 20px;
             gap: 10px;
@@ -26,40 +22,6 @@
             border: none;
             border-bottom: 2px solid #aaa;
         }
-
-        .card {
-            width: var(--card-width);
-            min-width: var(--card-width);
-            gap: 1em;
-            padding-bottom: 1em;
-            text-decoration: none;
-        }
-
-        .card:hover {
-            box-shadow: 0 0 6px rgba(0, 0, 0, .3);
-        }
-
-        .card .card-img {
-            width: var(--card-width);
-            height: var(--card-width);
-        }
-
-        .card .card-title {
-            display: block;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 0;
-            height: auto;
-            width: auto;
-        }
-
-        .card .card-body {
-            padding: 0 1em;
-        }
-
-        .card .card-price {
-            color: #ed7d61;
-        }
     </style>
     <title>Products | Industrial Sales Assist</title>
 </head>
@@ -71,41 +33,6 @@
             <h1>Products</h1>
         </div>
         <div flex="h">
-            <div>
-                <div flex="v" id="search-filter-container">
-                    <h2 class="header">Search</h2>
-                    <div>
-                        <input type="text" id="search-input" placeholder="Search here" form-input>
-                        <div style="padding: 1em 0;">
-                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProduct(filter)">
-                                Search
-                            </button>
-                        </div>
-                        <hr>
-                    </div>
-                    <div id="advanced-search-filters" flex="v">
-                        <div>
-                            <h3 class="header">Type</h3>
-                            <hr>
-                            <select form-input id="type-select">
-                                <option value="null">Select type</option>
-                            </select>
-                        </div>
-                        <div>
-                            <h3 class="header">Brand</h3>
-                            <hr>
-                            <select form-input id="brand-select">
-                                <option value="null">Select brand</option>
-                            </select>
-                        </div>
-                        <div style="padding: 1em 0;">
-                            <button style="outline: none; border: 0; width: 100%; padding: .5em .7em;" button="secondary" fullpadding white-text style="border-radius: 1000px; box-sizing: border-box; width: 100%;" onclick="searchProductWithFilters()">
-                                Apply Filters
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div flex="v" style="gap: 1em;" fullwidth>
                 <div flex="h" flex-wrap id="products-container">
                 </div>
@@ -174,7 +101,7 @@
 
             for (let row of rows) {
                 let div = document.createElement("div");
-                let string = `<a href="../store/viewproduct?id={{product_id}}" class="card" flex="v">
+                let string = `<a href="../products/view?id={{product_id}}" class="card" flex="v">
                         <img src="../{{product_img_path}}" class="card-img" loading="lazy" style="object-fit: cover;">
                         <div class="card-body">
                             <div class="card-title">{{product_name}}</div>
@@ -209,7 +136,7 @@
 
             for (let row of rows) {
                 let div = document.createElement("div");
-                let string = `<a href="../store/viewproduct?id={{product_id}}" class="card" flex="v">
+                let string = `<a href="../products/view?id={{product_id}}" class="card" flex="v">
                         <img src="../{{product_img_path}}" class="card-img" loading="lazy" style="object-fit: cover;">
                         <div class="card-body">
                             <div class="card-title">{{product_name}}</div>

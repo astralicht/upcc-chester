@@ -1,0 +1,12 @@
+<a href='../products/view?id={{product_id}}' style='text-decoration: none;'>
+    <div class='card' flex='v'>
+        <img src='../{{product_img_path}}' alt='product photo' class='card-img' style='object-fit: cover;'>
+        <div class='card-body'>
+            <span class='card-title'>{{product_name}}</span>
+            <div flex="h">
+                <span class='card-price' fullwidth>₱{{product_price}}</span>
+                {{products_more_info}}
+            </div>
+        </div>
+    </div>
+</a>

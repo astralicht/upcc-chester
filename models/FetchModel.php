@@ -4,6 +4,7 @@ namespace Main\Models;
 session_start();
 
 use Main\Config;
+use Main\Controllers\ViewsController;
 use TypeError;
 
 class FetchModel
@@ -37,6 +38,17 @@ class FetchModel
         while ($row = $result->fetch_assoc()) $rows[] = $row;
 
         return ["status" => 200, "rows" => $rows];
+    }
+
+
+    private function flattenAssocArray($array) {
+        $flatArray = [];
+
+        foreach ($array as $value) {
+            $flatArray[] = $value;
+        }
+
+        return $flatArray;
     }
 
 
@@ -106,9 +118,6 @@ class FetchModel
 
         if ($typeId === null) $typeId = "null";
 
-        $weightedProducts = (new \Main\Controllers\RecommendationController())->computeRelevance();
-        $productKeys = implode(", ", array_keys($weightedProducts));
-
         $filterString = "";
         $brandAndType = "";
 
@@ -120,18 +129,43 @@ class FetchModel
 
         if ($brand !== "null" && $typeId !== "null") $brandAndType = "AND (p.`brand`='$brand' AND p.`type_id`='$typeId')";
 
-        $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`, p.`date_added`
-                FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
+        // $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`, p.`date_added`
+        //         FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
+        //         WHERE p.`date_removed` IS NULL
+        //         AND p.`id`=pr.`product_id`
+        //         AND p.`type_id`=pt.`id`
+        //         $filterString
+        //         $brandAndType
+        //         GROUP BY p.`id`
+        //         ORDER BY FIELD(p.`id`, $productKeys)
+        //         LIMIT ?, ?";
+
+        $sql = "SELECT p.`id`,
+                    p.`name`,
+                    pt.`name` AS 'type',
+                    p.`brand`,
+                    p.`image_path`,
+                    p.`image_name`,
+                    pr.`unit_price`,
+                    p.`clicks`,
+                    p.`date_added`,
+                    COUNT(p.`shop_id`) AS shop_count
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                INNER JOIN product_types AS pt
                 WHERE p.`date_removed` IS NULL
-                AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
                 $filterString
                 $brandAndType
-                GROUP BY p.`id`
-                ORDER BY FIELD(p.`id`, $productKeys)
+                GROUP BY p.`id`, p.`shop_id`
+                ORDER BY
+                    p.`clicks` DESC,
+                    pr.`unit_price` ASC,
+                    shop_count DESC
                 LIMIT ?, ?";
-
-        // return [$brand, $typeId, $sql];
                 
         return self::getResult($sql, $range);
     }
@@ -343,13 +377,6 @@ class FetchModel
     }
 
 
-    function featuredProducts() {
-        $sql = "SELECT `id`, `name`, `image_path`, `image_name` FROM products WHERE `date_removed` IS NULL ORDER BY `date_added` DESC LIMIT 4";
-
-        return self::getResult($sql);
-    }
-
-
     function typesAndBrands() {
         $sql = "SELECT `brand` FROM products WHERE `date_removed` IS NULL GROUP BY `brand`";
         $result = self::getResult($sql);
@@ -407,6 +434,259 @@ class FetchModel
                 AND `date_removed` IS NULL";
 
         return self::getResult($sql);
+    }
+
+
+    function previousOrderedProducts($limit) {
+        $sql = "SELECT p.`name`, p.`id`, pr.`unit_price`, p.`image_path`, SUM(op.`item_count`) AS items_sold
+                FROM products AS p
+                INNER JOIN products_prices AS pr
+                INNER JOIN orders AS o
+                INNER JOIN orders_products AS op
+                WHERE p.`date_removed` IS NULL
+                AND p.`id`
+                AND o.`date_removed` IS NULL
+                AND op.`date_removed` IS NULL
+                AND o.`status`='APPROVED'
+                AND o.`id`=op.`order_id`
+                AND pr.`product_id`=p.`id`
+                AND op.`product_id`=p.`id`
+                GROUP BY p.`id`
+                LIMIT ?";
+
+        return self::getResult($sql, [$limit]);
+    }
+
+
+    function search() {
+        $param = $_GET["param"];
+        $sort = $_GET["sort"];
+
+        // $sql = "SELECT s.`id`, s.`name`
+        //         FROM shops AS s INNER JOIN products AS p
+        //         WHERE s.`date_removed` IS NULL
+        //         AND p.`date_removed` IS NULL
+        //         AND p.`shop_id`=s.`id`
+        //         AND s.`name` LIKE '%$param%'
+        //         AND p.`name` LIKE '%$param%';
+        //     ";
+
+        $sql = "SELECT `id`, `name`, `image_path`
+                FROM shops
+                WHERE `date_removed` IS NULL
+                AND `name` LIKE '%$param%'";
+
+        $rows = [];
+        $rows["shops"] = self::getResult($sql)["rows"];
+
+        if ($sort === "topsales") {
+            $sql = "SELECT p.`id` AS product_id,
+                            p.`name` AS product_name,
+                            pt.`id` AS type_id, 
+                            pt.`name` AS type_name,
+                            p.`image_path` AS product_img_path,
+                            pr.`unit_price` AS product_price,
+                            SUM(op.`item_count`) AS items_sold
+                    FROM products AS p
+                    INNER JOIN product_types AS pt
+                    INNER JOIN products_prices AS pr
+                    INNER JOIN orders_products AS op
+                    INNER JOIN orders AS o
+                    WHERE p.`date_removed` IS NULL
+                    AND p.`type_id`=pt.`id`
+                    AND p.`id`=pr.`product_id`
+                    AND p.`id`=op.`product_id`
+                    AND op.`order_id`=o.`id`
+                    AND o.`status`='APPROVED'
+                    AND (p.`name` LIKE '%$param%'
+                    OR p.`brand` LIKE '%$param%'
+                    OR p.`material` LIKE '%$param%'
+                    OR p.`connection_type` LIKE '%$param%')
+                    GROUP BY p.`id`
+                    ORDER BY items_sold DESC;
+                ";
+        } else if ($sort === "latest") {
+            $sql = "SELECT p.`id` AS product_id,
+                        p.`name` AS product_name,
+                        pt.`id` AS type_id, 
+                        pt.`name` AS type_name,
+                        p.`image_path` AS product_img_path,
+                        pr.`unit_price` AS product_price,
+                        p.`clicks`
+                FROM products AS p
+                INNER JOIN product_types AS pt
+                INNER JOIN products_prices AS pr
+                INNER JOIN orders_products AS op
+                INNER JOIN orders AS o
+                WHERE p.`date_removed` IS NULL
+                AND p.`type_id`=pt.`id`
+                AND p.`id`=pr.`product_id`
+                AND p.`id`=op.`product_id`
+                AND (p.`name` LIKE '%$param%'
+                OR p.`brand` LIKE '%$param%'
+                OR p.`material` LIKE '%$param%'
+                OR p.`connection_type` LIKE '%$param%')
+                GROUP BY p.`id`
+                ORDER BY
+                    p.`clicks` DESC,
+                    p.`date_added`DESC;
+            ";
+        } else if ($sort === "price-dsc") {
+            $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    pr.`unit_price` AS product_price,
+                    COUNT(p.`shop_id`) AS shop_count,
+                    p.`clicks`
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
+                AND (p.`name` LIKE '%$param%'
+                OR p.`brand` LIKE '%$param%'
+                OR p.`material` LIKE '%$param%'
+                OR p.`connection_type` LIKE '%$param%')
+                GROUP BY p.`id`, p.`shop_id`
+                ORDER BY
+                    pr.`unit_price` DESC,
+                    shop_count DESC";
+        } else if ($sort === "price-asc") {
+            $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    pr.`unit_price` AS product_price,
+                    COUNT(p.`shop_id`) AS shop_count,
+                    p.`clicks` AS clicks
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
+                AND (p.`name` LIKE '%$param%'
+                OR p.`brand` LIKE '%$param%'
+                OR p.`material` LIKE '%$param%'
+                OR p.`connection_type` LIKE '%$param%')
+                GROUP BY p.`id`, p.`shop_id`
+                ORDER BY
+                    clicks DESC,
+                    shop_count DESC,
+                    pr.`unit_price` ASC";
+        } else {
+            $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    pr.`unit_price` AS product_price,
+                    COUNT(p.`shop_id`) AS shop_count,
+                    p.`clicks` AS clicks
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
+                AND (p.`name` LIKE '%$param%'
+                OR p.`brand` LIKE '%$param%'
+                OR p.`material` LIKE '%$param%'
+                OR p.`connection_type` LIKE '%$param%')
+                GROUP BY p.`id`
+                ORDER BY
+                    clicks DESC,
+                    shop_count DESC,
+                    pr.`unit_price` ASC";
+        }
+
+        $rows["products"] = self::getResult($sql)["rows"];
+        $rows["status"] = 200;
+
+        return $rows;
+    }
+
+
+    function featuredProducts() {
+        $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    p.`image_name` AS product_img_name,
+                    pr.`unit_price` AS product_price,
+                    p.`clicks`,
+                    COUNT(p.`shop_id`) AS shop_count
+                FROM products AS p
+                INNER JOIN orders_products AS op
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND op.`product_id`=p.`id`
+                AND pr.`product_id`=p.`id`
+                GROUP BY p.`id`, p.`shop_id`
+                ORDER BY
+                    p.`clicks` DESC,
+                    pr.`unit_price` ASC,
+                    shop_count DESC";
+
+        return self::getResult($sql);
+    }
+
+
+    function featuredShops($limit) {
+        $sql = "SELECT s.`name` AS shop_name,
+                    s.`image_path` AS shop_image_path,
+                    s.`id` AS shop_id,
+                    s.`rating` AS rating,
+                    COUNT(op.`product_id`) AS product_count
+                FROM shops AS s
+                INNER JOIN orders_products AS op
+                INNER JOIN products AS p
+                WHERE s.`date_removed` IS NULL
+                AND op.`date_removed` IS NULL
+                AND p.`shop_id`=s.`id`
+                AND op.`product_id`=p.`id`
+                GROUP BY s.`id`
+                LIMIT ?;";
+
+        return self::getResult($sql, [$limit]);
+    }
+
+
+    function shop($id) {
+        $sql = "SELECT * 
+                FROM shops
+                WHERE `id`=?
+                AND `date_removed` IS NULL";
+
+        return self::getResult($sql, [$id]);
+    }
+
+
+    function shopProducts($shopId) {
+        $sql = "SELECT *
+                FROM products
+                WHERE `shop_id`=?
+                AND `date_removed` IS NULL;";
+
+        return self::getResult($sql, [$shopId]);
+    }
+
+
+    function shopRating($shopId) {
+        $sql = "SELECT `rating`
+                FROM shops
+                WHERE `id`=?
+                AND `date_removed` IS NULL";
+
+        return self::getResult($sql, [$shopId]);
+    }
+
+
+    function itemsSold($id) {
+        $sql = "SELECT op.`product_id`, op.`item_count`
+                FROM orders_products AS op INNER JOIN orders AS o
+                WHERE op.`product_id`=?
+                AND o.`id`=op.`order_id`
+                AND o.`status`='APPROVED'";
+
+        return self::getResult($sql, [$id]);
     }
 
 }

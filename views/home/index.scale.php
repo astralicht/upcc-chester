@@ -2,76 +2,153 @@
 <html lang="en">
 
 <head>
-    <?php include_once "views/shared/headers.php"; ?>
+    <?php
+
+    use Main\Controllers\FetchController;
+    use Main\Models\FetchModel;
+
+    include_once "views/shared/headers.php"; ?>
     <style>
-        .hero {
-            display: flex;
-            flex: auto;
-            height: calc(100vh - 3em);
-            width: 100%;
-            padding: 80px;
-            background-color: #f5f5f5;
-            background-image: url("../views/assets/img/hero1.webp");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        html,
+        body {
+            height: 100%;
         }
 
-        .hero-content>* {
-            padding: 50px;
+        .section-title {
+            padding: 1em;
+            background-color: #e5e5e5;
+            width: 50%;
+        }
+
+        .section-subtitle {
+            font-size: .5em;
+            color: #ed7d61;
+        }
+
+        .cards-container {
+            overflow-x: auto;
             width: 100%;
-            color: white;
-            line-height: 1.5em;
+            padding: 1em 0;
         }
     </style>
     <title>Home | Industrial Sales Assist</title>
 </head>
 
-<body>
-    <div body back-light>
+<body flex="v" nogap>
+    <div body>
         <?php include_once("views/shared/nav.php"); ?>
-        
+        <div style="padding: 1em 3em;">
+            <section flex="v" nogap>
+                <h2 class="section-title" flex="v" nogap>Featured Shops<span class="section-subtitle">Shops you might like</span></h2>
+                <div flex="h" h-end style="padding: 0 1em;">
+                    <a href="../shops/index">See all ></a>
+                </div>
+                <div class="cards-container" id="shops" flex="h">
+                    <?php
+                    $FetchModel = new FetchModel();
+                    $results = $FetchModel->featuredShops(10);
+                    $rows = $results["rows"];
+                    foreach ($rows as $row) {
+                        $card = file_get_contents("views/templates/_card_shop.html");
+
+                        $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
+                        $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
+                        $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
+
+                        $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
+
+                        $card = str_replace("{{shop_products_count}}", count($rows), $card);
+
+                        $rating = $row["rating"];
+
+                        if ($rating == null || $rating == "") $rating = 0.0;
+
+                        $card = str_replace("{{shop_rating}}", $rating, $card);
+
+                        echo $card;
+                    }
+                    ?>
+                </div>
+            </section>
+            <section flex="v" nogap>
+                <h2 class="section-title" flex="v" nogap>Featured Products<span class="section-subtitle">Products you might like</span></h2>
+                <div flex="h" h-end style="padding: 0 1em;">
+                    <a href="../products/index">See all ></a>
+                </div>
+                <div class="cards-container" id="products" flex="h">
+                    <?php
+                    $FetchModel = new FetchModel();
+                    $results = $FetchModel->featuredProducts();
+                    $rows = $results["rows"];
+                    foreach ($rows as $row) {
+                        $img_path = $row["product_img_path"];
+                        $img_name = $row["product_img_name"];
+                        $name = $row["product_name"];
+                        $id = $row["product_id"];
+                        $price = $row["product_price"];
+                        $clicks = $row["clicks"];
+                        $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
+                                    <div class='card' flex='v'>
+                                        <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
+                                        <div class='card-body'>
+                                            <span class='card-title'>$name</span>
+                                            <div flex='h'>
+                                                <span class='card-price' fullwidth>₱$price</span>
+                                                <i fullwidth flex='h' h-end>$clicks views</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>";
+                        echo $card;
+                    }
+                    ?>
+                </div>
+            </section>
+            <?php
+            if (isset($_SESSION["type"])) {
+            ?>
+            <section flex="v" nogap>
+                <h2 class="section-title">Buy Again</h2>
+                <div flex="h" h-end style="padding: 0 1em;">
+                    <a href="../products/index">See all ></a>
+                </div>
+                <div class="cards-container" id="buy-again" flex="h">
+                    <?php
+                    $FetchModel = new FetchModel();
+                    $results = $FetchModel->previousOrderedProducts(10);
+                    $rows = $results["rows"];
+
+                    if (empty($rows) || gettype($rows) !== "array") {
+                        echo "<i>No products previously bought.</i>";
+                        return;
+                    }
+
+                    foreach ($rows as $row) {
+                        $img_path = $row["image_path"];
+                        $img_name = $row["image_name"];
+                        $name = $row["name"];
+                        $id = $row["product_id"];
+                        $price = $row["unit_price"];
+                        $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
+                                    <div class='card' flex='v'>
+                                        <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
+                                        <div class='card-body'>
+                                            <span class='card-title'>$name</span>
+                                            <div flex='h'>
+                                                <span class='card-price' fullwidth>₱$price</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>";
+                        echo $card;
+                    }
+                    ?>
+                </div>
+            </section>
+            <?php } ?>
+        </div>
     </div>
     <?php include_once "views/shared/footers.php"; ?>
-    <script>
-        fetch("../api/featured-products").then(response => response.text()).then(json => {
-            try {
-                json = JSON.parse(json);
-            } catch (error) {
-                console.error(error);
-            }
-
-            if (json["status"] !== 200) console.error(json);
-            if (json["rows"] === undefined) return;
-
-            printProducts(json["rows"]);
-        });
-
-
-        function printProducts(rows) {
-            let cardsContainer = document.querySelector(".cards-container");
-
-            for (let row of rows) {
-                let card = document.createElement("div");
-
-                card.className = "card";
-                card.innerHTML = `<img src="../${row["image_path"]}" alt="${row["image_name"]}" class="card-img" style="object-fit: cover;">
-                                    <div>
-                                        <span class="card-title">${row["name"]}</span>
-                                    </div>
-                                    <div flex="h" h-center>
-                                        <a href="../store/viewproduct?id=${row["id"]}" button="secondary" fullpadding no-text-decor style="width: 150px; border-radius: 1000px;">
-                                            <div white-text>
-                                                View Product
-                                            </div>
-                                        </a>
-                                    </div>`;
-                card.setAttribute("flex", "v");
-
-                cardsContainer.appendChild(card);
-            }
-        }
-    </script>
 </body>
 
 </html>
