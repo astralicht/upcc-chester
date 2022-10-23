@@ -244,5 +244,20 @@ class ViewsController {
     function shopAdminNewProduct() {
         return self::getFile("views/shop-admin/new-product.scale.php");
     }
+    
+
+    function adminViewUserInfo() {
+        return self::getFile("views/admin/user-info.scale.php");
+    }
+
+
+    function adminEditInfo() {
+        return self::getFile("views/admin/edit-user-info.scale.php");
+    }
+
+
+    function tnc() {
+        return self::getFile("views/client/tnc.scale.php");
+    }
 
 }

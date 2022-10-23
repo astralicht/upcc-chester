@@ -112,7 +112,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 <div flex="h" h-end style="flex-grow: 1;">
                     <div>
                         <input type="checkbox" name="tnccheck" id="tnccheck" onclick="activateCheckout(this)">
-                        <label for="tnccheck">I have read and agree to the <a href="#">Terms and Conditions</a>.</label>
+                        <label for="tnccheck">I have read and agree to the <a href="../store/termsandconditions">Terms and Conditions</a>.</label>
                         <button onclick="showPopup()" disabled button contain id="checkout-button">Checkout</button>
                     </div>
                 </div>

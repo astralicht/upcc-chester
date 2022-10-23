@@ -185,6 +185,22 @@ $UpdateModel->productClicks($_GET["id"]);
                                 <strong>Thickness:</strong>
                                 <span id="thickness"></span>
                             </p>
+                            <p nomargin>
+                                <strong>Company:</strong>
+                                <span id="company_name"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Company Address:</strong>
+                                <span id="office_address"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Contact Details:</strong>
+                                <span id="contact_number"></span>
+                            </p>
+                            <p nomargin>
+                                <strong>Shop Name:</strong>
+                                <span id="shop_name"></span>
+                            </p>
                         </div>
                     </div>
                 </div>

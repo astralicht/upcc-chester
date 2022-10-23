@@ -86,6 +86,7 @@ class Routes {
 
             "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
             "api/admin/create-user" => ["CreateController", "adminNewUser", "POST"],
+            "api/admin/save-info" => ["UpdateController", "adminInfo", "POST"],
 
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
 
@@ -134,6 +135,8 @@ class Routes {
             "admin/new-product-type" => ["ViewsController", "adminNewProductType"],
             "admin/view-order?order_id=*" => ["ViewsController", "adminViewOrder"],
             "admin/new-user" => ["ViewsController", "adminNewUser"],
+            "admin/user-info" => ["ViewsController", "adminViewUserInfo"],
+            "admin/edit-info?id=*" => ["ViewsController", "adminEditInfo"],
 
             "shop-admin/dashboard" => ["ViewsController", "shopAdminDashboard"],
             "shop-admin/products" => ["ViewsController", "shopAdminProducts"],
@@ -157,6 +160,8 @@ class Routes {
 
             "relevance/index" => ["RecommendationController", "computeRelevance"],
             "upload/image" => ["UploadController", "image", "POST"],
+
+            "store/termsandconditions" => ["ViewsController", "tnc"],
         ];
     }
 

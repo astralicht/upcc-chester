@@ -130,4 +130,13 @@ class UpdateModel {
         return self::getResult($sql, [$id]);
     }
 
+
+    function adminInfo($data) {
+        $data = json_decode($data, true);
+
+        $sql = "UPDATE users SET `first_name`=?, `last_name`=?, `company_name`=?, `company_address`=?, `phone_number`=?, `company_nature`=? WHERE `id`=?";
+
+        return self::getResult($sql, $data);
+    }
+
 }

@@ -4,6 +4,10 @@
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
+        html, body {
+            height: 100%;
+        }
+
         .card {
             width: 100%;
             height: auto;
@@ -70,9 +74,9 @@
     <title>Signup | Industrial Sales Assist</title>
 </head>
 
-<body>
+<body flex="v" nogap>
     <?php include_once("views/shared/nav.php"); ?>
-    <div main flex="v" fullwidth back-light style="height: calc(100vh - 4em);" v-center>
+    <div main flex="v" fullwidth back-light fullheight style="flex-grow: 1;">
         <div flex="h" v-center>
             <button onclick="history.back()" contain="secondary" small button flex="h" v-center style="height: fit-content; width: fit-content; border-radius: var(--border-radius);"><img src="../views/assets/img/arrow-right.webp" style="transform: rotate(180deg);" alt="">Back</button>
             <h1 style="margin: 0; flex-shrink: 0;">New User</h1>

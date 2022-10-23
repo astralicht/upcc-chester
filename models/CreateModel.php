@@ -128,6 +128,9 @@ class CreateModel {
 
         $data = self::flattenAssocArray($data);
 
+        var_dump($data);
+        die;
+
         $sql = "INSERT INTO users(`first_name`, `last_name`, `company_name`,
                     `email`, `phone_number`, `password`, `company_nature`, `company_address`)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
@@ -162,12 +165,12 @@ class CreateModel {
 
         if ($count > 0) return ["status" => 400, "message" => "That product already exists."];
 
-        $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `type_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
+        $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `company_name`, `office_address`, `contact_number`, `shop_id`, `type_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-        if ($_SESSION["type"] === "SHOP-ADMIN") {
-            $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `type_id`, `shop_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
-            $flatData[] = $_SESSION["shop_id"];
-        }
+        // if ($_SESSION["type"] === "SHOP-ADMIN") {
+        //     $sql = "INSERT INTO products(`name`, `material`, `brand`, `connection_type`, `length`, `width`, `thickness`, `shop_id`, `type_id`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        //     $flatData[] = $_SESSION["shop_id"];
+        // }
 
         $result = self::executeQuery($sql, $flatData, true);
         $productId = $result["id"];
@@ -410,6 +413,8 @@ class CreateModel {
         $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
 
         $data = self::flattenAssocArray($data);
+
+        unset($data[0]);
 
         $sql = "INSERT INTO users(`first_name`, `last_name`, `company_name`,
                     `email`, `phone_number`, `password`, `type`, `company_nature`, `company_address`)

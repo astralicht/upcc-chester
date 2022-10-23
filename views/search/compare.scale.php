@@ -181,7 +181,7 @@
 
             for (let row of rows) {
                 let div = document.createElement("div");
-                let string = `<a href="../products/view?id={{product_id}}" class="card" flex="v">
+                let string = `<a style="cursor: pointer" onclick="window.location.href+={{product_id}}" class="card" flex="v">
                         <img src="../{{product_img_path}}" class="card-img" loading="lazy" style="object-fit: cover;">
                         <div class="card-body">
                             <div class="card-title">{{product_name}}</div>

@@ -4,6 +4,12 @@
         <span white-text>Admin Panel</span>
     </div>
     <div flex="v" nogap noshadowtoall fullwidth>
+        <a href="../admin/user-info" button contain="overdark" flex="h" h-center v-center style="border-radius: 0; width: 100%;" nogap>
+            <span style="flex-shrink: 0;" flex="h" v-center>User Info</span>
+            <div flex="h" h-end style="width: 100%;">
+                <img src="../api/assets/img?name=arrow-right.webp&type=webp" alt="right arrow">
+            </div>
+        </a>
         <a href="../admin/dashboard" button contain="overdark" flex="h" h-center v-center style="border-radius: 0; width: 100%;" nogap>
             <span style="flex-shrink: 0;" flex="h" v-center>Dashboard</span>
             <div flex="h" h-end style="width: 100%;">

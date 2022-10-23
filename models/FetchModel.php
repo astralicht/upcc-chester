@@ -60,7 +60,14 @@ class FetchModel
 
 
     function productsCount() {
-        $sql = "SELECT COUNT(`id`) AS 'products_count' FROM products WHERE `date_removed` IS NULL";
+        $sql = "SELECT COUNT(p.`id`) AS products_count
+                FROM products AS p
+                INNER JOIN products_prices AS pr
+                INNER JOIN product_types AS pt
+                WHERE p.`date_removed` IS NULL
+                AND p.`type_id`=pt.`id`
+                AND pr.`product_id`=p.`id`
+                GROUP BY p.`id`";
 
         return self::getResult($sql);
     }
@@ -148,23 +155,17 @@ class FetchModel
                     p.`image_name`,
                     pr.`unit_price`,
                     p.`clicks`,
-                    p.`date_added`,
-                    COUNT(p.`shop_id`) AS shop_count
+                    p.`date_added`
                 FROM products AS p
-                INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 INNER JOIN product_types AS pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
-                AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
-                $filterString
-                $brandAndType
-                GROUP BY p.`id`, p.`shop_id`
+                GROUP BY p.`id`
                 ORDER BY
-                    p.`clicks` DESC,
                     pr.`unit_price` ASC,
-                    shop_count DESC
+                    p.`clicks` DESC
                 LIMIT ?, ?";
                 
         return self::getResult($sql, $range);
@@ -305,11 +306,16 @@ class FetchModel
     
     function product($data) {
         $id = $data["id"];
-        $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`, p.`image_name` as image_name, p.`image_path`, pr.`unit_price`
-                FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types AS pt
+        $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`,
+                    p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`, s.`name` AS 'shop_name'
+                FROM products AS p
+                INNER JOIN products_prices AS pr
+                INNER JOIN product_types AS pt
+                INNER JOIN shops AS s
                 WHERE p.`id`=?
                 AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
+                AND p.`shop_id`=s.`id`
                 AND p.`date_removed` IS NULL";
 
         return self::getResult($sql, [$id]);
@@ -648,6 +654,15 @@ class FetchModel
                 LIMIT ?;";
 
         return self::getResult($sql, [$limit]);
+    }
+
+
+    function shops() {
+        $sql = "SELECT * 
+                FROM shops
+                WHERE `date_removed` IS NULL";
+
+        return self::getResult($sql);
     }
 
 

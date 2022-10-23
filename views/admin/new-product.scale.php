@@ -1,4 +1,7 @@
 <?php
+
+use Main\Models\FetchModel;
+
 session_start();
 if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location: ../error/403");
 ?>
@@ -97,6 +100,49 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                             </div>
                             <input type="number" step="0.01" id="unit-price" form-input placeholder="Enter unit price here" required>
                         </div>
+                        <div form-group>
+                            <div flex="h" v-center>
+                                <h3 nomargin>Shop</h3>
+                                <i style="color: red;">*Required</i>
+                            </div>
+                            <select id="store" form-input required style="width: 250px;">
+                                <option value="NULL">Select type</option>
+                                <?php
+                                $FetchModel = new FetchModel();
+                                $rows = $FetchModel->shops()["rows"];
+                                foreach ($rows as $row) {
+                                    $id = $row["id"];
+                                    $name = $row["name"];
+                                    echo "<option value='$id'>$name</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <b>Company Details</b>
+                    <div flex="h">
+                        <div form-group>
+                            <div flex="h" v-center>
+                                <h3 nomargin>Company Name</h3>
+                                <i style="color: red;">*Required</i>
+                            </div>
+                            <input type="text" id="company-name" placeholder="Enter company name here" form-input required>
+                        </div>
+                        <div form-group>
+                            <div flex="h" v-center>
+                                <h3 nomargin>Office Address</h3>
+                                <i style="color: red;">*Required</i>
+                            </div>
+                            <input type="text" id="company-address" placeholder="Enter company address here" form-input required>
+                        </div>
+                        <div form-group>
+                            <div flex="h" v-center>
+                                <h3 nomargin>Contact Number</h3>
+                                <i style="color: red;">*Required</i>
+                            </div>
+                            <input type="text" id="company-number" placeholder="Enter company number here" form-input required>
+                        </div>
                     </div>
                     <div form-group fullwidth flex="v" h-end>
                         <button type="submit" contain="good" button>Submit</button>
@@ -167,6 +213,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     data = JSON.parse(data);
                 } catch (error) {
                     console.error(error);
+                    console.log(data);
                 }
 
                 if (data["status"] != 200) {
