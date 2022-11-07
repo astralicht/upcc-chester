@@ -27,8 +27,6 @@ $response = checkIfSuccess($task, $CreateModel, "user", json_encode([
     "company_address" => "",
 ]));
 
-var_dump($response);
-
 $_SESSION["type"] = "ADMIN";
 
 $task = "Create product type";
