@@ -66,8 +66,7 @@ class FetchModel
                 INNER JOIN product_types AS pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
-                AND pr.`product_id`=p.`id`
-                GROUP BY p.`id`";
+                AND pr.`product_id`=p.`id`";
 
         return self::getResult($sql);
     }
@@ -249,7 +248,7 @@ class FetchModel
     function clientOrders() {
         $clientId = [$_SESSION["id"]];
         
-        $sql = "SELECT o.`id`, o.`id` AS order_id, SUM(pr.`unit_price` * op.`item_count`) AS total_price, o.`date_added`
+        $sql = "SELECT o.`id`, o.`id` AS order_id, SUM(pr.`unit_price` * op.`item_count`) AS total_price, o.`date_added`, o.`status`
         FROM orders AS o INNER JOIN orders_products AS op INNER JOIN products AS p INNER JOIN products_prices AS pr
         WHERE o.`user_id`=?
         AND op.`order_id`=o.`id`

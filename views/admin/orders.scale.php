@@ -92,6 +92,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 "orders": {
                     "next": document.querySelector("#next-page"),
                     "previous": document.querySelector("#prev-page"),
+                    "label": document.querySelector("#pages-display"),
                 }
             };
             var table_bodies = {
@@ -103,8 +104,6 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
 
 
             function fetchOrders(orders_page) {
-                orders_page = 0;
-
                 let filter = null;
                 let timeout = 10;
 
@@ -166,8 +165,10 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                             div.setAttribute("fullwidth", "");
                             div.setAttribute("contain", "secondary");
 
-                            if (row[key] === "APPROVED") div.setAttribute("contain", "good");
+                            if (row[key] === "APPROVED") div.setAttribute("contain", "warning");
                             if (row[key] === "DENIED") div.setAttribute("contain", "danger");
+                            if (row[key] === "SHIPPED") div.setAttribute("contain", "warning");
+                            if (row[key] === "DELIVERED") div.setAttribute("contain", "good");
 
                             td.appendChild(div);
                             tr.appendChild(td);
@@ -195,6 +196,8 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 let total_count = data["rows"][0]["orders_count"];
                 let total_pages = parseInt(total_count / LIMIT);
 
+                if (total_pages < 1) total_pages = 1;
+
                 controls["previous"].onclick = () => {
                     previousOrdersTablePage()
                 };
@@ -202,7 +205,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     nextOrdersTablePage(total_pages)
                 };
 
-                controls.innerText = `Page ${pages["orders"]+1} of ${total_pages}`;
+                controls["label"].innerText = `Page ${pages["orders"]+1} of ${total_pages}`;
             }
 
 

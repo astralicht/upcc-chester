@@ -15,7 +15,7 @@ try {
 }
 
 $task = "Create user";
-checkIfSuccess($task, $CreateModel, "user", json_encode([
+$response = checkIfSuccess($task, $CreateModel, "user", json_encode([
     "first_name" => "Unit",
     "last_name" => "Testing",
     "company_name" => "UPCC",
@@ -26,6 +26,8 @@ checkIfSuccess($task, $CreateModel, "user", json_encode([
     "company_nature" => "",
     "company_address" => "",
 ]));
+
+var_dump($response);
 
 $_SESSION["type"] = "ADMIN";
 

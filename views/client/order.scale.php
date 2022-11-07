@@ -127,11 +127,12 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                     if (key === "product_id") {
                         let a = document.createElement("a");
 
-                        a.href = `../store/viewproduct?id=${row[key]}`;
+                        a.href = `../products/view?id=${row[key]}`;
                         a.innerText = "View in store";
 
                         td.appendChild(a);
                         tr.appendChild(td);
+
                         continue;
                     }
 

@@ -57,12 +57,21 @@ class UpdateModel {
 
 
     function orderStatus($data) {
-        $data = json_decode($data, true);
-        $params = [$data["status"], $data["order_id"]];
+        if (gettype($data) == "string") $data = json_decode($data, true);
+        if ($data["status"] == null) return;
 
+        $redirectFlag = $data["redirect_flag"];
+
+        unset($data["redirect_flag"]);
+
+        $params = [$data["status"], $data["order_id"]];
         $sql = "UPDATE orders SET `status`=? WHERE `id`=?";
 
-        return self::getResult($sql, $params);
+        $response = self::getResult($sql, $params);
+
+        if ($redirectFlag != true || $redirectFlag == null) return $response;
+        
+        header("Location: ../../admin/view-order?order_id=".$data["order_id"]);
     }
 
     

@@ -62,6 +62,7 @@ class Routes {
             "api/orders?filter=*&page=*&limit=*" => ["FetchController", "allOrders", "GET"],
             "api/approveorder" => ["UpdateController", "approveOrder", "POST"],
             "api/declineorder" => ["UpdateController", "declineOrder", "POST"],
+            "api/order/set-status" => ["UpdateController", "orderStatus", "POST"],
             "api/order?id=*" => ["FetchController", "order", "GET"],
             "api/remove-orders" => ["DeleteController", "orders", "POST"],
             "api/create-order" => ["CreateController", "order", "POST"],

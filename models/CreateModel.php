@@ -77,6 +77,11 @@ class CreateModel {
         }
 
         try {
+
+            var_dump($params);
+            var_dump($query->execute());
+            die;
+
             $query->execute();
         } catch (\Exception $e) {
             echo json_encode(["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()]);
@@ -84,6 +89,7 @@ class CreateModel {
         }
 
         $result = $query->get_result();
+
         $rows = [];
         while ($row = $result->fetch_assoc()) $rows[] = $row;
 
@@ -128,14 +134,11 @@ class CreateModel {
 
         $data = self::flattenAssocArray($data);
 
-        var_dump($data);
-        die;
-
         $sql = "INSERT INTO users(`first_name`, `last_name`, `company_name`,
                     `email`, `phone_number`, `password`, `company_nature`, `company_address`)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
-        return self::executeQuery($sql, $data);
+        return self::executeQueryWithResult($sql, $data, true);
     }
 
 
@@ -330,7 +333,7 @@ class CreateModel {
         
         if ($response["status"] !== 200) return $response;
 
-        return $result;
+        header("Location: ../store/continue-shopping");
     }
 
 

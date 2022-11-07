@@ -28,7 +28,7 @@ class Config {
             'host' => 'localhost',
             'username' => 'root',
             'password' => '',
-            'db_name' => 'upcc',
+            'db_name' => 'upcc_unit_tests',
         ];
 
         // self::$db_config = [

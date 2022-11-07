@@ -76,7 +76,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
 
         fetch("../api/products/count").then(response => response.json()).then(json => {
             if (json["status"] !== 200) console.error(json);
-            document.querySelector("#products-count").innerText = json["rows"].length;
+            document.querySelector("#products-count").innerText = json["rows"][0]["products_count"];
         });
     </script>
 </body>

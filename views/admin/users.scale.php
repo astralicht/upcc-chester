@@ -98,6 +98,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 "users": {
                     "next": document.querySelector("#next-page"),
                     "previous": document.querySelector("#prev-page"),
+                    "label": document.querySelector("#pages-display"),
                 }
             };
             var table_bodies = {
@@ -168,6 +169,8 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 let total_count = data["rows"][0]["users_count"];
                 let total_pages = parseInt(total_count / LIMIT);
 
+                if (total_pages < 1) total_pages = 1;
+
                 controls["previous"].onclick = () => {
                     previousUsersTablePage()
                 };
@@ -175,7 +178,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     nextUsersTablePage(total_pages)
                 };
 
-                controls.innerText = `Page ${pages["users"]+1} of ${total_pages}`;
+                controls["label"].innerText = `Page ${pages["users"]+1} of ${total_pages}`;
             }
 
 

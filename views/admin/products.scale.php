@@ -94,6 +94,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 "products": {
                     "next": document.querySelector("#next-page"),
                     "previous": document.querySelector("#prev-page"),
+                    "label": document.querySelector("#pages-display"),
                 }
             };
             var table_bodies = {
@@ -106,17 +107,16 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
 
             function fetchProducts(products_page) {
                 clearTableBody(table_bodies["products"]);
-                products_page = 0;
+                products_page = pages["products"];
 
                 let filter = null;
                 let brand = null;
                 let type = null;
-                let page = pages["products"];
 
                 setTimeout(() => {
                     filter = document.querySelector("#search-input").value;
 
-                    fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
+                    fetch(`../api/products?filter=${filter}&brand=${brand}&typeid=${type}&page=${products_page}&limit=${LIMIT}`).then(response => response.json()).then(json => {
                         if (json["status"] !== 200) console.error(json);
                         if (json["rows"] === undefined) return;
 
@@ -167,6 +167,8 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                 let total_count = data["rows"][0]["products_count"];
                 let total_pages = parseInt(total_count / LIMIT);
 
+                if (total_pages < 1) total_pages = 1;
+
                 controls["previous"].onclick = () => {
                     previousProductsTablePage()
                 };
@@ -174,7 +176,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     nextProductsTablePage(total_pages)
                 };
 
-                controls.innerText = `Page ${pages["products"]+1} of ${total_pages}`;
+                controls["label"].innerText = `Page ${pages["products"]+1} of ${total_pages}`;
             }
 
 

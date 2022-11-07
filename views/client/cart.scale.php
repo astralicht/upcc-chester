@@ -103,6 +103,13 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             <?php include_once("views/shared/client_header_nav.php"); ?>
             <h1>Your Cart</h1>
             <table id="cart-table" table contain="white" style="width: 100%;">
+                <thead>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Subtotal</th>
+                </thead>
                 <tbody></tbody>
             </table>
 

@@ -27,6 +27,8 @@ function checkIfSuccess($task, $class, $method, $params = [], $otherConditions =
             printFailed($task);
             echo "<li>".$response["message"]."</li>";
         }
+
+        return $response;
     } catch(mysqli_sql_exception $e) {
         printFailed($task);
         echo "<li>$e</li>";

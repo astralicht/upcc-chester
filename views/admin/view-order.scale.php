@@ -60,10 +60,32 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
             <?php include_once("views/shared/admin_header_nav.php"); ?>
             <div main flex="v">
                 <button button contain="secondary" small onclick="history.back()">Back</button>
-                <div flex="h" v-center>
-                    <div id="order-id" style="display: none;"><?php echo $_GET["order_id"] ?></div>
-                    <h1 style="flex-shrink: 0;">Order #<?php echo $_GET["order_id"] ?></h1>
-                    <div id="status-circle" contain="secondary" style="border-radius: 50px; padding: .5em 1em;" small>PENDING</div>
+                <div flex="h">
+                    <div flex="h" v-center>
+                        <div id="order-id" style="display: none;"><?php echo $_GET["order_id"] ?></div>
+                        <h1 style="flex-shrink: 0;" nomargin>Order #<?php echo $_GET["order_id"] ?></h1>
+                        <div id="status-circle" contain="secondary" style="border-radius: 50px; padding: .5em 1em;" small>PENDING</div>
+                    </div>
+                    <div flex="h" fullwidth h-end id="set-status-buttons">
+                        <button contain="danger" button style="width: 200px;" onclick="denyOrder()">Deny Order</button>
+                        <button contain="warning" button style="width: 200px;" onclick="approveOrder()">Approve Order</button>
+                    </div>
+                    <div flex="h" fullwidth h-end id="set-status-select" style="display: none;">
+                        <form action="../api/order/set-status" method="POST" flex="h">
+                            <input type="hidden" name="order_id" id="order_id" value=<?php echo $_GET["order_id"]; ?>>
+                            <input type="hidden" name="redirect_flag" value="true">
+                            <select id="status-select" name="status" form-input style="width: fit-content;">
+                                <option value="null">Select status</option>
+                                <option value="PENDING">Pending Order</option>
+                                <option value="DENIED">Deny Order</option>
+                                <option value="CANCELLED">Cancel Order</option>
+                                <option value="APPROVED">Approve Order</option>
+                                <option value="SHIPPED">Shipped Out</option>
+                                <option value="DELIVERED">Delivered</option>
+                            </select>
+                            <button button style="background-color: #003366;">Set Status</button>
+                        </form>
+                    </div>
                 </div>
                 <div flex="v">
                     <table table id='orders-table' contain="white" style="width: auto; text-align: left; overflow: auto;">
@@ -77,10 +99,6 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         </thead>
                         <tbody></tbody>
                     </table>
-                </div>
-                <div flex="h" fullwidth h-end>
-                    <button contain="danger" button style="width: 200px;" onclick="denyOrder()">Deny Order</button>
-                    <button contain="good" button style="width: 200px;" onclick="approveOrder()">Approve Order</button>
                 </div>
             </div>
         </div>
@@ -189,13 +207,25 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     if (key === "status") {
                         let statusCircle = document.querySelector("div#status-circle");
 
-                        if (row[key] === "DENIED") {
+                        if (row[key] === "DENIED" || row[key] === "CANCELLED") {
                             statusCircle.setAttribute("contain", "danger");
                             statusCircle.innerText = row[key];
                         }
-                        if (row[key] === "APPROVED") {
+                        if (row[key] === "APPROVED" || row[key] === "SHIPPED") {
+                            statusCircle.setAttribute("contain", "warning");
+                            statusCircle.innerText = row[key];
+                        }
+                        if (row[key] === "DELIVERED") {
                             statusCircle.setAttribute("contain", "good");
                             statusCircle.innerText = row[key];
+                        }
+
+                        document.querySelector("#set-status-buttons").style.display = "flex";
+                        document.querySelector("#set-status-select").style.display = "none";
+
+                        if (row[key] !== "PENDING") {
+                            document.querySelector("#set-status-buttons").style.display = "none";
+                            document.querySelector("#set-status-select").style.display = "flex";
                         }
 
                         continue;

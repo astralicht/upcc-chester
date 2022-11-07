@@ -127,9 +127,28 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                         tr.appendChild(td);
                         continue;
                     }
-                    if (key === "order_id") {
 
+                    if (key === "status") {
+                        let div = document.createElement("div");
+
+                        div.innerText = row[key];
+
+                        if (row[key] === "APPROVED") div.setAttribute("contain", "good");
+                        if (row[key] === "DENIED") div.setAttribute("contain", "danger");
+                        if (row[key] === "PENDING") div.setAttribute("contain", "secondary");
+                        if (row[key] === "SHIPPED") div.setAttribute("contain", "warning");
+                        if (row[key] === "DELIVERED") div.setAttribute("contain", "info");
+
+                        div.setAttribute("small", "");
+                        div.style.width = "100%";
+                        div.style.textAlign = "center";
+
+                        td.appendChild(div);
+                        tr.appendChild(td);
+
+                        continue;
                     }
+
 
                     td.innerText = row[key];
                     tr.appendChild(td);
