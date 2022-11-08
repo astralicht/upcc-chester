@@ -36,6 +36,10 @@ $UpdateModel->productClicks($_GET["id"]);
 <head>
     <?php include_once "views/shared/headers.php"; ?>
     <style>
+        html, body {
+            height: 100%;
+        }
+
         .products-section {
             padding: 0 15px;
         }
@@ -111,7 +115,7 @@ $UpdateModel->productClicks($_GET["id"]);
 <body>
     <?php include_once("views/shared/nav.php"); ?>
     <input type="hidden" id="product-id" style="display: hidden;" value="<?php echo $_GET['id']; ?>">
-    <div flex="v" main>
+    <div flex="v" main fullheight>
         <div flex="h">
             <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../views/assets/img/arrow-right.webp" alt="back" style="transform: rotate(180deg);">Back</button>
         </div>

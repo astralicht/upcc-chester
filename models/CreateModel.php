@@ -77,11 +77,6 @@ class CreateModel {
         }
 
         try {
-
-            var_dump($params);
-            var_dump($query->execute());
-            die;
-
             $query->execute();
         } catch (\Exception $e) {
             echo json_encode(["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()]);

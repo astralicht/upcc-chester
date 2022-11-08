@@ -306,15 +306,16 @@ class FetchModel
     function product($data) {
         $id = $data["id"];
         $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`,
-                    p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`, s.`name` AS 'shop_name'
+                    p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`
+                    -- ,s.`name` AS 'shop_name'
                 FROM products AS p
                 INNER JOIN products_prices AS pr
                 INNER JOIN product_types AS pt
-                INNER JOIN shops AS s
+                -- INNER JOIN shops AS s
                 WHERE p.`id`=?
                 AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
-                AND p.`shop_id`=s.`id`
+                -- AND p.`shop_id`=s.`id`
                 AND p.`date_removed` IS NULL";
 
         return self::getResult($sql, [$id]);
