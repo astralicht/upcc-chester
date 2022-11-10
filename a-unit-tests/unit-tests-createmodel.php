@@ -42,11 +42,15 @@ checkIfSuccess($task, $CreateModel, "product", json_encode([
     "length" => "",
     "width" => "",
     "thickness" => "",
+    "company_name" => "",
+    "office_address" => "",
+    "contact_number" => "",
+    "shop_id" => "1",
     "type_id" => "12",
 ]));
 
 $task = "Create product price";
-checkIfSuccess($task, $CreateModel, "productPrice", json_encode(["9", "10.01"]));
+checkIfSuccess($task, $CreateModel, "productPrice", json_encode(["1", "10.01"]));
 
 // $task = "Create product stock";
 // checkIfSuccess($task, $CreateModel, "productStock", json_encode(["", ""]));
@@ -87,10 +91,10 @@ $_SESSION["type"] = "ADMIN";
 
 $task = "Create user (admin)";
 checkIfSuccess($task, $CreateModel, "user", json_encode([
-    "first_name" => "Unit",
+    "first_name" => "Admin Unit",
     "last_name" => "Testing",
     "company_name" => "UPCC",
-    "email" => "unit-test@mail.com",
+    "email" => "unit-test-admin@mail.com",
     "phone_number" => "",
     "password" => "unit-test",
     "confirm_password" => "unit-test",

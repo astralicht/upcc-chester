@@ -72,6 +72,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                                 <th>Unit Price</th>
                                 <th>Image Path</th>
                                 <th>Image Name</th>
+                                <th>Clicks</th>
                                 <th>Date Added</th>
                             </thead>
                             <tbody></tbody>

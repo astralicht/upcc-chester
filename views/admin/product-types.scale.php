@@ -41,7 +41,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProductTypes()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProductTypes(pages['product-types'])">
                                 <div id="search-button" flex="h" v-center onclick="fetchProductTypes()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>
@@ -248,7 +248,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     } catch (error) {
                         console.error(error);
                     }
-                    
+
                     if (data["status"] !== 200) return console.error(data["message"]);
 
                     let tbody = table_bodies["product-types"];

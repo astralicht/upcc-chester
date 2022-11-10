@@ -70,7 +70,7 @@ try {
     echo "<li>$e</li>";
 }
 
-$task = "Get cookies";
+$task = "Fetch cookies";
 try {
     $RecController = new RecommendationController();
     $cookies = $RecController->getCookies();
@@ -129,7 +129,7 @@ checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
 $task = "Fetch products with empty filter only (no other params)";
 checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
     "filter" => "",
-], "non-zero");
+]);
 
 $task = "Fetch products with null filter only (no other params)";
 checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
@@ -143,7 +143,7 @@ $task = "Fetch all products complete";
 checkIfSuccess($task, $FetchModel, "allProductsComplete");
 
 $task = "Fetch all specific product details complete with existing id";
-checkIfSuccess($task, $FetchModel, "productDetailsComplete", "12", "non-zero");
+checkIfSuccess($task, $FetchModel, "productDetailsComplete", "1", "non-zero");
 
 $task = "Fetch all specific product details complete with blank id";
 checkIfSuccess($task, $FetchModel, "productDetailsComplete", "", "zero");

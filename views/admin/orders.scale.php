@@ -40,7 +40,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeyup="fetchOrders()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeyup="fetchOrders(pages['orders'])">
                                 <div id="search-button" flex="h" v-center onclick="fetchOrders()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>
@@ -115,7 +115,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         try {
                             json = JSON.parse(json);
                         } catch (error) {
-                            console.error(error);
+                            console.error(json);
                         }
 
                         if (json["status"] !== 200) console.error(json);

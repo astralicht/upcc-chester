@@ -5,6 +5,10 @@
     <?php include_once "views/shared/headers.php"; ?>
     <link rel="stylesheet" href="api/assets/css?name=main.css">
     <style>
+        html, body {
+            height: 100%;
+        }
+
         #search-filter-container {
             padding: 15px 20px;
             gap: 10px;

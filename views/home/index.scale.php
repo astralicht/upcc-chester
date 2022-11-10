@@ -35,9 +35,9 @@
 </head>
 
 <body flex="v" nogap>
-    <div body fullheight>
+    <div body>
         <?php include_once("views/shared/nav.php"); ?>
-        <div style="padding: 1em 3em; flex-grow: 1;">
+        <div style="padding: 1em 3em; flex-grow: 1;" fullheight>
             <section flex="v" nogap>
                 <h2 class="section-title" flex="v" nogap>Featured Shops<span class="section-subtitle">Shops you might like</span></h2>
                 <div flex="h" h-end style="padding: 0 1em;">

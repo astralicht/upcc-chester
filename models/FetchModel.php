@@ -230,16 +230,23 @@ class FetchModel
                 ORDER BY o.`date_added` DESC
                 LIMIT ?, ?";
 
-        // if ($filter !== "") {
-        //     $sql = "SELECT `id`, `name`, `description`
-        //             FROM orders
-        //             WHERE `date_removed` IS NULL
-        //             AND (`id` LIKE '%$filter%'
-        //             OR `user_id` LIKE '%$filter%'
-        //             OR `date_added` LIKE '$filter'
-        //             OR `status` LIKE '$filter')
-        //             LIMIT ?, ?";
-        // }
+        if ($filter !== "") {
+            $sql = "SELECT o.`id`, o.`id` AS 'order_id', CONCAT(u.`first_name`, ' ', u.`last_name`), SUM(op.`item_count`), SUM(pr.`unit_price`*op.`item_count`), o.`id` AS 'order_id_redr', o.`status`, o.`date_added`
+                FROM orders AS o INNER JOIN products AS p INNER JOIN products_prices AS pr INNER JOIN orders_products AS op INNER JOIN users AS u
+                WHERE op.`product_id`=p.`id`
+                AND op.`order_id`=o.`id`
+                AND pr.`product_id`=p.`id`
+                AND o.`user_id`=u.`id`
+                AND o.`date_removed` IS NULL
+                AND (o.`id` LIKE '%$filter%'
+                OR CONCAT(u.`first_name`, ' ', u.`last_name`) LIKE '%$filter%'
+                OR o.`user_id` LIKE '%$filter%'
+                OR o.`date_added` LIKE '%$filter%'
+                OR o.`status` LIKE '%$filter%') 
+                GROUP BY o.`id`
+                ORDER BY o.`date_added` DESC
+                LIMIT ?, ?";
+        }
 
         return self::getResult($sql, $range);
     }

@@ -133,7 +133,7 @@ class CreateModel {
                     `email`, `phone_number`, `password`, `company_nature`, `company_address`)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
-        return self::executeQueryWithResult($sql, $data, true);
+        return self::executeQuery($sql, $data, true);
     }
 
 
