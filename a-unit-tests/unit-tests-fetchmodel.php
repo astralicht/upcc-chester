@@ -193,13 +193,13 @@ checkIfSuccess($task, $FetchModel, "product", ["id" => ""], "zero");
 $task = "Fetch specific product with null id";
 checkIfSuccess($task, $FetchModel, "product", ["id" => null], "zero");
 
-$task = "Fetch specfic user with existing id";
+$task = "Fetch specific user with existing id";
 checkIfSuccess($task, $FetchModel, "user", ["id" => "13"], "non-zero");
 
-$task = "Fetch specfic user with blank id";
+$task = "Fetch specific user with blank id";
 checkIfSuccess($task, $FetchModel, "user", ["id" => ""], "zero");
 
-$task = "Fetch specfic user with null id";
+$task = "Fetch specific user with null id";
 checkIfSuccess($task, $FetchModel, "user", ["id" => null], "zero");
 
 $task = "Fetch product type with existing filter";
