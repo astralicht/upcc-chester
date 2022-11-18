@@ -7,7 +7,12 @@ include_once "unit-test-tools.php";
 
 $task = "New Update model instance";
 try {
-    $UpdateModel = new UpdateModel;
+    $UpdateModel = new UpdateModel([
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db_name' => 'upcc_unit_tests',
+    ]);
     if (get_class($UpdateModel) === "Main\Models\UpdateModel") printSuccess($task);
 } catch (Error $e) {
     printFailed($task);

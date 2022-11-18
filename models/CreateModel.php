@@ -10,8 +10,17 @@ use Main\Models\FetchModel;
 
 class CreateModel {
 
+    static $configOverride = null;
+
+    function __construct($configOverride = null)
+    {
+        if ($configOverride !== null) {
+            self::$configOverride = $configOverride;
+        }
+    }
+
     private function executeQuery($sql, $params = null, $getLastInsertId = false) {
-        $conn = (new Config())->openDbConnection(); 
+        $conn = (new Config(self::$configOverride))->openDbConnection(); 
 
         try {
             $query = $conn->prepare($sql);
@@ -59,7 +68,7 @@ class CreateModel {
 
 
     private function executeQueryWithResult($sql, $params = null, $getLastInsertId = false) {
-        $conn = (new Config())->openDbConnection();
+        $conn = (new Config(self::$configOverride))->openDbConnection();
 
         try {
             $query = $conn->prepare($sql);
@@ -323,6 +332,13 @@ class CreateModel {
 
         $_SESSION["cart_count"] = 0;
 
+        $data = [
+            "message" => "Order #$orderId has been created! View your order details <a href='../client/order?id=$orderId'>here.</a>.",
+            "user_id" => $_SESSION["id"],
+        ];
+
+        self::notification($data);
+
         $MailController = new MailController();
         $response = $MailController->sendToRandomAgent($orderId, $clientId, $productIds, $items);
         
@@ -434,6 +450,16 @@ class CreateModel {
         $response["token"] = $token;
 
         return $response;
+    }
+
+
+    function notification($data) {
+        $message = $data["message"];
+        $userId = $data["user_id"];
+
+        $sql = "INSERT INTO notifications(`message`, `user_id`) VALUES (?, ?);";
+
+        return self::executeQuery($sql, [$message, $userId]);
     }
 
 }

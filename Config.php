@@ -16,7 +16,7 @@ class Config {
     private static $URI_OFFSET;
     private static array $db_config;
 
-    function __construct() {
+    function __construct($override = null) {
         // Environment options are either OFFSET-1 or OFFSET-2 in all caps.
         // OFFSET-1 offsets (removes a part of) the URI by 1 from the left.
         // OFFSET-2 offsets (removes a part of) the URI by 2 from the left.
@@ -28,8 +28,12 @@ class Config {
             'host' => 'localhost',
             'username' => 'root',
             'password' => '',
-            'db_name' => 'upcc_unit_tests',
+            'db_name' => 'upcc',
         ];
+
+        if ($override !== null) {
+            self::$db_config = $override;
+        }
 
         // self::$db_config = [
         //     'host' => 'localhost',

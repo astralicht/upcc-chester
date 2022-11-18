@@ -7,7 +7,12 @@ include_once "unit-test-tools.php";
 
 $task = "New Auth model instance";
 try {
-    $AuthModel = new AuthModel;
+    $AuthModel = new AuthModel([
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db_name' => 'upcc_unit_tests',
+    ]);
     if (get_class($AuthModel) === "Main\Models\AuthModel") printSuccess($task);
 } catch (Error $e) {
     printFailed($task);

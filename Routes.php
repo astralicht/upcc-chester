@@ -95,6 +95,10 @@ class Routes {
             "store/search?param=*" => ["ViewsController", "search"],
             "store/compare?param=*&first=*&second=*" => ["ViewsController", "compare"],
 
+            "api/notifications?user_id=*&param=unread" => ["FetchController", "notificationsUnread", "GET"],
+            "api/notifications?user_id=*&param=all" => ["FetchController", "notificationsAll", "GET"],
+            "api/notifications/mark-all-read?user_id=*" => ["UpdateController", "notificationsMarkAllRead", "GET"],
+
             
             "default" => "home/index",
             "home/index" => ["ViewsController", "home"],
@@ -147,6 +151,9 @@ class Routes {
             "shop-admin/view-order?order_id=*" => ["ViewsController", "shopAdminViewOrder"],
 
             "client/account-details" => ["ViewsController", "clientAccountDetails"],
+            "client/notifications" => ["ViewsController", "clientNotifications"],
+            "client/notifications?user_id=*&param=unread" => ["ViewsController", "clientNotificationsUnread", "GET"],
+            "client/notifications?user_id=*&param=all" => ["ViewsController", "clientNotificationsAll", "GET"],
             "client/order-history" => ["ViewsController", "clientOrderHistory"],
             "client/order?id*" => ["ViewsController", "clientOrder"],
             "client/cart" => ["ViewsController", "clientCart"],

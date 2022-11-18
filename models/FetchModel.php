@@ -10,6 +10,14 @@ use TypeError;
 class FetchModel
 {
 
+    static $configOverride = null;
+
+    function __construct($configOverride = null) {
+        if ($configOverride !== null) {
+            self::$configOverride = $configOverride;
+        }
+    }
+
     function getResult($sql, $params = null) {
         $conn = (new Config())->openDbConnection();
 
@@ -109,7 +117,9 @@ class FetchModel
                     LIMIT ?, ?";
         }
 
-        return self::getResult($sql, $range);
+        $response = self::getResult($sql, $range);
+
+        return $response;
     }
 
 
@@ -127,7 +137,7 @@ class FetchModel
         $filterString = "";
         $brandAndType = "";
 
-        if ($filter !== "null") $filterString = "AND p.`name` LIKE '%$filter%'";
+        if ($filter !== "null") $filterString = "AND p.`name` LIKE '%$filter%' OR pt.`name` LIKE '%$filter%' OR p.`brand` LIKE '%$filter%'";
 
         if ($brand !== "null" && $typeId === "null") $brandAndType = "AND (p.`brand`='$brand')";
 
@@ -161,6 +171,8 @@ class FetchModel
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
                 AND pr.`product_id`=p.`id`
+                $filterString
+                $brandAndType
                 GROUP BY p.`id`
                 ORDER BY
                     pr.`unit_price` ASC,
@@ -583,7 +595,7 @@ class FetchModel
                 OR p.`brand` LIKE '%$param%'
                 OR p.`material` LIKE '%$param%'
                 OR p.`connection_type` LIKE '%$param%')
-                GROUP BY p.`id`, p.`shop_id`
+                GROUP BY p.`id`, p.`shop_id`, shop_count
                 ORDER BY
                     clicks DESC,
                     shop_count DESC,
@@ -626,21 +638,40 @@ class FetchModel
                     p.`image_name` AS product_img_name,
                     pr.`unit_price` AS product_price,
                     p.`clicks`,
-                    COUNT(p.`shop_id`) AS shop_count
+                    COUNT(op.`product_id`) AS order_count
                 FROM products AS p
                 INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
                 AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
-                GROUP BY p.`id`, p.`shop_id`
+                GROUP BY p.`id`, order_count
                 ORDER BY
                     p.`clicks` DESC,
-                    pr.`unit_price` ASC,
-                    shop_count DESC
+                    pr.`unit_price` ASC
                 LIMIT ?";
 
-        return self::getResult($sql, [$limit]);
+        $result = self::getResult($sql, [$limit]);
+
+        if (count($result["rows"]) < 1) {
+            $sql = "SELECT p.`id` AS product_id,
+                        p.`name` AS product_name,
+                        p.`image_path` AS product_img_path,
+                        p.`image_name` AS product_img_name,
+                        pr.`unit_price` AS product_price,
+                        p.`clicks`
+                    FROM products AS p
+                    INNER JOIN products_prices AS pr
+                    WHERE p.`date_removed` IS NULL
+                    AND pr.`product_id`=p.`id`
+                    GROUP BY p.`id`
+                    ORDER BY
+                        p.`clicks` DESC,
+                        pr.`unit_price` ASC
+                    LIMIT ?";
+
+            return self::getResult($sql, [$limit]);
+        }
     }
 
 
@@ -660,7 +691,19 @@ class FetchModel
                 GROUP BY s.`id`
                 LIMIT ?;";
 
-        return self::getResult($sql, [$limit]);
+        $result = self::getResult($sql, [$limit]);
+
+        if (count($result["rows"]) < 1) {
+            $sql = "SELECT s.`name` AS shop_name,
+                    s.`image_path` AS shop_image_path,
+                    s.`id` AS shop_id,
+                    s.`rating` AS rating
+                FROM shops AS s
+                WHERE s.`date_removed` IS NULL
+                LIMIT ?;";
+
+            return self::getResult($sql, [$limit]);
+        }
     }
 
 
@@ -738,6 +781,20 @@ class FetchModel
         $sql = "SELECT `id` FROM products WHERE `shop_id`=?";
 
         return self::getResult($sql, [$shopId]);
+    }
+
+
+    function notificationsAll($data) {
+        $sql = "SELECT * FROM notifications WHERE `user_id`=? ORDER BY `date_added` DESC";
+
+        return self::getResult($sql, [$data["user_id"]]);
+    }
+
+
+    function notificationsUnread($data) {
+        $sql = "SELECT * FROM notifications WHERE `user_id`=? AND `date_read` IS NULL ORDER BY `date_added` DESC";
+
+        return self::getResult($sql, [$data["user_id"]]);
     }
 
 }

@@ -13,6 +13,11 @@ function checkIfSuccess($task, $class, $method, $params = [], $otherConditions =
                 $response = call_user_func_array(array($class, $method), $params);
             } else {
                 $response = $class->$method($params);
+                
+                
+                var_dump($params);
+
+                
             }
         }
         else  {

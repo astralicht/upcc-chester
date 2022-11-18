@@ -8,6 +8,14 @@ use Main\Config;
 
 class DeleteModel {
 
+    static $configOverride = null;
+
+    function __construct($configOverride = null) {
+        if ($configOverride !== null) {
+            self::$configOverride = $configOverride;
+        }
+    }
+
     private function getResult($sql, $params = null) {
         $conn = (new Config())->openDbConnection();
 
@@ -38,9 +46,15 @@ class DeleteModel {
     function users($data) {
         $data = json_decode($data, true);
         $date_now = date("Y-m-d H:i:s");
-        $clause = implode(',', array_fill(0, count($data), '?'));
 
-        $sql = "UPDATE users SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+        if (count($data) > 1) {
+            $clause = implode(',', array_fill(0, count($data), '?'));
+            $sql = "UPDATE users SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+        } else {
+            $sql = "UPDATE users SET `date_removed`='$date_now' WHERE `id`=?";
+        }
+
+        var_dump($data);
 
         return self::getResult($sql, $data);
     }
@@ -49,9 +63,13 @@ class DeleteModel {
     function products($data) {
         $data = json_decode($data, true);
         $date_now = date("Y-m-d H:i:s");
-        $clause = implode(',', array_fill(0, count($data), '?'));
 
-        $sql = "UPDATE products SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+        if (count($data) > 1) {
+            $clause = implode(',', array_fill(0, count($data), '?'));
+            $sql = "UPDATE products SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+        } else {
+            $sql = "UPDATE products SET `date_removed`='$date_now' WHERE `id`=?";
+        }
 
         return self::getResult($sql, $data);
     }

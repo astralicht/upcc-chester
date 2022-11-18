@@ -112,7 +112,11 @@ class MailController {
 
         $agentEmail = $rows[rand(0, count($rows)-1)]["email"];
         
-        $Mailer = self::setMailParameters($message, "Order #$orderId", $agentEmail);
+        try {
+            $Mailer = self::setMailParameters($message, "Order #$orderId", $agentEmail);
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+        }
 
         $Mailer->ClearReplyTos();
 
@@ -121,6 +125,7 @@ class MailController {
         } catch (PHPMailerException $e) {
             return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
         }
+        
         $Mailer->send();
 
         return ["status" => 200];

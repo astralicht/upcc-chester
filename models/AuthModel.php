@@ -5,10 +5,18 @@ use Main\Config;
 
 class AuthModel {
 
+    static $configOverride = null;
+
+    function __construct($configOverride = null) {
+        if ($configOverride !== null) {
+            self::$configOverride = $configOverride;
+        }
+    }
+
     function login($data) {
         $data = json_decode($data, true);
 
-        $conn = (new Config())->openDbConnection();
+        $conn = (new Config(self::$configOverride))->openDbConnection();
 
         $sql = 'SELECT `id`, `first_name`, `last_name`, `email`, `type`, `dp_path`, `password`
         FROM users

@@ -40,6 +40,8 @@ class ViewsController {
     function adminEditProduct(): string { return self::getFile('views/admin/edit-product.scale.php'); }
     function signupSuccess(): string { return self::getFile('views/signup/success.scale.php'); }
     function clientAccountDetails(): string { return self::getFile('views/client/account-details.scale.php'); }
+    function clientNotificationsUnread(): string { return self::getFile('views/client/notifications-unread.scale.php'); }
+    function clientNotificationsAll(): string { return self::getFile('views/client/notifications-all.scale.php'); }
     function clientOrderHistory(): string { return self::getFile('views/client/order-history.scale.php'); }
     function clientOrder(): string { return self::getFile('views/client/order.scale.php'); }
     function clientCart(): string { return self::getFile('views/client/cart.scale.php'); }

@@ -41,7 +41,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                         <div flex="v">
                             <h3 nomargin>Search</h3>
                             <div flex="h" v-center>
-                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProducts()">
+                                <input type="text" form-input box-shadow placeholder="Enter search here" id="search-input" onkeydown="fetchProducts(pages['products'])">
                                 <div id="search-button" flex="h" v-center onclick="fetchProducts()">
                                     <img src="../views/assets/img/search.svg" alt="search" style="height: 2em; width: 2em;">
                                 </div>

@@ -30,9 +30,9 @@
     <title>Products | Industrial Sales Assist</title>
 </head>
 
-<body>
+<body flex="v">
     <?php include_once("views/shared/nav.php"); ?>
-    <div flex="v" main>
+    <div flex="v" main style="flex-grow: 1;">
         <div>
             <h1>Products</h1>
         </div>

@@ -12,7 +12,12 @@ include_once "unit-test-tools.php";
 
 $task = "New fetch instance";
 try {
-    $FetchModel = new FetchModel();
+    $FetchModel = new FetchModel([
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db_name' => 'upcc_unit_tests',
+    ]);
     if (get_class($FetchModel) === "Main\Models\FetchModel") printSuccess($task);
 } catch (Error $e) {
     printFailed($task);
@@ -41,16 +46,16 @@ checkIfSuccess($task, $FetchModel, "users", [
     "limit" => "20",
 ]);
 
-$task = "Fetch all users with existing 'User' filter";
+$task = "Fetch all users with existing 'Unit' filter";
 checkIfSuccess($task, $FetchModel, "users", [
-    "filter" => "",
+    "filter" => "Unit",
     "page" => "0",
     "limit" => "20",
 ], "non-zero");
 
-$task = "Fetch all users with non-existent 'banana' filter";
+$task = "Fetch all users with non-existent 'NONE' filter";
 checkIfSuccess($task, $FetchModel, "users", [
-    "filter" => "banana",
+    "filter" => "NONE",
     "page" => "0",
     "limit" => "20",
 ], "zero");
@@ -123,7 +128,7 @@ checkIfSuccess($task, $FetchModel, "products", [
 
 $task = "Fetch products with existing filter only (no other params)";
 checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
-    "filter" => "banana",
+    "filter" => "Unit",
 ], "non-zero");
 
 $task = "Fetch products with empty filter only (no other params)";

@@ -8,7 +8,15 @@ use Main\Config;
 
 class UpdateModel {
 
-    private function getResult($sql, $params = null) {
+    static $configOverride = null;
+
+    function __construct($configOverride = null) {
+        if ($configOverride !== null) {
+            self::$configOverride = $configOverride;
+        }
+    }
+
+    private function executeQuery($sql, $params = null) {
         $conn = (new Config())->openDbConnection();
 
         try {
@@ -35,6 +43,40 @@ class UpdateModel {
     }
 
 
+    private function executeQueryWithResult($sql, $params = null) {
+        $conn = (new Config())->openDbConnection();
+
+        try {
+            $query = $conn->prepare($sql);
+        } catch (\Exception $e) {
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+        }
+
+        if ($params !== NULL) {
+            $literals = "";
+            foreach ($params as $param) {
+                $literals .= "s";
+            }
+            $query->bind_param($literals, ...$params);
+        }
+
+        try {
+            $query->execute();
+        } catch (\Exception $e) {
+            return ["status" => 500, "message" => $e->getMessage(), "stack_trace" => $e->getTraceAsString()];
+        }
+
+        $result = $query->get_result();
+
+        $rows = [];
+        while ($row = $result->fetch_assoc()) $rows[] = $row;
+
+        $conn->close();
+
+        return ["status" => 200, "rows" => $rows];
+    }
+
+
     private function flattenAssocArray($array) {
         $flatArray = [];
 
@@ -52,7 +94,7 @@ class UpdateModel {
 
         $sql = "UPDATE users SET `first_name`=?, `last_name`=?, `company_name`=?, `company_address`=?, `phone_number`=?, `company_nature`=? WHERE `id`=?";
 
-        return self::getResult($sql, $data);
+        return self::executeQuery($sql, $data);
     }
 
 
@@ -64,14 +106,29 @@ class UpdateModel {
 
         unset($data["redirect_flag"]);
 
-        $params = [$data["status"], $data["order_id"]];
+        $orderId = $data["order_id"];
+        $status = $data["status"];
+
+        $sql = "SELECT `user_id` FROM orders WHERE `id`=?";
+        $response = self::executeQueryWithResult($sql, [$orderId]);
+
+        $userId = $response["rows"][0]["user_id"];
+
+        $params = [$status, $orderId];
         $sql = "UPDATE orders SET `status`=? WHERE `id`=?";
 
-        $response = self::getResult($sql, $params);
+        $response = self::executeQuery($sql, $params);
+
+        $data = [
+            "message" => "Order #$orderId is now $status. View your order details <a href='../client/order?id=$orderId'>here.</a>.",
+            "user_id" => $userId,
+        ];
+
+        $response = (new \Main\Models\CreateModel)->notification($data);
 
         if ($redirectFlag != true || $redirectFlag == null) return $response;
         
-        header("Location: ../../admin/view-order?order_id=".$data["order_id"]);
+        header("Location: ../../admin/view-order?order_id=".$orderId);
     }
 
     
@@ -86,7 +143,7 @@ class UpdateModel {
             $data = [$fileDestination, $id];
         }
 
-        return self::getResult($sql, $data);
+        return self::executeQuery($sql, $data);
     }
 
 
@@ -106,13 +163,13 @@ class UpdateModel {
                 SET `name`=?, `material`=?, `brand`=?, `connection_type`=?, `length`=?, `width`=?, `thickness`=?, `type_id`=?
                 WHERE `id`=?";
 
-        self::getResult($sql, $data);
+        self::executeQuery($sql, $data);
 
         $sql = "UPDATE products_prices
                 SET `unit_price`=?
                 WHERE `product_id`=?";
 
-        return self::getResult($sql, $productPricesArr);
+        return self::executeQuery($sql, $productPricesArr);
     }
 
 
@@ -122,7 +179,7 @@ class UpdateModel {
                 WHERE `email`=?";
 
         $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $response = self::getResult($sql, [$newPassword, $_SESSION["email-for-password-reset"]]);
+        $response = self::executeQuery($sql, [$newPassword, $_SESSION["email-for-password-reset"]]);
 
         unset($_SESSION["email-for-password-reset"]);
         session_destroy();
@@ -136,7 +193,7 @@ class UpdateModel {
                 SET `clicks`=`clicks`+1
                 WHERE `id`=?";
 
-        return self::getResult($sql, [$id]);
+        return self::executeQuery($sql, [$id]);
     }
 
 
@@ -145,7 +202,19 @@ class UpdateModel {
 
         $sql = "UPDATE users SET `first_name`=?, `last_name`=?, `company_name`=?, `company_address`=?, `phone_number`=?, `company_nature`=? WHERE `id`=?";
 
-        return self::getResult($sql, $data);
+        return self::executeQuery($sql, $data);
+    }
+
+
+    function notificationsMarkAllRead($data) {
+        $userId = $data["user_id"];
+        $date_now = date("Y-m-d H:i:s");
+
+        $sql = "UPDATE notifications SET `date_read`=? WHERE `user_id`=? AND `date_read` IS NULL";
+
+        self::executeQuery($sql, [$date_now, $userId]);
+        
+        return header("Location: ../../client/notifications?user_id=$userId&param=unread");
     }
 
 }

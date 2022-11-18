@@ -31,5 +31,7 @@ class FetchController {
     function previousOrderedProducts($limit) { return (new FetchModel)->previousOrderedProducts($limit); }
     function search($param) { return (new FetchModel)->search($param); }
     function shopProductsCount($param) { return (new FetchModel)->shopProductsCount($param); }
+    function notificationsUnread($data) { return (new FetchModel)->notificationsUnread($data); }
+    function notificationsAll($data) { return (new FetchModel)->notificationsAll($data); }
     
 }

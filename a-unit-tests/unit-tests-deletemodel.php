@@ -7,7 +7,12 @@ include_once "unit-test-tools.php";
 
 $task = "New Delete model instance";
 try {
-    $DeleteModel = new DeleteModel;
+    $DeleteModel = new DeleteModel([
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db_name' => 'upcc_unit_tests',
+    ]);
     if (get_class($DeleteModel) === "Main\Models\DeleteModel") printSuccess($task);
 } catch (Error $e) {
     printFailed($task);
@@ -18,8 +23,13 @@ try {
  * Users
  */
 
-$task = "Delete existing single user";
-checkIfSuccess($task, $DeleteModel, "users", json_encode(["30"]));
+$task = "Delete existing single user with ID #1";
+$response = checkIfSuccess($task, $DeleteModel, "users", json_encode(["1"]));
+
+// var_dump($response);
+
+$task = "Delete existing single user with ID #2";
+checkIfSuccess($task, $DeleteModel, "users", json_encode(["2"]));
 
 $task = "Delete non-existing single user";
 checkIfSuccess($task, $DeleteModel, "users", json_encode(["1080"]));

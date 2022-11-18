@@ -7,7 +7,12 @@ include_once "unit-test-tools.php";
 
 $task = "New Create model instance";
 try {
-    $CreateModel = new CreateModel;
+    $CreateModel = new CreateModel([
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db_name' => 'upcc_unit_tests',
+    ]);
     if (get_class($CreateModel) === "Main\Models\CreateModel") printSuccess($task);
 } catch (Error $e) {
     printFailed($task);

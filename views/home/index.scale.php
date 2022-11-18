@@ -35,59 +35,58 @@
 </head>
 
 <body flex="v" nogap>
-    <div body>
-        <?php include_once("views/shared/nav.php"); ?>
-        <div style="padding: 1em 3em; flex-grow: 1;" fullheight>
-            <section flex="v" nogap>
-                <h2 class="section-title" flex="v" nogap>Featured Shops<span class="section-subtitle">Shops you might like</span></h2>
-                <div flex="h" h-end style="padding: 0 1em;">
-                    <a href="../shops/index">See all ></a>
-                </div>
-                <div class="cards-container" id="shops" flex="h">
-                    <?php
-                    $FetchModel = new FetchModel();
-                    $results = $FetchModel->featuredShops(7);
-                    $rows = $results["rows"];
-                    foreach ($rows as $row) {
-                        $card = file_get_contents("views/templates/_card_shop.html");
+    <?php include_once("views/shared/nav.php"); ?>
+    <div style="padding: 1em 3em; flex-grow: 1;">
+        <section flex="v" nogap>
+            <h2 class="section-title" flex="v" nogap>Featured Shops<span class="section-subtitle">Shops you might like</span></h2>
+            <div flex="h" h-end style="padding: 0 1em;">
+                <a href="../shops/index">See all ></a>
+            </div>
+            <div class="cards-container" id="shops" flex="h">
+                <?php
+                $FetchModel = new FetchModel();
+                $results = $FetchModel->featuredShops(7);
+                $rows = $results["rows"];
+                foreach ($rows as $row) {
+                    $card = file_get_contents("views/templates/_card_shop.html");
 
-                        $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
-                        $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
-                        $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
+                    $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
+                    $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
+                    $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
 
-                        $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
+                    $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
 
-                        $card = str_replace("{{shop_products_count}}", count($rows), $card);
+                    $card = str_replace("{{shop_products_count}}", count($rows), $card);
 
-                        $rating = $row["rating"];
+                    $rating = $row["rating"];
 
-                        if ($rating == null || $rating == "") $rating = 0.0;
+                    if ($rating == null || $rating == "") $rating = 0.0;
 
-                        $card = str_replace("{{shop_rating}}", $rating, $card);
+                    $card = str_replace("{{shop_rating}}", $rating, $card);
 
-                        echo $card;
-                    }
-                    ?>
-                </div>
-            </section>
-            <section flex="v" nogap>
-                <h2 class="section-title" flex="v" nogap>Featured Products<span class="section-subtitle">Products you might like</span></h2>
-                <div flex="h" h-end style="padding: 0 1em;">
-                    <a href="../products/index">See all ></a>
-                </div>
-                <div class="cards-container" id="products" flex="h">
-                    <?php
-                    $FetchModel = new FetchModel();
-                    $results = $FetchModel->featuredProducts(10);
-                    $rows = $results["rows"];
-                    foreach ($rows as $row) {
-                        $img_path = $row["product_img_path"];
-                        $img_name = $row["product_img_name"];
-                        $name = $row["product_name"];
-                        $id = $row["product_id"];
-                        $price = $row["product_price"];
-                        $clicks = $row["clicks"];
-                        $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
+                    echo $card;
+                }
+                ?>
+            </div>
+        </section>
+        <section flex="v" nogap>
+            <h2 class="section-title" flex="v" nogap>Featured Products<span class="section-subtitle">Products you might like</span></h2>
+            <div flex="h" h-end style="padding: 0 1em;">
+                <a href="../products/index">See all ></a>
+            </div>
+            <div class="cards-container" id="products" flex="h">
+                <?php
+                $FetchModel = new FetchModel();
+                $results = $FetchModel->featuredProducts(10);
+                $rows = $results["rows"];
+                foreach ($rows as $row) {
+                    $img_path = $row["product_img_path"];
+                    $img_name = $row["product_img_name"];
+                    $name = $row["product_name"];
+                    $id = $row["product_id"];
+                    $price = $row["product_price"];
+                    $clicks = $row["clicks"];
+                    $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
                                     <div class='card' flex='v'>
                                         <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
                                         <div class='card-body'>
@@ -99,14 +98,14 @@
                                         </div>
                                     </div>
                                 </a>";
-                        echo $card;
-                    }
-                    ?>
-                </div>
-            </section>
-            <?php
-            if (isset($_SESSION["type"])) {
-            ?>
+                    echo $card;
+                }
+                ?>
+            </div>
+        </section>
+        <?php
+        if (isset($_SESSION["type"])) {
+        ?>
             <section flex="v" nogap>
                 <h2 class="section-title">Buy Again</h2>
                 <div flex="h" h-end style="padding: 0 1em;">
@@ -145,8 +144,7 @@
                     ?>
                 </div>
             </section>
-            <?php } ?>
-        </div>
+        <?php } ?>
     </div>
     <?php include_once "views/shared/footers.php"; ?>
 </body>

@@ -282,6 +282,7 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     json = JSON.parse(json);
                 } catch (error) {
                     console.error(error);
+                    console.log(json);
                     return;
                 }
 
