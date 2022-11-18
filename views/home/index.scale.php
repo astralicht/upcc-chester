@@ -1,13 +1,14 @@
+<?php
+
+use Main\Models\FetchModel;
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php
-
-    use Main\Controllers\FetchController;
-    use Main\Models\FetchModel;
-
-    include_once "views/shared/headers.php"; ?>
+    <?php include_once "views/shared/headers.php"; ?>
     <style>
         html,
         body {
@@ -45,8 +46,9 @@
             <div class="cards-container" id="shops" flex="h">
                 <?php
                 $FetchModel = new FetchModel();
-                $results = $FetchModel->featuredShops(7);
+                $results = $FetchModel->featuredShops(10);
                 $rows = $results["rows"];
+
                 foreach ($rows as $row) {
                     $card = file_get_contents("views/templates/_card_shop.html");
 
@@ -77,8 +79,13 @@
             <div class="cards-container" id="products" flex="h">
                 <?php
                 $FetchModel = new FetchModel();
+
+                // ini_set('display_errors', 0);
+                // error_reporting(0);
+
                 $results = $FetchModel->featuredProducts(10);
                 $rows = $results["rows"];
+
                 foreach ($rows as $row) {
                     $img_path = $row["product_img_path"];
                     $img_name = $row["product_img_name"];

@@ -638,14 +638,14 @@ class FetchModel
                     p.`image_name` AS product_img_name,
                     pr.`unit_price` AS product_price,
                     p.`clicks`,
-                    COUNT(op.`product_id`) AS order_count
+                    COUNT(op.`product_id`) AS 'order_count'
                 FROM products AS p
                 INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
                 AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
-                GROUP BY p.`id`, order_count
+                GROUP BY p.`id`, op.`product_id`
                 ORDER BY
                     p.`clicks` DESC,
                     pr.`unit_price` ASC
@@ -672,6 +672,8 @@ class FetchModel
 
             return self::getResult($sql, [$limit]);
         }
+
+        return $result;
     }
 
 
@@ -704,6 +706,8 @@ class FetchModel
 
             return self::getResult($sql, [$limit]);
         }
+
+        return $result;
     }
 
 
