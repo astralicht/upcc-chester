@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2022 at 05:24 AM
+-- Generation Time: Nov 26, 2022 at 12:34 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `upcc_unit_tests`
 --
-CREATE DATABASE IF NOT EXISTS `upcc_unit_tests` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `upcc_unit_tests`;
 
 -- --------------------------------------------------------
 
@@ -34,6 +32,20 @@ CREATE TABLE `company_natures` (
   `nature` varchar(50) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
   `date_removed` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `message` text DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `date_added` datetime DEFAULT current_timestamp(),
+  `date_read` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -238,6 +250,12 @@ ALTER TABLE `company_natures`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -319,6 +337,12 @@ ALTER TABLE `users_carts`
 -- AUTO_INCREMENT for table `company_natures`
 --
 ALTER TABLE `company_natures`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

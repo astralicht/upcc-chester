@@ -51,7 +51,7 @@ checkIfSuccess($task, $CreateModel, "product", json_encode([
     "office_address" => "",
     "contact_number" => "",
     "shop_id" => "1",
-    "type_id" => "12",
+    "type_id" => "1",
 ]));
 
 $task = "Create product price";
@@ -108,6 +108,7 @@ checkIfSuccess($task, $CreateModel, "user", json_encode([
 ]));
 
 $task = "Create new 5-minute token";
-checkIfSuccess($task, $CreateModel, "token", "unit-test@mail.com");
+$response = checkIfSuccess($task, $CreateModel, "token", "unit-test@mail.com");
+$token = $response["token"];
 
 unset($_SESSION["type"]);

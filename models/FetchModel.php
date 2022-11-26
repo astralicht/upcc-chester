@@ -34,6 +34,7 @@ class FetchModel
             }
             $query->bind_param($literals, ...$params);
         }
+        
 
         try {
             $query->execute();
@@ -42,8 +43,11 @@ class FetchModel
         }
 
         $result = $query->get_result();
+
         $rows = [];
-        while ($row = $result->fetch_assoc()) $rows[] = $row;
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
 
         return ["status" => 200, "rows" => $rows];
     }
@@ -134,16 +138,10 @@ class FetchModel
 
         if ($typeId === null) $typeId = "null";
 
-        $filterString = "";
-        $brandAndType = "";
-
-        if ($filter !== "null") $filterString = "AND p.`name` LIKE '%$filter%' OR pt.`name` LIKE '%$filter%' OR p.`brand` LIKE '%$filter%'";
-
-        if ($brand !== "null" && $typeId === "null") $brandAndType = "AND (p.`brand`='$brand')";
-
-        if ($brand === "null" && $typeId !== "null") $brandAndType = "AND (p.`type_id`='$typeId')";
-
-        if ($brand !== "null" && $typeId !== "null") $brandAndType = "AND (p.`brand`='$brand' AND p.`type_id`='$typeId')";
+        if ($filter !== "null") $filterString = "AND (p.`name` LIKE '%$filter%' OR pt.`name` LIKE '%$filter%' OR p.`brand` LIKE '%$filter%')";
+        else if ($brand !== "null" && $typeId === "null") $brandAndType = "AND (p.`brand`='$brand')";
+        else if ($brand === "null" && $typeId !== "null") $brandAndType = "AND (p.`type_id`='$typeId')";
+        else if ($brand !== "null" && $typeId !== "null") $brandAndType = "AND (p.`brand`='$brand' AND p.`type_id`='$typeId')";
 
         // $sql = "SELECT p.`id`, p.`name`, pt.`name` AS 'type', p.`brand`, pr.`unit_price`, p.`image_path`, p.`image_name`, p.`date_added`
         //         FROM products AS p INNER JOIN products_prices AS pr INNER JOIN product_types as pt
@@ -218,9 +216,9 @@ class FetchModel
                 FROM products AS p INNER JOIN product_types as pt
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
-                AND p.`id`='$id'";
+                AND p.`id`=?";
 
-        return self::getResult($sql);
+        return self::getResult($sql, [$id]);
     }
 
 
@@ -324,25 +322,30 @@ class FetchModel
     
     function product($data) {
         $id = $data["id"];
-        $sql = "SELECT p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`,
+
+        $sql = "SELECT p.`id`, p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`,
                     p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`
-                    -- ,s.`name` AS 'shop_name'
                 FROM products AS p
-                INNER JOIN products_prices AS pr
+                JOIN (
+                	SELECT `product_id`, `unit_price`, MAX(`date_added`) AS date_added
+                    FROM products_prices
+                    WHERE `product_id`=?
+                    GROUP BY `product_id`
+                    LIMIT 1
+                ) AS pr
                 INNER JOIN product_types AS pt
-                -- INNER JOIN shops AS s
                 WHERE p.`id`=?
                 AND p.`id`=pr.`product_id`
                 AND p.`type_id`=pt.`id`
-                -- AND p.`shop_id`=s.`id`
                 AND p.`date_removed` IS NULL";
 
-        return self::getResult($sql, [$id]);
+        return self::getResult($sql, [$id, $id]);
     }
 
 
     function user($data) {
         $id = [$data["id"]];
+        
         $sql = "SELECT * FROM users WHERE `id`=? AND `date_removed` IS NULL";
 
         return self::getResult($sql, $id);

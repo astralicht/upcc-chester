@@ -126,35 +126,11 @@ checkIfSuccess($task, $FetchModel, "products", [
     "limit" => "20",
 ]);
 
-$task = "Fetch products with existing filter only (no other params)";
-checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
-    "filter" => "Unit",
-], "non-zero");
-
-$task = "Fetch products with empty filter only (no other params)";
-checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
-    "filter" => "",
-]);
-
-$task = "Fetch products with null filter only (no other params)";
-checkIfSuccess($task, $FetchModel, "productsFilterOnly", [
-    "filter" => null,
-], "non-zero");
-
 $task = "Fetch all product ids";
 checkIfSuccess($task, $FetchModel, "allProductIds");
 
 $task = "Fetch all products complete";
 checkIfSuccess($task, $FetchModel, "allProductsComplete");
-
-$task = "Fetch all specific product details complete with existing id";
-checkIfSuccess($task, $FetchModel, "productDetailsComplete", "1", "non-zero");
-
-$task = "Fetch all specific product details complete with blank id";
-checkIfSuccess($task, $FetchModel, "productDetailsComplete", "", "zero");
-
-$task = "Fetch all specific product details complete with null id";
-checkIfSuccess($task, $FetchModel, "productDetailsComplete", null, "zero");
 
 $task = "Fetch all orders";
 checkIfSuccess($task, $FetchModel, "allOrders", [
@@ -190,7 +166,7 @@ $task = "Fetch all company natures";
 checkIfSuccess($task, $FetchModel, "companyNatures");
 
 $task = "Fetch specific product with existing id";
-checkIfSuccess($task, $FetchModel, "product", ["id" => "12"], "non-zero");
+checkIfSuccess($task, $FetchModel, "product", ["id" => 1], "non-zero");
 
 $task = "Fetch specific product with blank id";
 checkIfSuccess($task, $FetchModel, "product", ["id" => ""], "zero");
@@ -199,7 +175,7 @@ $task = "Fetch specific product with null id";
 checkIfSuccess($task, $FetchModel, "product", ["id" => null], "zero");
 
 $task = "Fetch specific user with existing id";
-checkIfSuccess($task, $FetchModel, "user", ["id" => "13"], "non-zero");
+checkIfSuccess($task, $FetchModel, "user", ["id" => 1], "non-zero");
 
 $task = "Fetch specific user with blank id";
 checkIfSuccess($task, $FetchModel, "user", ["id" => ""], "zero");
@@ -233,7 +209,7 @@ checkIfSuccess($task, $FetchModel, "productTypesAll");
 
 $task = "Fetch specific client cart items with existing id";
 checkIfSuccess($task, $FetchModel, "clientCart", [
-    "client_id" => "13",
+    "client_id" => "1",
 ]);
 
 $task = "Fetch specific client cart items with blank id";
@@ -253,7 +229,7 @@ $task = "Fetch all types and brands";
 checkIfSuccess($task, $FetchModel, "typesAndBrands");
 
 $task = "Check if email is registered to an account.";
-checkIfSuccess($task, $FetchModel, "isAccountEmail", "admin@mail.com", "non-zero");
+checkIfSuccess($task, $FetchModel, "isAccountEmail", "unit-test@mail.com", "non-zero");
 
 $task = "Check if non-existent email is registered to an account.";
 checkIfSuccess($task, $FetchModel, "isAccountEmail", "sample@mail.com", "zero");
@@ -265,10 +241,10 @@ $task = "Check if null email is registered to an account.";
 checkIfSuccess($task, $FetchModel, "isAccountEmail", null, "zero");
 
 $task = "Check if existing token is valid";
-checkIfSuccess($task, $FetchModel, "isTokenValid", "678fcf69a6f5fa8d8f92bdf882aaeff3784cb2e084e74e9df75bfab3dee8548334bf902cc0c2c0d9bd13770e5299bf6438a1c69d4492ef5dab82a173d1c4bcd3", "non-zero");
+checkIfSuccess($task, $FetchModel, "isTokenValid", $token, "non-zero");
 
 $task = "Check if non-existent token is valid";
-checkIfSuccess($task, $FetchModel, "isTokenValid", "", "zero");
+checkIfSuccess($task, $FetchModel, "isTokenValid", "aaa", "zero");
 
 $task = "Check if blank token is valid";
 checkIfSuccess($task, $FetchModel, "isTokenValid", "", "zero");

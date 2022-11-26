@@ -36,7 +36,8 @@ $UpdateModel->productClicks($_GET["id"]);
 <head>
     <?php include_once "views/shared/headers.php"; ?>
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
         }
 
@@ -244,7 +245,12 @@ $UpdateModel->productClicks($_GET["id"]);
 
         fetch(`../api/product?id=${id}`)
             .then(response => response.json())
-            .then(json => displayDataToDom(json));
+            .then(json => {
+
+                // console.log(json)
+
+                displayDataToDom(json)
+            });
 
         function displayDataToDom(json) {
             if (json["status"] !== 200) return;
@@ -253,10 +259,15 @@ $UpdateModel->productClicks($_GET["id"]);
             let product = json["rows"][0];
             let keys = Object.keys(product);
 
+            console.log(product);
+
             document.title = `${product["name"]} | ISA Store`;
 
             for (let key of keys) {
                 let element = document.querySelector(`#${key}`);
+
+                if (key === "type_id") continue;
+                if (key === "id") continue;
 
                 if (product[key] === null || product[key] === "") {
                     if (element === null) continue;

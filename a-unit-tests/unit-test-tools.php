@@ -2,26 +2,13 @@
 
 function printSuccess($task) { echo "<style>* {color: #e5e5e5; font-family: Segoe UI;} body {background-color: #333}</style><br>$task: <span style='background-color: green; color: #f5f5f5; height: 1em; width: 1em; display: inline-block; border-radius: 100%;'></span>"; }
 function printFailed($task) { echo "<style>* {color: #e5e5e5; font-family: Segoe UI;} body {background-color: #333}</style><br>$task: <span style='background-color: red; color: #f5f5f5; height: 1em; width: 1em; display: inline-block; border-radius: 100%;'></span>"; }
-function checkIfSuccess($task, $class, $method, $params = [], $otherConditions = true) {
+function checkIfSuccess($task, $class, $method, $params = null, $otherConditions = true) {
     try {
-        if (!empty($params)) {
-            if (gettype($params) === "string" && $params !== "") {
-                $response = $class->$method($params);
-            }
-            else if (isset($params["options"]) && $params["options"] === "MULTIPLE") {
-                unset($params["options"]);
-                $response = call_user_func_array(array($class, $method), $params);
-            } else {
-                $response = $class->$method($params);
-                
-                
-                var_dump($params);
-
-                
-            }
-        }
-        else  {
-            $response = $class->$method();
+        if (isset($params["options"]) && $params["options"] === "MULTIPLE") {
+            unset($params["options"]);
+            $response = call_user_func_array(array($class, $method), $params);
+        } else {
+            $response = $class->$method($params);
         }
 
         if ($otherConditions === "non-zero") $otherConditions = count($response["rows"]) > 0;
@@ -30,7 +17,9 @@ function checkIfSuccess($task, $class, $method, $params = [], $otherConditions =
         if ($response["status"] === 200 && $otherConditions) printSuccess($task);
         else {
             printFailed($task);
-            echo "<li>".$response["message"]."</li>";
+
+            if (isset($response["message"])) echo "<li>".$response["message"]."</li>";
+            else echo "<li>Row count does not correspond to zero/non-zero option.</li>";
         }
 
         return $response;
