@@ -4,10 +4,11 @@
 <head>
     <?php include_once("views/shared/headers.php"); ?>
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
         }
-        
+
         .card {
             width: 100%;
             height: auto;
@@ -72,6 +73,7 @@
     <?php include_once("views/shared/nav.php"); ?>
     <div main flex="v" fullwidth back-light v-center>
         <div class="content-section" flex="v" h-center style="box-shadow: 0 6px 6px -6px rgba(0, 0, 0, .3); height: 100vh;">
+            <div id="popup-message" style="opacity: 0; display: none; padding: 15px 20px; transition: opacity .3s ease-in-out;" flex bordered dark-text></div>
             <div class="card" flex="v" style="justify-content: center; gap: 0; background-color: #FFF;">
                 <form onsubmit="event.preventDefault(); submitSignup();">
                     <div class="row">
@@ -208,6 +210,9 @@
         </div>
     </div>
     <script>
+        let popupMessage = document.querySelector("#popup-message");
+
+
         fetch("../api/companynatures").then(response => response.json()).then(json => {
             if (json["status"] !== 200) console.error(json);
             if (json["rows"] === undefined) return;
@@ -275,11 +280,20 @@
                     json = JSON.parse(json);
                 } catch {
                     console.error(json);
+
+                    popupMessage.innerText = json["message"];
+                    flexInOut(popupMessage);
+
                     return false;
                 }
 
                 if (json["status"] !== 200) {
                     console.error(json);
+
+                    popupMessage.innerText = json["message"];
+                    popupMessage.setAttribute("contain", "danger");
+                    fadeInOutFlex(popupMessage);
+
                     return false;
                 }
 
