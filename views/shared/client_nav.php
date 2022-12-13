@@ -39,7 +39,7 @@
                 <img src="../api/assets/img?name=arrow-right.webp&type=webp" alt="right arrow">
             </div>
         </a>
-        <a href="../auth/logout" button contain="overdark" flex="h" h-center v-center style="border-radius: 0; width: 100%;" nogap>
+        <a href="../logout/confirm" button contain="overdark" flex="h" h-center v-center style="border-radius: 0; width: 100%;" nogap>
             <span style="flex-shrink: 0;" flex="h" v-center><img src="../views/assets/img/power.svg" alt="">Logout</span>
             <div flex="h" h-end style="width: 100%;"><img src="../api/assets/img?name=arrow-right.webp&type=webp" alt="right arrow"></div>
         </a>

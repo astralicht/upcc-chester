@@ -98,6 +98,11 @@
                             return;
                         }
 
+                        if (json["COMMAND"] !== undefined) {
+                            window.location.href = "../auth/not-verified";
+                            return;
+                        }
+
                         if (json["status"] === 200) {
                             window.location.href = "../auth/loginredirect";
                             return;

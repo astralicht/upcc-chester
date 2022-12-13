@@ -132,7 +132,7 @@ class ViewsController {
         $id = $_GET["id"];
 
         $FetchModel = new FetchModel();
-        $response = $FetchModel->shop($id);
+        $response = $FetchModel->shop(["id" => $id]);
         $shop = $response["rows"][0];
 
         foreach ($shop as $key => $value) {
@@ -218,48 +218,20 @@ class ViewsController {
     }
 
 
-    function shopAdminDashboard() {
-        return self::getFile("views/shop-admin/dashboard.scale.php");
-    }
-
-
-    function shopAdminProducts() {
-        return self::getFile("views/shop-admin/products.scale.php");
-    }
-
-
-    function shopAdminOrders() {
-        return self::getFile("views/shop-admin/orders.scale.php");
-    }
-
-
-    function shopAdminViewOrder() {
-        return self::getFile("views/shop-admin/view-order.scale.php");
-    }
-
-    
-    function shopAdminEditProduct() {
-        return self::getFile("views/shop-admin/edit-product.scale.php");
-    }
-
-
-    function shopAdminNewProduct() {
-        return self::getFile("views/shop-admin/new-product.scale.php");
-    }
-    
-
-    function adminViewUserInfo() {
-        return self::getFile("views/admin/user-info.scale.php");
-    }
-
-
-    function adminEditInfo() {
-        return self::getFile("views/admin/edit-user-info.scale.php");
-    }
-
-
-    function tnc() {
-        return self::getFile("views/client/tnc.scale.php");
-    }
+    function shopAdminDashboard() { return self::getFile("views/shop-admin/dashboard.scale.php"); }
+    function shopAdminProducts() { return self::getFile("views/shop-admin/products.scale.php"); }
+    function shopAdminOrders() { return self::getFile("views/shop-admin/orders.scale.php"); }
+    function shopAdminViewOrder() { return self::getFile("views/shop-admin/view-order.scale.php"); }
+    function shopAdminEditProduct() { return self::getFile("views/shop-admin/edit-product.scale.php"); }
+    function shopAdminNewProduct() { return self::getFile("views/shop-admin/new-product.scale.php"); }
+    function adminViewUserInfo() { return self::getFile("views/admin/user-info.scale.php"); }
+    function adminEditInfo() { return self::getFile("views/admin/edit-user-info.scale.php"); }
+    function tnc() { return self::getFile("views/client/tnc.scale.php"); }
+    function adminShops() { return self::getFile("views/admin/shops.scale.php"); }
+    function adminNewShop() { return self::getFile("views/admin/new-shop.scale.php"); }
+    function logoutConfirm() { return self::getFile("views/auth/logout-confirm.scale.php"); }
+    function adminEditShop() { return self::getFile("views/admin/edit-shop.scale.php"); }
+    function notVerified() { return self::getFile("views/auth/not-verified.scale.php"); }
+    function emailVerifySent(): string { return self::getFile('views/login/email-verification-sent.scale.php'); }
 
 }

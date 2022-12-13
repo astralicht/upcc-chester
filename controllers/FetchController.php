@@ -23,7 +23,7 @@ class FetchController {
     function productTypesAll() { return (new FetchModel)->productTypesAll(); }
     function clientCart($data) { return (new FetchModel)->clientCart($data); }
     function order($data) { return (new FetchModel)->order($data); }
-    function featuredProducts() { return (new FetchModel)->featuredProducts(); }
+    function featuredProducts($limit) { return (new FetchModel)->featuredProducts($limit); }
     function productsFilterOnly($data) { return (new FetchModel)->productsFilterOnly($data); }
     function allproductIds() { return (new FetchModel)->allProductIds(); }
     function typesAndBrands() { return (new FetchModel)->typesAndBrands(); }
@@ -33,5 +33,9 @@ class FetchController {
     function shopProductsCount($param) { return (new FetchModel)->shopProductsCount($param); }
     function notificationsUnread($data) { return (new FetchModel)->notificationsUnread($data); }
     function notificationsAll($data) { return (new FetchModel)->notificationsAll($data); }
-    
+    function adminShops($data) { return (new FetchModel)->adminShops($data); }
+    function shopsCount($data) { return (new FetchModel)->shopsCount($data); }
+    function adminShop($id) { return (new FetchModel)->shop($id); }
+    function shopDetails($data) { return (new FetchModel)->shop($data); }
+
 }

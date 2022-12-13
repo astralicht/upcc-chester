@@ -259,8 +259,6 @@ $UpdateModel->productClicks($_GET["id"]);
             let product = json["rows"][0];
             let keys = Object.keys(product);
 
-            console.log(product);
-
             document.title = `${product["name"]} | ISA Store`;
 
             for (let key of keys) {
@@ -292,6 +290,25 @@ $UpdateModel->productClicks($_GET["id"]);
                 }
 
                 if (key === "type_id") continue;
+
+                if (key === "shop_id") {
+                    fetch(`../api/shop-details?id=${product[key]}`).then(response => response.text()).then(json => {
+                        try {
+                            json = JSON.parse(json);
+                        } catch (error) {
+                            console.error(error);
+                            console.error(json);
+                        }
+
+                        let element = document.querySelector("#shop_name");
+                        let shopName = json["rows"][0]["name"];
+
+                        element.innerText = shopName;
+
+                        return;
+                    });
+                    continue;
+                }
 
                 element.innerText = product[key];
             }

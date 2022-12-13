@@ -105,4 +105,19 @@ class DeleteModel {
         return self::getResult($sql, $data);
     }
 
+
+    function adminRemoveShops($data) {
+        $data = json_decode($data, true);
+        $date_now = date("Y-m-d H:i:s");
+
+        if (count($data) > 1) {
+            $clause = implode(',', array_fill(0, count($data), '?'));
+            $sql = "UPDATE shops SET `date_removed`='$date_now' WHERE `id` IN (" . $clause . ");";
+        } else {
+            $sql = "UPDATE shops SET `date_removed`='$date_now' WHERE `id`=?";
+        }
+
+        return self::getResult($sql, $data);
+    }
+
 }

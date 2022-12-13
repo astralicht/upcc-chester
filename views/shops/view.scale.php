@@ -99,13 +99,23 @@
         </div>
         <div flex="h">
             <img src="../{{image_path}}" alt="shop image" style="height: 75px; width: 75px; border-radius: 100%;">
-            <h3>{{name}}</h3>
+            <div flex="v" nogap v-center>
+                <h3 nomargin>{{name}}</h3>
+                <div id="rating-container">Average Rating: {{rating}}</div>
+            </div>
         </div>
+        <h3 nomargin>All Products</h3>
         <div class="cards-container" id="products" flex="h">
             <?php
             $FetchModel = new FetchModel();
             $results = $FetchModel->shopProducts($_GET["id"]);
             $rows = $results["rows"];
+
+            if (count($rows) < 1) {
+                echo "<i>No products to show.</i>";
+                return;
+            }
+
             foreach ($rows as $row) {
                 $img_path = $row["product_img_path"];
                 $img_name = $row["product_img_name"];

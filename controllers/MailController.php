@@ -50,7 +50,6 @@ class MailController {
 
 
     public function sendPasswordResetEmail() {
-
         $email = $_POST["email"];
 
         $FetchController = new FetchController();
@@ -81,8 +80,8 @@ class MailController {
         $host = $_SERVER["HTTP_HOST"];
         $link = "http://$host/auth/password-reset?token=$token";
         $customerServiceEmail = "inquiries@industrialsalesassist.com";
-        $message = "<style>body { font-family: Arial; }</style><h2>UPCC Account Password Reset</h2>\n<p>To reset your account's password, either copy and paste the link below, or simply click it to proceed: \r\n<a href='$link'>$link</a></p><p>If you did not request a password reset, disregard this email. For other concerns about your account, you may reach our customer service at <a href='mailto:$customerServiceEmail'>$customerServiceEmail</a>.</p>";
-        $subject = "UPCC | Account Password Reset Request";
+        $message = "<style>body { font-family: Arial; }</style><h2>ISA Account Password Reset</h2>\n<p>To reset your account's password, either copy and paste the link below, or simply click it to proceed: \r\n<a href='$link'>$link</a></p><p>If you did not request a password reset, disregard this email. For other concerns about your account, you may reach our customer service at <a href='mailto:$customerServiceEmail'>$customerServiceEmail</a>.</p>";
+        $subject = "ISA | Account Password Reset Request";
 
         $Mailer = self::setMailParameters($message, $subject, $email);
         $Mailer->send();
@@ -129,6 +128,48 @@ class MailController {
         $Mailer->send();
 
         return ["status" => 200];
+    }
+
+
+    public function sendEmailVerification() {
+        $email = $_POST["email"];
+
+        $FetchController = new FetchController();
+        $response = $FetchController->isAccountEmail($email);
+
+        if ($response["status"] !== 200) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        if(count($response["rows"]) < 1) {
+            header("Location: ../login/email-verification-sent");
+            return;
+        }
+
+        date_default_timezone_set("Asia/Manila");
+
+        $CreateModel = new CreateModel();
+        $response = $CreateModel->token($email);
+
+        if($response["status"] !== 200) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        $token = $response["token"];
+
+        $host = $_SERVER["HTTP_HOST"];
+        $link = "http://$host/auth/verify-email?token=$token";
+        $customerServiceEmail = "inquiries@industrialsalesassist.com";
+        $message = "<style>body { font-family: Arial; }</style><h2>ISA </h2>\n<p>To verify your email, either copy and paste the link below, or simply click it to proceed: \r\n<a href='$link'>$link</a></p><p>If you did not register for an account, disregard this email. For other concerns about this email, you may reach our customer service at <a href='mailto:$customerServiceEmail'>$customerServiceEmail</a>.</p>";
+        $subject = "ISA | Account Email Verification";
+
+        $Mailer = self::setMailParameters($message, $subject, $email);
+        $Mailer->send();
+
+        header("Location: ../login/email-verification-sent");
+        return;
     }
 
 }

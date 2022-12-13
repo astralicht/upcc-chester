@@ -205,6 +205,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
 
                     if (key === "id") {
                         cartItemId = row[key];
+
                         continue;
                     }
                     if (key === "product_quantity") quantity = row[key];
@@ -213,11 +214,12 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
 
                         let text = document.createElement("span");
                         text.style.color = "#C0C0C0";
-                        text.innerText = "/order";
+                        text.innerText = "/item";
 
                         td.innerText = `₱${numberWithCommas(unitPrice)}`;
                         td.appendChild(text);
                         tr.appendChild(td);
+
                         continue;
                     }
                     if (key === "image_path") {
@@ -232,6 +234,22 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
 
                         td.appendChild(img);
                         tr.appendChild(td);
+
+                        continue;
+                    }
+                    if (key === "name") {
+                        let div = document.createElement("div");
+                        let a = document.createElement("a");
+
+                        a.href = `../products/view?id=${row["id"]}`;
+                        a.innerText = row[key];
+
+                        div.appendChild(a);
+                        td.appendChild(div);
+                        tr.appendChild(td);
+
+                        delete row.id;
+
                         continue;
                     }
 

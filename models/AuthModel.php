@@ -18,7 +18,7 @@ class AuthModel {
 
         $conn = (new Config(self::$configOverride))->openDbConnection();
 
-        $sql = 'SELECT `id`, `first_name`, `last_name`, `email`, `type`, `dp_path`, `password`
+        $sql = 'SELECT `id`, `first_name`, `last_name`, `email`, `type`, `dp_path`, `password`, `is_email_confirmed`
         FROM users
         WHERE `email`=?
         AND `date_removed` IS NULL

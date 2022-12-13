@@ -17,5 +17,6 @@ class CreateController {
     // function history($data) { return (new CreateModel)->history($data); }
     function adminNewUser($data) { return (new CreateModel)->adminNewUser($data); }
     function clientOrder($data) { return (new CreateModel)->clientOrder($data); }
+    function adminNewShop($data) { return (new CreateModel)->adminNewShop($data); }
     
 }

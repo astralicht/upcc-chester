@@ -158,8 +158,6 @@ class FetchModel
                     p.`name`,
                     pt.`name` AS 'type',
                     p.`brand`,
-                    p.`image_path`,
-                    p.`image_name`,
                     pr.`unit_price`,
                     p.`clicks`,
                     p.`date_added`
@@ -324,7 +322,7 @@ class FetchModel
         $id = $data["id"];
 
         $sql = "SELECT p.`id`, p.`name`, pt.`id` AS 'type_id', pt.`name` AS 'type', p.`material`, p.`brand`, p.`connection_type`, p.`length`, p.`width`, p.`thickness`,
-                    p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`
+                    p.`image_name` AS image_name, p.`image_path`, pr.`unit_price`, p.`company_name`, p.`office_address`, p.`contact_number`, p.`shop_id`
                 FROM products AS p
                 JOIN (
                 	SELECT `product_id`, `unit_price`, MAX(`date_added`) AS date_added
@@ -395,7 +393,7 @@ class FetchModel
 
     function clientCart($data) {
         $clientId = [$data["client_id"]];
-        $sql = "SELECT uc.`id`, p.`image_path`, p.`name`, uc.`product_quantity`, pr.`unit_price`
+        $sql = "SELECT uc.`id`, p.`image_path`, p.`name`, p.`id`, uc.`product_quantity`, pr.`unit_price`
                 FROM users_carts AS uc INNER JOIN products AS p INNER JOIN products_prices AS pr
                 WHERE uc.`user_id`=?
                 AND uc.`product_id`=p.`id`
@@ -722,14 +720,47 @@ class FetchModel
         return self::getResult($sql);
     }
 
+    
+    function adminShops($data) {
+        $filterString = "";
+        $limit = "";
 
-    function shop($id) {
+        if (isset($data["filter"])) {
+            $filter = $data["filter"];
+            $filterString = "AND `name` LIKE '%$filter%'";
+        }
+
+        if (isset($data["limit"])) {
+            $limit = $data["limit"];
+        }
+        
+        $sql = "SELECT `id`, `name`, `rating`, `date_added` 
+                FROM shops
+                WHERE `date_removed` IS NULL
+                $filterString
+                LIMIT ?";
+
+        return self::getResult($sql, [$limit]);
+    }
+
+
+    function shopsCount() {
+        $sql = "SELECT COUNT(`id`) AS 'count'
+                FROM shops
+                WHERE `date_removed` IS NULL
+                GROUP BY `id`";
+
+        return self::getResult($sql);
+    }
+
+
+    function shop($data) {
         $sql = "SELECT * 
                 FROM shops
                 WHERE `id`=?
                 AND `date_removed` IS NULL";
 
-        return self::getResult($sql, [$id]);
+        return self::getResult($sql, [$data["id"]]);
     }
 
 
@@ -741,10 +772,8 @@ class FetchModel
                     pr.`unit_price` AS product_price,
                     p.`clicks`
                 FROM products AS p
-                INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
-                AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
                 AND p.`shop_id`=?
                 GROUP BY p.`id`

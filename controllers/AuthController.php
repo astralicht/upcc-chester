@@ -24,8 +24,10 @@ class AuthController {
             ];
         }
 
-        if ($response["status"] === 200) {
+        if ($response["status"] === 200) { 
             $userDetails = $response["user"];
+
+            if ($userDetails["is_email_confirmed"] === "FALSE") return ["status" => 401, "message" => "That email is not yet verified.", "COMMAND" => "REDIRECT-TO-VERIFY-CONFIRMATION"];
 
             $_SESSION["id"] = $userDetails["id"];
             $_SESSION["email"] = $userDetails["email"];
@@ -104,6 +106,35 @@ class AuthController {
         $_SESSION["email-for-password-reset"] = $row["email"];
         
         header("Location: ../auth/reset-password");
+        return;
+    }
+
+
+    function verifyTokenEmail() {
+        $token = $_GET["token"];
+
+        $FetchModel = new FetchModel();
+        $response = $FetchModel->isTokenValid($token);
+
+        if ($response["status"] === 500) {
+            header("Location: ../error/500");
+            return;
+        }
+
+        if (count($response["rows"]) < 1) {
+            header("Location: ../auth/invalid-token");
+            return;
+        }
+
+        $row = $response["rows"][0];
+        $diff = date_create(date("Y-m-d H:i:s"))->diff(date_create($row["expiry_date"]));
+
+        if ($diff->i > 5) {
+            header("Location: ../auth/invalid-token");
+            return;
+        }
+        
+        header("Location: ../auth/email-verify");
         return;
     }
 

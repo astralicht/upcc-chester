@@ -124,6 +124,7 @@ class CreateModel {
 
     function user($data) {
         $data = json_decode($data, true);
+        unset($data["search-bar"]);
 
         $sql = "SELECT `email` FROM users WHERE `email`=? AND `date_removed` IS NULL LIMIT 1";
 
@@ -460,6 +461,23 @@ class CreateModel {
         $sql = "INSERT INTO notifications(`message`, `user_id`) VALUES (?, ?);";
 
         return self::executeQuery($sql, [$message, $userId]);
+    }
+
+
+    function adminNewShop($data) {
+        if ($_SESSION["type"] !== "ADMIN") return ["status" => 403, "message" => "You cannot have access to this resource!"];
+
+        $data = json_decode($data, true);
+
+        $sql = "SELECT `name` FROM shops WHERE `name`=? AND `date_removed` IS NULL LIMIT 1";
+
+        $result = self::executeQueryWithResult($sql, [$data["email"]]);
+
+        if (count($result["rows"]) > 0) return ["status" => 409, "message" => "That shop name already exists!"];
+
+        $sql = "INSERT INTO shops(`name`) VALUES (?)";
+
+        return self::executeQuery($sql, [$data["name"]]);
     }
 
 }

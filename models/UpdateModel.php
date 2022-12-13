@@ -160,7 +160,8 @@ class UpdateModel {
         $data[] = $productPricesArr[1];
 
         $sql = "UPDATE products
-                SET `name`=?, `material`=?, `brand`=?, `connection_type`=?, `length`=?, `width`=?, `thickness`=?, `type_id`=?
+                SET `name`=?, `material`=?, `brand`=?, `connection_type`=?, `length`=?, `width`=?, `thickness`=?, 
+                    `company_name`=?, `office_address`=?, `contact_number`=?, `type_id`=?, `shop_id`=?
                 WHERE `id`=?";
 
         self::executeQuery($sql, $data);
@@ -215,6 +216,15 @@ class UpdateModel {
         self::executeQuery($sql, [$date_now, $userId]);
         
         return header("Location: ../../client/notifications?user_id=$userId&param=unread");
+    }
+
+
+    function adminEditShop($data) {
+        $data = json_decode($data, true);
+
+        $sql = "UPDATE shops SET `name`=? WHERE `id`=?";
+
+        return self::executeQuery($sql, [$data["name"], $data["id"]]);
     }
 
 }

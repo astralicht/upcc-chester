@@ -88,6 +88,7 @@ class Routes {
             "api/admin/update-order-status" => ["UpdateController", "orderStatus", "POST"],
             "api/admin/create-user" => ["CreateController", "adminNewUser", "POST"],
             "api/admin/save-info" => ["UpdateController", "adminInfo", "POST"],
+            "api/admin/create-shop" => ["CreateController", "adminNewShop", "POST"],
 
             "api/agent/products-for-select?filter=*" => ["FetchController", "productsFilterOnly", "GET"],
 
@@ -98,6 +99,15 @@ class Routes {
             "api/notifications?user_id=*&param=unread" => ["FetchController", "notificationsUnread", "GET"],
             "api/notifications?user_id=*&param=all" => ["FetchController", "notificationsAll", "GET"],
             "api/notifications/mark-all-read?user_id=*" => ["UpdateController", "notificationsMarkAllRead", "GET"],
+
+            "api/admin-shops?filter=*&limit=*" => ["FetchController", "adminShops", "GET"],
+            "api/shops/count" => ["FetchController", "shopsCount", "GET"],
+            "api/admin-shop?id=*" => ["FetchController", "adminShop", "GET"],
+            
+            "api/admin/save-shop" => ["UpdateController", "adminEditShop", "POST"],
+            "api/admin/remove-shops" => ["DeleteController", "adminRemoveShops", "POST"],
+
+            "api/shop-details?id=*" => ["FetchController", "shopDetails", "GET"],
 
             
             "default" => "home/index",
@@ -112,9 +122,7 @@ class Routes {
             "login/index" => ["ViewsController", "login"],
             "login/forgot-password" => ["ViewsController", "forgotPassword"],
             "login/reset-email-sent" => ["ViewsController", "resetEmailSent"],
-
-            "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
-            "auth/password-reset?token=*" => ["AuthController", "verifyToken", "GET"],
+            "login/email-verification-sent" => ["ViewsController", "emailVerifySent"],
 
             "signup/index" => ["ViewsController", "signup"],
             "signup/success" => ["ViewsController", "signupSuccess"],
@@ -126,6 +134,13 @@ class Routes {
             "auth/reset-password" => ["ViewsController", "resetPassword"],
             "auth/reset-password-submit" => ["AuthController", "resetPasswordSubmit"],
             "auth/password-reset-successful" => ["ViewsController", "passwordResetSuccessful"],
+            "auth/not-verified" => ["ViewsController", "notVerified"],
+
+            "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
+            "auth/password-reset?token=*" => ["AuthController", "verifyToken", "GET"],
+            "auth/verify-email?token=*" => ["AuthController", "verifyTokenEmail", "GET"],
+
+            "logout/confirm" => ["ViewsController", "logoutConfirm"],
 
             "admin/dashboard" => ["ViewsController", "adminDashboard"],
             "admin/users" => ["ViewsController", "adminUsers"],
@@ -142,6 +157,9 @@ class Routes {
             "admin/new-user" => ["ViewsController", "adminNewUser"],
             "admin/user-info" => ["ViewsController", "adminViewUserInfo"],
             "admin/edit-info?id=*" => ["ViewsController", "adminEditInfo"],
+            "admin/shops" => ["ViewsController", "adminShops"],
+            "admin/new-shop" => ["ViewsController", "adminNewShop"],
+            "admin/edit-shop?id=*" => ["ViewsController", "adminEditShop"],
 
             "shop-admin/dashboard" => ["ViewsController", "shopAdminDashboard"],
             "shop-admin/products" => ["ViewsController", "shopAdminProducts"],
