@@ -13,7 +13,7 @@ class MailController {
 
     public function setMailParameters($message, $subject, $target) {
         $sender_email = "upcc-password@industrialsalesassist.com";
-        $sender_name = "UPCC";
+        $sender_name = "ISA";
 
         $Mailer = new PHPMailer(true);
         $Mailer->isSMTP();
@@ -132,7 +132,10 @@ class MailController {
 
 
     public function sendEmailVerification() {
-        $email = $_POST["email"];
+        if (isset($_POST["email"])) $email = $_POST["email"];
+        else if (isset($_GET["email"])) $email = $_GET["email"];
+
+        var_dump($email);
 
         $FetchController = new FetchController();
         $response = $FetchController->isAccountEmail($email);

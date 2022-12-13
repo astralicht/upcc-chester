@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +12,7 @@
 <body noshadow flex="v" h-center fullwidth nogap>
     <h3>Industrial Sales Assist</h3>
     <h2 nomargin> Your email is not yet verified. </h2>
-    <a href="../api/resend-confirmation-email">Resend Confirmation Email</a>
+    <a href="../api/resend-confirmation-email?email=<?php echo $_SESSION["email-for-verification"]; unset($_SESSION["email-for-verification"]); ?>">Resend Confirmation Email</a>
     <a href="../login/index">Proceed to Login</a>
 </body>
 

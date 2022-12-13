@@ -27,7 +27,11 @@ class AuthController {
         if ($response["status"] === 200) { 
             $userDetails = $response["user"];
 
-            if ($userDetails["is_email_confirmed"] === "FALSE") return ["status" => 401, "message" => "That email is not yet verified.", "COMMAND" => "REDIRECT-TO-VERIFY-CONFIRMATION"];
+            if ($userDetails["is_email_confirmed"] === "FALSE") {
+                $_SESSION["email-for-verification"] = $userDetails["email"];
+                
+                return ["status" => 401, "message" => "That email is not yet verified.", "COMMAND" => "REDIRECT-TO-VERIFY-CONFIRMATION"];
+            }
 
             $_SESSION["id"] = $userDetails["id"];
             $_SESSION["email"] = $userDetails["email"];
@@ -133,8 +137,11 @@ class AuthController {
             header("Location: ../auth/invalid-token");
             return;
         }
-        
-        header("Location: ../auth/email-verify");
+
+        $UpdateModel = new UpdateModel();
+        $UpdateModel->userEmailStatus($row["email"]);
+
+        header("Location: ../auth/email-verification-successful");
         return;
     }
 

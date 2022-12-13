@@ -109,6 +109,8 @@ class Routes {
 
             "api/shop-details?id=*" => ["FetchController", "shopDetails", "GET"],
 
+            "api/resend-confirmation-email?email=*" => ["MailController", "sendEmailVerification", "GET"],
+
             
             "default" => "home/index",
             "home/index" => ["ViewsController", "home"],
@@ -139,6 +141,7 @@ class Routes {
             "forgot-password/email" => ["MailController", "sendPasswordResetEmail", "POST"],
             "auth/password-reset?token=*" => ["AuthController", "verifyToken", "GET"],
             "auth/verify-email?token=*" => ["AuthController", "verifyTokenEmail", "GET"],
+            "auth/email-verification-successful" => ["ViewsController", "emailVerifySuccess"],
 
             "logout/confirm" => ["ViewsController", "logoutConfirm"],
 

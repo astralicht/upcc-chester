@@ -227,4 +227,11 @@ class UpdateModel {
         return self::executeQuery($sql, [$data["name"], $data["id"]]);
     }
 
+
+    function userEmailStatus($email) {
+        $sql = "UPDATE users SET `is_email_confirmed`='TRUE' WHERE `email`=?";
+
+        return self::executeQuery($sql, [$email]);
+    }
+
 }
