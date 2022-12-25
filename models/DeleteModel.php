@@ -54,8 +54,6 @@ class DeleteModel {
             $sql = "UPDATE users SET `date_removed`='$date_now' WHERE `id`=?";
         }
 
-        var_dump($data);
-
         return self::getResult($sql, $data);
     }
 

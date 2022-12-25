@@ -4,6 +4,7 @@ namespace Main\Models;
 session_start();
 date_default_timezone_set("Asia/Manila");
 
+use Error;
 use Main\Config;
 use Main\Controllers\MailController;
 use Main\Models\FetchModel;

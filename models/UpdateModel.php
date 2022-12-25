@@ -4,6 +4,7 @@ namespace Main\Models;
 
 date_default_timezone_set("Asia/Manila");
 
+use Error;
 use Main\Config;
 
 class UpdateModel {
@@ -127,8 +128,8 @@ class UpdateModel {
         $response = (new \Main\Models\CreateModel)->notification($data);
 
         if ($redirectFlag != true || $redirectFlag == null) return $response;
-        
-        header("Location: ../../admin/view-order?order_id=".$orderId);
+
+        header("Location: ../../admin/view-order?order_id=" . $orderId);
     }
 
     
@@ -207,13 +208,15 @@ class UpdateModel {
     }
 
 
-    function notificationsMarkAllRead($data) {
+    function notificationsMarkAllRead($data, $test = null) {
         $userId = $data["user_id"];
         $date_now = date("Y-m-d H:i:s");
 
         $sql = "UPDATE notifications SET `date_read`=? WHERE `user_id`=? AND `date_read` IS NULL";
 
-        self::executeQuery($sql, [$date_now, $userId]);
+        $response = self::executeQuery($sql, [$date_now, $userId]);
+
+        if ($test !== null) return $response;
         
         return header("Location: ../../client/notifications?user_id=$userId&param=unread");
     }
