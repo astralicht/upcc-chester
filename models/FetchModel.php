@@ -160,7 +160,9 @@ class FetchModel
                     p.`brand`,
                     pr.`unit_price`,
                     p.`clicks`,
-                    p.`date_added`
+                    p.`date_added`,
+                    p.`image_name`,
+                    p.`image_path`
                 FROM products AS p
                 INNER JOIN products_prices AS pr
                 INNER JOIN product_types AS pt

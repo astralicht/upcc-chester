@@ -99,7 +99,7 @@ class DeleteModelUT
 
         $testName = "Users";
         $testInput = [
-            1, 2,
+            "1", "2",
         ];
         $testOutput = null;
         try {
@@ -120,7 +120,7 @@ class DeleteModelUT
 
         $testName = "Products";
         $testInput = [
-            1, 2,
+            "1", "2",
         ];
         $testOutput = null;
         try {
@@ -141,7 +141,7 @@ class DeleteModelUT
 
         $testName = "Product Types";
         $testInput = [
-            1, 2,
+            "1", "2",
         ];
         $testOutput = null;
         try {
@@ -183,7 +183,7 @@ class DeleteModelUT
 
         $testName = "Orders";
         $testInput = [
-            1, 2,
+            "1", "2",
         ];
         $testOutput = null;
         try {
@@ -204,7 +204,7 @@ class DeleteModelUT
 
         $testName = "Admin remove shops";
         $testInput = [
-            1, 2,
+            "1", "2",
         ];
         $testOutput = null;
         try {
