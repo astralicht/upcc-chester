@@ -245,7 +245,13 @@ if (!isset($_SESSION["type"]) || $_SESSION["type"] !== "ADMIN") header("Location
                     "method": "POST",
                     "Content-Type": "application/json",
                     "body": JSON.stringify(user_ids),
-                }).then(response => response.json()).then(data => {
+                }).then(response => response.text()).then(data => {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        console.error(data);
+                    }
+
                     if (data["status"] === 200) {
                         let tbody = table_bodies["users"];
                         tbody = clearTableBody(tbody);

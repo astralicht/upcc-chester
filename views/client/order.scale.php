@@ -63,6 +63,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Subtotal</th>
+                        <th>Status</th>
                     </thead>
                     <tbody></tbody>
                 </table>

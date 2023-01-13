@@ -1,29 +1,8 @@
 <?php
 
-use Main\Models\FetchModel;
 use Main\Models\UpdateModel;
 
 session_start();
-
-// if (isset($_SESSION["id"])) {
-//     $FetchModel = new FetchModel();
-//     $product = $FetchModel->productDetailsComplete($_GET["id"])["rows"][0];
-
-//     $cookieValues = json_encode([
-//         "product_id" => $_GET["id"],
-//         "type" => $product["type"],
-//         "material" => $product["material"],
-//         "brand" => $product["brand"],
-//         "connection_type" => $product["connection_type"],
-//     ]);
-
-//     setcookie(
-//         $_SESSION["id"] . "_" . uniqid(),
-//         $cookieValues,
-//         time() + 31540000000,
-//         "/"
-//     );
-// }
 
 $UpdateModel = new UpdateModel();
 $UpdateModel->productClicks($_GET["id"]);

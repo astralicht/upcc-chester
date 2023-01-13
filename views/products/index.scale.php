@@ -33,6 +33,9 @@
 <body flex="v">
     <?php include_once("views/shared/nav.php"); ?>
     <div flex="v" main style="flex-grow: 1;">
+        <div flex="h">
+            <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../views/assets/img/arrow-right.webp" alt="back" style="transform: rotate(180deg);">Back</button>
+        </div>
         <div>
             <h1>Products</h1>
         </div>

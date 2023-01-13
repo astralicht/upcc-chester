@@ -2,6 +2,50 @@
 
 use Main\Models\FetchModel;
 
+function renderShops($rows, $FetchModel) {
+    foreach ($rows as $row) {
+        $card = file_get_contents("views/templates/_card_shop.html");
+
+        $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
+        $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
+        $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
+
+        $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
+
+        $card = str_replace("{{shop_products_count}}", count($rows), $card);
+
+        $rating = $row["rating"];
+
+        if ($rating == null || $rating == "") $rating = 0.0;
+
+        $card = str_replace("{{shop_rating}}", $rating, $card);
+
+        echo $card;
+    }
+}
+
+function renderProducts($rows) {
+    foreach ($rows as $row) {
+        $img_path = $row["product_img_path"];
+        $img_name = $row["product_img_name"];
+        $name = $row["product_name"];
+        $id = $row["product_id"];
+        $price = $row["product_price"];
+        $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
+                                    <div class='card' flex='v'>
+                                        <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
+                                        <div class='card-body'>
+                                            <span class='card-title'>$name</span>
+                                            <div flex='h'>
+                                                <span class='card-price' fullwidth>₱$price</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>";
+        echo $card;
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -45,29 +89,28 @@ use Main\Models\FetchModel;
             </div>
             <div class="cards-container" id="shops" flex="h">
                 <?php
+                $requestCount = 10;
+
                 $FetchModel = new FetchModel();
-                $results = $FetchModel->featuredShops(10);
+                $results = $FetchModel->featuredShops($requestCount);
                 $rows = $results["rows"];
 
-                foreach ($rows as $row) {
-                    $card = file_get_contents("views/templates/_card_shop.html");
+                renderShops($rows, $FetchModel);
 
-                    $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
-                    $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
-                    $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
+                $countDiff = $requestCount - count($rows);
 
-                    $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
+                if ($countDiff == 0) return;
 
-                    $card = str_replace("{{shop_products_count}}", count($rows), $card);
+                $excludedIds = [];
 
-                    $rating = $row["rating"];
-
-                    if ($rating == null || $rating == "") $rating = 0.0;
-
-                    $card = str_replace("{{shop_rating}}", $rating, $card);
-
-                    echo $card;
+                foreach($rows as $row) {
+                    $excludedIds[] = $row["shop_id"];
                 }
+
+                $results = $FetchModel->randShops(["limit" => $countDiff, "excludedIds" => $excludedIds]);
+                $rows = $results["rows"];
+
+                renderShops($rows, $FetchModel);
                 ?>
             </div>
         </section>
@@ -78,35 +121,31 @@ use Main\Models\FetchModel;
             </div>
             <div class="cards-container" id="products" flex="h">
                 <?php
+                $requestCount = 25;
+
                 $FetchModel = new FetchModel();
 
-                // ini_set('display_errors', 0);
-                // error_reporting(0);
-
-                $results = $FetchModel->featuredProducts(10);
+                $results = $FetchModel->featuredProducts($requestCount);
                 $rows = $results["rows"];
 
-                foreach ($rows as $row) {
-                    $img_path = $row["product_img_path"];
-                    $img_name = $row["product_img_name"];
-                    $name = $row["product_name"];
-                    $id = $row["product_id"];
-                    $price = $row["product_price"];
-                    $clicks = $row["clicks"];
-                    $card = "<a href='../products/view?id=$id' style='text-decoration: none;'>
-                                    <div class='card' flex='v'>
-                                        <img src='../$img_path' alt='$img_name' class='card-img' style='object-fit: cover;'>
-                                        <div class='card-body'>
-                                            <span class='card-title'>$name</span>
-                                            <div flex='h'>
-                                                <span class='card-price' fullwidth>₱$price</span>
-                                                <i fullwidth flex='h' h-end>$clicks views</i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>";
-                    echo $card;
+                renderProducts($rows);
+
+                $countDiff = $requestCount - count($rows);
+
+                if ($countDiff == 0) return;
+
+                if ($countDiff == 0) return;
+
+                $excludedIds = [];
+
+                foreach($rows as $row) {
+                    $excludedIds[] = $row["product_id"];
                 }
+
+                $results = $FetchModel->randProducts(["limit" => $countDiff]);
+                $rows = $results["rows"];
+
+                renderProducts($rows);
                 ?>
             </div>
         </section>
@@ -121,7 +160,7 @@ use Main\Models\FetchModel;
                 <div class="cards-container" id="buy-again" flex="h">
                     <?php
                     $FetchModel = new FetchModel();
-                    $results = $FetchModel->previousOrderedProducts(10);
+                    $results = $FetchModel->previousOrderedProducts($requestCount);
                     $rows = $results["rows"];
 
                     if (empty($rows) || gettype($rows) !== "array") {

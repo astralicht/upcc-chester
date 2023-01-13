@@ -42,25 +42,28 @@
 <body flex="v" nogap>
     <?php include_once("views/shared/nav.php"); ?>
     <div flex="v" main fullheight style="flex-grow: 1;">
+        <div flex="h">
+            <button button contain="dark" small flex="h" v-center nogap onclick="history.back()"><img src="../views/assets/img/arrow-right.webp" alt="back" style="transform: rotate(180deg);">Back</button>
+        </div>
         <div>
             <h1>Shops</h1>
         </div>
         <div class="cards-container" id="shops" flex="h">
             <?php
             $FetchModel = new FetchModel();
-            $results = $FetchModel->featuredShops(10);
+            $results = $FetchModel->shops();
             $rows = $results["rows"];
             
             foreach ($rows as $row) {
                 $card = file_get_contents("views/templates/_card_shop.html");
 
-                $card = str_replace("{{shop_img_path}}", $row["shop_image_path"], $card);
-                $card = str_replace("{{shop_name}}", $row["shop_name"], $card);
-                $card = str_replace("{{shop_id}}", $row["shop_id"], $card);
+                $card = str_replace("{{shop_img_path}}", $row["image_path"], $card);
+                $card = str_replace("{{shop_name}}", $row["name"], $card);
+                $card = str_replace("{{shop_id}}", $row["id"], $card);
 
-                $rows = $FetchModel->shopProducts($row["shop_id"])["rows"];
+                $productsRows = $FetchModel->shopProducts($row["id"])["rows"];
 
-                $card = str_replace("{{shop_products_count}}", count($rows), $card);
+                $card = str_replace("{{shop_products_count}}", count($productsRows), $card);
 
                 $rating = $row["rating"];
 

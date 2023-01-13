@@ -545,17 +545,13 @@ class FetchModel
                 FROM products AS p
                 INNER JOIN product_types AS pt
                 INNER JOIN products_prices AS pr
-                INNER JOIN orders_products AS op
-                INNER JOIN orders AS o
                 WHERE p.`date_removed` IS NULL
                 AND p.`type_id`=pt.`id`
                 AND p.`id`=pr.`product_id`
-                AND p.`id`=op.`product_id`
                 AND (p.`name` LIKE '%$param%'
                 OR p.`brand` LIKE '%$param%'
                 OR p.`material` LIKE '%$param%'
                 OR p.`connection_type` LIKE '%$param%')
-                GROUP BY p.`id`
                 ORDER BY
                     p.`clicks` DESC,
                     p.`date_added`DESC;
@@ -565,43 +561,32 @@ class FetchModel
                     p.`name` AS product_name,
                     p.`image_path` AS product_img_path,
                     pr.`unit_price` AS product_price,
-                    COUNT(p.`shop_id`) AS shop_count,
                     p.`clicks`
                 FROM products AS p
-                INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
-                AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
                 AND (p.`name` LIKE '%$param%'
                 OR p.`brand` LIKE '%$param%'
                 OR p.`material` LIKE '%$param%'
                 OR p.`connection_type` LIKE '%$param%')
-                GROUP BY p.`id`, p.`shop_id`
                 ORDER BY
-                    pr.`unit_price` DESC,
-                    shop_count DESC";
+                    pr.`unit_price` DESC";
         } else if ($sort === "price-asc") {
             $sql = "SELECT p.`id` AS product_id,
                     p.`name` AS product_name,
                     p.`image_path` AS product_img_path,
                     pr.`unit_price` AS product_price,
-                    COUNT(p.`shop_id`) AS shop_count,
                     p.`clicks` AS clicks
                 FROM products AS p
-                INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
-                AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
                 AND (p.`name` LIKE '%$param%'
                 OR p.`brand` LIKE '%$param%'
                 OR p.`material` LIKE '%$param%'
                 OR p.`connection_type` LIKE '%$param%')
-                GROUP BY p.`id`, p.`shop_id`, shop_count
                 ORDER BY
-                    clicks DESC,
-                    shop_count DESC,
                     pr.`unit_price` ASC";
         } else {
             $sql = "SELECT p.`id` AS product_id,
@@ -611,10 +596,8 @@ class FetchModel
                     COUNT(p.`shop_id`) AS shop_count,
                     p.`clicks` AS clicks
                 FROM products AS p
-                INNER JOIN orders_products AS op
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
-                AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
                 AND (p.`name` LIKE '%$param%'
                 OR p.`brand` LIKE '%$param%'
@@ -693,7 +676,7 @@ class FetchModel
                 AND op.`date_removed` IS NULL
                 AND p.`shop_id`=s.`id`
                 AND op.`product_id`=p.`id`
-                GROUP BY s.`id`
+                GROUP BY s.`id`, product_count
                 LIMIT ?;";
 
         $result = self::getResult($sql, [$limit]);
@@ -833,6 +816,52 @@ class FetchModel
         $sql = "SELECT * FROM notifications WHERE `user_id`=? AND `date_read` IS NULL ORDER BY `date_added` DESC";
 
         return self::getResult($sql, [$data["user_id"]]);
+    }
+
+
+    function randShops($data) {
+        $excludedIds = $data["excludedIds"];
+
+        $notInClause = "";
+
+        if (count($excludedIds) > 0) {
+            $excludedIds = implode(",", $excludedIds);
+            $excludedIds = "(".$excludedIds.")";
+            $notInClause = "NOT IN $excludedIds";
+        }
+
+        $sql = "SELECT `name` AS shop_name,
+                    `image_path` AS shop_image_path,
+                    `id` AS shop_id,
+                    `rating`
+                FROM shops
+                WHERE `date_removed` IS NULL
+                $notInClause
+                ORDER BY
+                    RAND(),
+                    `date_added` DESC
+                LIMIT ?;";
+
+        return self::getResult($sql, [$data["limit"]]);
+    }
+
+    
+    function randProducts($data) {
+        $sql = "SELECT p.`id` AS product_id,
+                    p.`name` AS product_name,
+                    p.`image_path` AS product_img_path,
+                    p.`image_name` AS product_img_name,
+                    pr.`unit_price` AS product_price
+                FROM products AS p
+                INNER JOIN products_prices AS pr
+                WHERE p.`date_removed` IS NULL
+                AND pr.`product_id`=p.`id`
+                ORDER BY
+                    RAND(),
+                    p.`date_added` DESC
+                LIMIT ?";
+
+        return self::getResult($sql, [$data["limit"]]);
     }
 
 }

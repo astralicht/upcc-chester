@@ -59,6 +59,7 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                         <th>Order #</th>
                         <th>Total Price</th>
                         <th>Date</th>
+                        <th>Status</th>
                     </thead>
                     <tbody></tbody>
                 </table>
