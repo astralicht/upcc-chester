@@ -143,6 +143,10 @@ class UpdateModel {
             $sql = "UPDATE users SET `dp_path`=? WHERE `id`=?";
             $data = [$fileDestination, $id];
         }
+        if ($imageType === "SHOP") {
+            $sql = "UPDATE shops SET `image_path`=?, `image_name`=? WHERE `id`=?";
+            $data = [$fileDestination, $fileName, $id];
+        }
 
         return self::executeQuery($sql, $data);
     }

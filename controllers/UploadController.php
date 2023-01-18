@@ -48,7 +48,17 @@ class UploadController {
         
         if ($response["status"] === 200) unlink($data["old-image-path"]);
 
-        header("Location: ../" . strtolower($_SESSION["type"]) . "/edit-product?id=" . $data["id"]);
+        if (strtoupper($imageType) === "USER") {
+            header("Location: ../" . strtolower($_SESSION["type"]) . "/edit-info?id=" . $data["id"]);
+        }
+
+        if (strtoupper($imageType) === "PRODUCT") {
+            header("Location: ../" . strtolower($_SESSION["type"]) . "/edit-product?id=" . $data["id"]);
+        }
+
+        if (strtoupper($imageType) === "SHOP") {
+            header("Location: ../" . strtolower($_SESSION["type"]) . "/edit-shop?id=" . $data["id"]);
+        }
     }
     
 }

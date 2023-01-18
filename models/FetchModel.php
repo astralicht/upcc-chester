@@ -3,9 +3,8 @@ namespace Main\Models;
 
 session_start();
 
+use Error;
 use Main\Config;
-use Main\Controllers\ViewsController;
-use TypeError;
 
 class FetchModel
 {
@@ -32,6 +31,7 @@ class FetchModel
             foreach ($params as $param) {
                 $literals .= "s";
             }
+
             $query->bind_param($literals, ...$params);
         }
         
@@ -511,18 +511,14 @@ class FetchModel
         if ($sort === "topsales") {
             $sql = "SELECT p.`id` AS product_id,
                             p.`name` AS product_name,
-                            pt.`id` AS type_id, 
-                            pt.`name` AS type_name,
                             p.`image_path` AS product_img_path,
                             pr.`unit_price` AS product_price,
                             SUM(op.`item_count`) AS items_sold
                     FROM products AS p
-                    INNER JOIN product_types AS pt
                     INNER JOIN products_prices AS pr
                     INNER JOIN orders_products AS op
                     INNER JOIN orders AS o
                     WHERE p.`date_removed` IS NULL
-                    AND p.`type_id`=pt.`id`
                     AND p.`id`=pr.`product_id`
                     AND p.`id`=op.`product_id`
                     AND op.`order_id`=o.`id`
@@ -631,7 +627,6 @@ class FetchModel
                 WHERE p.`date_removed` IS NULL
                 AND op.`product_id`=p.`id`
                 AND pr.`product_id`=p.`id`
-                GROUP BY p.`id`, op.`product_id`
                 ORDER BY
                     p.`clicks` DESC,
                     pr.`unit_price` ASC
@@ -639,34 +634,14 @@ class FetchModel
 
         $result = self::getResult($sql, [$limit]);
 
-        if (count($result["rows"]) < 1) {
-            $sql = "SELECT p.`id` AS product_id,
-                        p.`name` AS product_name,
-                        p.`image_path` AS product_img_path,
-                        p.`image_name` AS product_img_name,
-                        pr.`unit_price` AS product_price,
-                        p.`clicks`
-                    FROM products AS p
-                    INNER JOIN products_prices AS pr
-                    WHERE p.`date_removed` IS NULL
-                    AND pr.`product_id`=p.`id`
-                    GROUP BY p.`id`
-                    ORDER BY
-                        p.`clicks` DESC,
-                        pr.`unit_price` ASC
-                    LIMIT ?";
-
-            return self::getResult($sql, [$limit]);
-        }
-
         return $result;
     }
 
 
     function featuredShops($limit) {
-        $sql = "SELECT s.`name` AS shop_name,
+        $sql = "SELECT s.`id` AS shop_id,
+		            s.`name` AS shop_name,
                     s.`image_path` AS shop_image_path,
-                    s.`id` AS shop_id,
                     s.`rating` AS rating,
                     COUNT(op.`product_id`) AS product_count
                 FROM shops AS s
@@ -676,22 +651,9 @@ class FetchModel
                 AND op.`date_removed` IS NULL
                 AND p.`shop_id`=s.`id`
                 AND op.`product_id`=p.`id`
-                GROUP BY s.`id`, product_count
-                LIMIT ?;";
+                LIMIT ?";
 
         $result = self::getResult($sql, [$limit]);
-
-        if (count($result["rows"]) < 1) {
-            $sql = "SELECT s.`name` AS shop_name,
-                    s.`image_path` AS shop_image_path,
-                    s.`id` AS shop_id,
-                    s.`rating` AS rating
-                FROM shops AS s
-                WHERE s.`date_removed` IS NULL
-                LIMIT ?;";
-
-            return self::getResult($sql, [$limit]);
-        }
 
         return $result;
     }
@@ -821,13 +783,12 @@ class FetchModel
 
     function randShops($data) {
         $excludedIds = $data["excludedIds"];
-
         $notInClause = "";
 
         if (count($excludedIds) > 0) {
             $excludedIds = implode(",", $excludedIds);
             $excludedIds = "(".$excludedIds.")";
-            $notInClause = "NOT IN $excludedIds";
+            $notInClause = "AND `id` NOT IN $excludedIds";
         }
 
         $sql = "SELECT `name` AS shop_name,
@@ -842,11 +803,22 @@ class FetchModel
                     `date_added` DESC
                 LIMIT ?;";
 
-        return self::getResult($sql, [$data["limit"]]);
+        $result = self::getResult($sql, [$data["limit"]]);
+
+        return $result;
     }
 
     
     function randProducts($data) {
+        $excludedIds = $data["excludedIds"];
+        $notInClause = "";
+
+        if (count($excludedIds) > 0) {
+            $excludedIds = implode(",", $excludedIds);
+            $excludedIds = "(" . $excludedIds . ")";
+            $notInClause = "AND p.`id` NOT IN $excludedIds";
+        }
+
         $sql = "SELECT p.`id` AS product_id,
                     p.`name` AS product_name,
                     p.`image_path` AS product_img_path,
@@ -856,6 +828,7 @@ class FetchModel
                 INNER JOIN products_prices AS pr
                 WHERE p.`date_removed` IS NULL
                 AND pr.`product_id`=p.`id`
+                $notInClause
                 ORDER BY
                     RAND(),
                     p.`date_added` DESC

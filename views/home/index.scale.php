@@ -124,7 +124,6 @@ function renderProducts($rows) {
                 $requestCount = 25;
 
                 $FetchModel = new FetchModel();
-
                 $results = $FetchModel->featuredProducts($requestCount);
                 $rows = $results["rows"];
 
@@ -134,15 +133,13 @@ function renderProducts($rows) {
 
                 if ($countDiff == 0) return;
 
-                if ($countDiff == 0) return;
-
                 $excludedIds = [];
 
                 foreach($rows as $row) {
                     $excludedIds[] = $row["product_id"];
                 }
 
-                $results = $FetchModel->randProducts(["limit" => $countDiff]);
+                $results = $FetchModel->randProducts(["limit" => $countDiff, "excludedIds" => $excludedIds]);
                 $rows = $results["rows"];
 
                 renderProducts($rows);

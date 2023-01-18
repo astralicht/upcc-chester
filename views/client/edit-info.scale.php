@@ -50,6 +50,14 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
                 <div>
                     <button button contain="secondary" small onclick="history.back()">Back</button>
                 </div>
+                <img src="" alt="" id="user-image" style="height: 300px; width: 300px; box-shadow: 6px 6px 6px -6px rgba(0, 0, 0, .2); flex-shrink: 0; object-fit: cover;">
+                <form action="../upload/image" method="POST" enctype="multipart/form-data" flex="v">
+                    <input type="file" name="image-input" id="image-input" form-input style="width: 300px; background-color: #ccc">
+                    <input type="hidden" value="USER" name="image-type" id="image-type">
+                    <input type="hidden" value="" name="old-image-path" id="old-image-path">
+                    <input type="hidden" value="<?php echo $_GET["id"]; ?>" name="id" id="user-id">
+                    <button type="submit" id="user-image-upload" form-input button contain="info" small style="width: 300px; border-radius: var(--border-radius);">Upload photo</button>
+                </form>
                 <h1 nomargin>Edit Account Details</h1>
                 <form onsubmit="submitInfo(); return false;" flex="v" contain="white" fullwidth style="padding: 2em;">
                     <div flex="h">
@@ -147,6 +155,8 @@ if (!isset($_SESSION["type"]) && $_SESSION !== "CLIENT") header("Location: ../er
             document.querySelector("#company_name").value = details["company_name"];
             document.querySelector("#company_address").value = details["company_address"];
             document.querySelector("#phone_number").value = details["phone_number"];
+            document.querySelector("img#user-image").src = "../" + details["dp_path"];
+            document.querySelector("img#user-image").alt = "prof_picture";
 
             let companyNature = details["company_nature"];
             let natureOptions = document.querySelectorAll("select option");
