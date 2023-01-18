@@ -522,7 +522,7 @@ class FetchModel
                     AND p.`id`=pr.`product_id`
                     AND p.`id`=op.`product_id`
                     AND op.`order_id`=o.`id`
-                    AND o.`status`='APPROVED'
+                    AND o.`status`<>'PENDING'
                     AND (p.`name` LIKE '%$param%'
                     OR p.`brand` LIKE '%$param%'
                     OR p.`material` LIKE '%$param%'
